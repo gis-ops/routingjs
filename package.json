@@ -1,0 +1,51 @@
+{
+    "name": "routing-js",
+    "version": "1.0.0",
+    "description": "Library for consistent access to various vehicle routing APIs",
+    "main": "dist/index.js",
+    "files": [
+        "dist"
+    ],
+    "typings": "dist/index.d.ts",
+    "scripts": {
+        "test": "jest",
+        "format": "prettier --write src/{*.ts,**/*.ts}",
+        "build": "tsc",
+        "build:watch": "tsc --watch",
+        "postinstall": "npx husky install"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/chrstnbwnkl/routing-js.git"
+    },
+    "keywords": [
+        "routing",
+        "vehicle routing",
+        "navigation",
+        "api",
+        "geo",
+        "geospatial"
+    ],
+    "author": "Christian Beiwinkel <christian@gis-ops.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/chrstnbwnkl/routing-js/issues"
+    },
+    "homepage": "https://github.com/chrstnbwnkl/routing-js#readme",
+    "devDependencies": {
+        "@commitlint/cli": "^17.1.2",
+        "@commitlint/config-conventional": "^17.1.0",
+        "@types/jest": "^29.1.2",
+        "@typescript-eslint/eslint-plugin": "^5.40.0",
+        "@typescript-eslint/parser": "^5.40.0",
+        "eslint": "^8.25.0",
+        "husky": "^8.0.1",
+        "jest": "^29.2.0",
+        "prettier": "^2.7.1",
+        "ts-jest": "^29.0.3",
+        "typescript": "^4.8.4"
+    },
+    "dependencies": {
+        "axios": "^1.1.3"
+    }
+}
