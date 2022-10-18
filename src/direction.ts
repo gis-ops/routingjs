@@ -1,14 +1,24 @@
-import { Geometry } from "./geojson"
-import { OSRMRouteResponse } from "./parameters/osrm"
+import { Feature, LineString } from "geojson"
+import { OSRMRoute, OSRMRouteResponse } from "./parameters/osrm"
 import { ValhallaRouteResponse } from "./parameters/valhalla"
 
-class Directions {
+export class Directions {
     constructor(
-        public readonly geometry: Geometry,
-        public readonly duration: number,
-        public readonly distance: number,
-        public readonly raw: ValhallaRouteResponse | OSRMRouteResponse
+        public readonly directions?: Direction[],
+        public readonly raw?: ValhallaRouteResponse | OSRMRouteResponse
     ) {}
 }
 
-export default Directions
+interface DirectionProps {
+    duration: number
+    distance: number
+}
+
+export type DirectionFeat = Feature<LineString, DirectionProps>
+
+export class Direction {
+    constructor(
+        public readonly feature?: DirectionFeat,
+        public readonly raw?: ValhallaRouteResponse | OSRMRoute
+    ) {}
+}

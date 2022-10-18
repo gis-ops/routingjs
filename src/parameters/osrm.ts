@@ -1,5 +1,3 @@
-import { Geometry } from "src/geojson"
-
 interface OSRMBaseParams {
     coordinates: string
     profile: string
@@ -26,8 +24,8 @@ export interface OSRMRouteResponse extends OSRMBaseResponse {
     routes?: OSRMRoute[]
 }
 
-interface OSRMRoute {
-    geometry?: string | Geometry
+export interface OSRMRoute {
+    geometry?: string | { [k: string]: any }
     legs?: OSRMLeg[]
     distance?: number
     duration?: number
@@ -42,7 +40,7 @@ interface OSRMLeg {
 }
 
 interface OSRMStep {
-    geometry?: string | Geometry
+    geometry?: string | { [k: string]: any }
     maneuver?: OSRMManeuver
     distance?: number
     duration?: number
@@ -90,7 +88,8 @@ interface OSRMAnnotation {
     nodes?: number[]
 }
 
-interface OSRMTableParams extends OSRMBaseParams {
+export interface OSRMTableParams extends OSRMBaseParams {
+    [key: string]: any
     sources: number[]
     destinations: number[]
 }

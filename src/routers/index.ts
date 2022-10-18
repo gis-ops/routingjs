@@ -1,18 +1,29 @@
-import Directions from "src/direction"
-import Matrix from "src/matrix"
+import Client from "client"
+import { Directions } from "direction"
+import { Isochrones } from "isochrone"
+import Matrix from "matrix"
 
 export interface BaseRouter {
+    client: Client
+
     directions: (
         locations: number[][],
         profile: string,
-        ...args: any
-    ) => Directions
+        directionsOpts: { [k: string]: any },
+        dryRun: boolean
+    ) => Promise<Directions | undefined>
 
-    matrix: (locations: number[][], profile: string, ...args: any) => Matrix
+    matrix: (
+        locations: number[][],
+        profile: string,
+        matrixOpts: { [k: string]: any },
+        dryRun: boolean
+    ) => Promise<Matrix>
 
     isochrones?: (
         location: [number, number],
         profile: string,
-        ...args: any
-    ) => Isochrones
+        isochronesOpts: { [k: string]: any },
+        dryRun: boolean
+    ) => Promise<Isochrones>
 }

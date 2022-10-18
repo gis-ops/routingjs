@@ -1,23 +1,30 @@
-interface ValhallaRouteParams extends ValhallaRequestParams {
+export interface ValhallaRouteParams extends ValhallaRequestParams {
     locations: ValhallaLocation[]
-    language?: string
-    directions_type?: ValhallaDirectionsType
+    narrative?: boolean
+    directions_options?: ValhallaDirectionsOptions
     alternates?: number
-    exclude_locations?: number[][]
-    exclude_polygons?: number[][][] | number[][][][]
+    exclude_locations?: [number, number][]
+    exclude_polygons?: [number, number][][] | [number, number][][][]
     date_time?: ValhallaDateTime
     linear_references?: boolean
 }
 
+interface ValhallaDirectionsOptions {
+    units?: ValhallaRequestUnit
+    directions_type?: ValhallaDirectionsType
+    language?: string
+}
+
 interface ValhallaRequestParams {
-    costing: ValhallaCostingTypes
+    costing: ValhallaCostingType
     costing_options?: ValhallaCostingOptTypes
-    units?: "mi" | "km"
     id?: string
 }
 
-interface ValhallaIsochroneParams extends ValhallaRequestParams {
-    locations: ValhallaLocation[]
+export type ValhallaRequestUnit = "mi" | "km" | "miles" | "kilometers"
+
+export interface ValhallaIsochroneParams extends ValhallaRequestParams {
+    locations: [ValhallaLocation]
     date_time?: ValhallaDateTime
     contours: ValhallaContours[]
     polygons?: boolean
@@ -26,7 +33,7 @@ interface ValhallaIsochroneParams extends ValhallaRequestParams {
     show_locations?: boolean
 }
 
-interface ValhallaMatrixParams extends ValhallaRequestParams {
+export interface ValhallaMatrixParams extends ValhallaRequestParams {
     sources: ValhallaLocation[]
     targets: ValhallaLocation[]
 }
@@ -39,17 +46,22 @@ interface ValhallaContours {
 
 export interface ValhallaRouteResponse {
     id?: string
-    status: number
-    status_message: string
-    units: string
-    language: string
-    locations: ValhallaLocation[]
-    warnings?: any
-    summary?: ValhallaRouteSummary
-    trip?: ValhallaLeg[]
+    trip?: ValhallaTrip
+    alternates?: ValhallaRouteResponse[]
 }
 
-interface ValhallaLeg {
+export interface ValhallaTrip {
+    locations?: ValhallaReturnLocation[]
+    legs?: ValhallaLeg[]
+    summary?: ValhallaRouteSummary
+    status_message?: string
+    status?: number
+    units?: string
+    language?: string
+    warnings?: any
+}
+
+export interface ValhallaLeg {
     summary: ValhallaRouteSummary
     shape?: string
     maneuvers?: ValhallaManeuvers[]
@@ -89,9 +101,9 @@ interface ValhallaManeuvers {
 
 export interface ValhallaMatrixResponse {
     sources_to_targets?: ValhallaMatrixItem[][]
-    sources?: ValhallaLocation[][]
-    targets?: ValhallaLocation[][]
-    locations?: ValhallaLocation[]
+    sources?: ValhallaReturnLocation[][]
+    targets?: ValhallaReturnLocation[][]
+    locations?: ValhallaReturnLocation[]
     units?: string
     warnings?: { [k: string]: any }[]
 }
@@ -126,14 +138,14 @@ interface ValhallaRouteSummary {
     max_lon: number
 }
 
-type ValhallaDirectionsType = "none" | "maneuvers" | "instructions"
+export type ValhallaDirectionsType = "none" | "maneuvers" | "instructions"
 
-interface ValhallaDateTime {
+export interface ValhallaDateTime {
     type: 0 | 1 | 2 | 3
     value: string
 }
 
-interface ValhallaLocation {
+export interface ValhallaLocation {
     lat: number
     lon: number
     type?: ValhallaLocationType
@@ -165,6 +177,10 @@ interface ValhallaLocation {
     date_time?: string
 }
 
+interface ValhallaReturnLocation extends ValhallaLocation {
+    original_index?: number
+}
+
 interface ValhallaCostingOptTypes {
     auto?: ValhallaCostingOptsAuto
     truck?: ValhallaCostingOptsTruck
@@ -188,7 +204,7 @@ interface ValhallaCostingOptsWheels extends ValhallaCostingOptsBase {
     country_crossing_penalty?: number
 }
 
-interface ValhallaCostingOptsPedestrian extends ValhallaCostingOptsBase {
+export interface ValhallaCostingOptsPedestrian extends ValhallaCostingOptsBase {
     walking_speed?: number
     walkway_factor?: number
     sidewalk_factor?: number
@@ -203,7 +219,7 @@ interface ValhallaCostingOptsPedestrian extends ValhallaCostingOptsBase {
     bss_rent_penalty?: number
 }
 
-interface ValhallaCostingOptsAuto extends ValhallaCostingOptsWheels {
+export interface ValhallaCostingOptsAuto extends ValhallaCostingOptsWheels {
     private_access_penalty?: number
     toll_booth_cost?: number
     toll_booth_penalty?: number
@@ -225,14 +241,14 @@ interface ValhallaCostingOptsAuto extends ValhallaCostingOptsWheels {
     include_hot?: boolean
 }
 
-interface ValhallaCostingOptsTruck extends ValhallaCostingOptsAuto {
+export interface ValhallaCostingOptsTruck extends ValhallaCostingOptsAuto {
     length?: number
     weight?: number
     axle_load?: number
     hazmat?: boolean
 }
 
-interface ValhallaCostingOptsBicycle extends ValhallaCostingOptsWheels {
+export interface ValhallaCostingOptsBicycle extends ValhallaCostingOptsWheels {
     bicycle_type?: ValhallaBicycleType
     cycling_speed?: number
     use_roads?: number
@@ -242,7 +258,7 @@ interface ValhallaCostingOptsBicycle extends ValhallaCostingOptsWheels {
     bss_return_penalty?: number
 }
 
-interface ValhallaCostingOptsMotorcycle extends ValhallaCostingOptsAuto {
+export interface ValhallaCostingOptsMotorcycle extends ValhallaCostingOptsAuto {
     use_trails?: boolean
 }
 
@@ -260,9 +276,13 @@ interface ValhallaSearchFilter {
 
 type ValhallaSideOfStreet = "left" | "right"
 
-type ValhallaCostingTypes =
+export type ValhallaCostingType =
     | "auto"
     | "bicycle"
     | "motorcycle"
     | "truck"
     | "pedestrian"
+
+export interface MapboxAuthParams {
+    access_token: string
+}

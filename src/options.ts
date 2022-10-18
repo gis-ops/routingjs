@@ -5,6 +5,7 @@ interface optionsInterface {
     defaultRetryTimeout: number
     defaultUserAgent: string
     defaultProxy?: false | AxiosProxyConfig
+    defaultMaxRetries: number
 }
 
 const options: optionsInterface = {
@@ -12,6 +13,7 @@ const options: optionsInterface = {
     defaultRetryTimeout: 30000,
     defaultProxy: false,
     defaultUserAgent: "routing-js-",
+    defaultMaxRetries: 5,
 }
 
 export default options
