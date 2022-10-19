@@ -9,8 +9,9 @@ export class Isochrones {
 
 export class Isochrone {
     constructor(
-        public readonly duration?: number,
-        public readonly distance?: number,
-        public readonly raw?: Feature
+        public readonly center: [number, number],
+        public readonly interval: number,
+        public readonly intervalType: string,
+        public readonly feature: Feature
     ) {}
 }

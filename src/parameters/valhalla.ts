@@ -3,8 +3,6 @@ export interface ValhallaRouteParams extends ValhallaRequestParams {
     narrative?: boolean
     directions_options?: ValhallaDirectionsOptions
     alternates?: number
-    exclude_locations?: [number, number][]
-    exclude_polygons?: [number, number][][] | [number, number][][][]
     date_time?: ValhallaDateTime
     linear_references?: boolean
 }
@@ -19,12 +17,14 @@ interface ValhallaRequestParams {
     costing: ValhallaCostingType
     costing_options?: ValhallaCostingOptTypes
     id?: string
+    exclude_locations?: [number, number][]
+    exclude_polygons?: [number, number][][] | [number, number][][][]
 }
 
 export type ValhallaRequestUnit = "mi" | "km" | "miles" | "kilometers"
 
 export interface ValhallaIsochroneParams extends ValhallaRequestParams {
-    locations: [ValhallaLocation]
+    locations: ValhallaLocation[]
     date_time?: ValhallaDateTime
     contours: ValhallaContours[]
     polygons?: boolean
@@ -38,7 +38,7 @@ export interface ValhallaMatrixParams extends ValhallaRequestParams {
     targets: ValhallaLocation[]
 }
 
-interface ValhallaContours {
+export interface ValhallaContours {
     time?: number
     distance?: number
     color?: string

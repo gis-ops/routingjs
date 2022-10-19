@@ -1,11 +1,12 @@
 import { AxiosRequestConfig } from "axios"
-import { Feature, Point, Polygon } from "geojson"
+import { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson"
 import Client from "client"
 import { Direction, DirectionFeat, Directions } from "direction"
 import Matrix from "matrix"
 import options from "options"
 import {
     MapboxAuthParams,
+    ValhallaContours,
     ValhallaCostingOptsAuto,
     ValhallaCostingOptsBicycle,
     ValhallaCostingOptsMotorcycle,
@@ -14,6 +15,7 @@ import {
     ValhallaCostingType,
     ValhallaDateTime,
     ValhallaDirectionsType,
+    ValhallaIsochroneParams,
     ValhallaLocation,
     ValhallaRequestUnit,
     ValhallaRouteParams,
@@ -21,8 +23,9 @@ import {
 } from "parameters/valhalla"
 import { BaseRouter } from "."
 import { decode } from "@googlemaps/polyline-codec"
+import { Isochrone, Isochrones } from "isochrone"
 
-interface ValhallaDirectionOpts {
+interface ValhallaBaseOpts {
     id?: string
     preference?: "shortest" | "fastest"
     costingOpts?:
@@ -31,14 +34,26 @@ interface ValhallaDirectionOpts {
         | ValhallaCostingOptsBicycle
         | ValhallaCostingOptsMotorcycle
         | ValhallaCostingOptsPedestrian
-    units?: ValhallaRequestUnit
-    instructions?: boolean
-    language?: string
-    directionsType?: ValhallaDirectionsType
     avoidLocations?: ([number, number] | Point | Feature<Point, any>)[]
     avoidPolygons?: ([number, number][][] | Polygon | Feature<Polygon, any>)[]
-    alternatives?: number
     dateTime?: ValhallaDateTime
+}
+
+interface ValhallaDirectionOpts extends ValhallaBaseOpts {
+    instructions?: boolean
+    alternatives?: number
+    units?: ValhallaRequestUnit
+    language?: string
+    directionsType?: ValhallaDirectionsType
+}
+
+interface ValhallaIsochroneOpts extends ValhallaBaseOpts {
+    intervalType?: "time" | "distance"
+    colors?: string[]
+    polygons?: boolean
+    denoise?: number
+    generalize?: number
+    showLocations?: boolean
 }
 
 class Valhalla implements BaseRouter {
@@ -64,7 +79,7 @@ class Valhalla implements BaseRouter {
         )
     }
 
-    public directions(
+    public async directions(
         locations: [number, number][],
         profile: ValhallaCostingType,
         directionsOpts?: ValhallaDirectionOpts,
@@ -188,7 +203,6 @@ class Valhalla implements BaseRouter {
         response: ValhallaRouteResponse,
         type: "main" | "alternative" = "main"
     ): Directions | Direction {
-        console.log(response)
         const geometry: [number, number][] = []
         let [duration, distance] = [0, 0]
         let factor = 1
@@ -235,6 +249,169 @@ class Valhalla implements BaseRouter {
         } else {
             return new Direction(feat, response)
         }
+    }
+
+    public async isochrones(
+        location: [number, number],
+        profile: ValhallaCostingType,
+        intervals: number[],
+        isochronesOpts?: ValhallaIsochroneOpts,
+        dryRun?: boolean
+    ): Promise<Isochrones> {
+        const auth: MapboxAuthParams | undefined = this.apiKey
+            ? { access_token: this.apiKey }
+            : undefined
+        const params = Valhalla.getIsochroneParams(
+            location,
+            profile,
+            intervals,
+            isochronesOpts
+        )
+
+        return this.client
+            .request("/isochrone", undefined, params, auth, dryRun)
+            .then((res) => {
+                console.log(res)
+                return Valhalla.parseIsochroneResponse(
+                    res as FeatureCollection<Point | Polygon | LineString, any>,
+                    location,
+                    intervals,
+                    isochronesOpts?.intervalType
+                        ? isochronesOpts.intervalType
+                        : "time"
+                ) as Isochrones
+            })
+            .catch((error) => {
+                console.log(error)
+                return new Isochrones()
+            })
+    }
+
+    public static getIsochroneParams(
+        location: [number, number],
+        profile: ValhallaCostingType,
+        intervals: number[],
+        isochroneOpts: ValhallaIsochroneOpts = {}
+    ): ValhallaIsochroneParams {
+        const contours: ValhallaContours[] = []
+        let [key, divisor]: ["time" | "distance", 60 | 1000] =
+            isochroneOpts.intervalType !== undefined &&
+            isochroneOpts.intervalType === "distance"
+                ? ["distance", 1000]
+                : ["time", 60]
+
+        intervals.forEach((interval, index) => {
+            const contourObj: ValhallaContours = {
+                [key]: interval / divisor,
+            }
+
+            if (isochroneOpts.colors !== undefined) {
+                if (isochroneOpts.colors.length !== intervals.length) {
+                    throw new Error(
+                        "Colors array must be of same length as intervals array"
+                    )
+                }
+                contourObj.color = isochroneOpts.colors[index]
+            }
+            contours.push(contourObj)
+        })
+
+        const params: ValhallaIsochroneParams = {
+            locations: this._buildLocations(location),
+            costing: profile,
+            contours,
+        }
+
+        if (
+            (isochroneOpts.costingOpts !== undefined &&
+                Object.keys(isochroneOpts.costingOpts).length) ||
+            isochroneOpts.preference !== undefined
+        )
+            params.costing_options = {
+                [profile]: {
+                    ...isochroneOpts.costingOpts,
+                    shortest: isochroneOpts.preference ? true : undefined,
+                },
+            }
+
+        if (isochroneOpts.avoidLocations) {
+            const avoidLocations: [number, number][] = []
+            isochroneOpts.avoidLocations.forEach((avoid_location) => {
+                if (Array.isArray(avoid_location)) {
+                    avoidLocations.push(avoid_location)
+                } else if (avoid_location.type === "Feature") {
+                    // GeoJSON Position object can have elevation coordinate
+                    avoidLocations.push([
+                        avoid_location.geometry.coordinates[0],
+                        avoid_location.geometry.coordinates[1],
+                    ])
+                } else {
+                    // geometry obj only
+                    avoidLocations.push([
+                        avoid_location.coordinates[0],
+                        avoid_location.coordinates[1],
+                    ])
+                }
+            })
+            params.exclude_locations = avoidLocations
+        }
+
+        if (isochroneOpts.avoidPolygons) {
+            const avoidPolygons: [number, number][][][] = []
+
+            isochroneOpts.avoidPolygons.forEach((avoid_polygon) => {
+                if (Array.isArray(avoid_polygon)) {
+                    avoidPolygons.push(avoid_polygon)
+                } else if (avoid_polygon.type === "Feature") {
+                    const outerRing: [number, number][][] =
+                        avoid_polygon.geometry.coordinates.map((ring) => {
+                            return ring.map((pos) => {
+                                return [pos[0], pos[1]] // strip possible elevation
+                            })
+                        })
+                    avoidPolygons.push(outerRing)
+                }
+                params.exclude_polygons = avoidPolygons
+            })
+        }
+
+        if (isochroneOpts.dateTime) {
+            params.date_time = isochroneOpts.dateTime
+        }
+
+        if (isochroneOpts.id) {
+            params.id = isochroneOpts.id
+        }
+
+        if (isochroneOpts.showLocations) {
+            params.show_locations = isochroneOpts.showLocations
+        }
+
+        return params
+    }
+
+    public static parseIsochroneResponse(
+        response: FeatureCollection<LineString | Polygon | Point, any>,
+        location: [number, number],
+        intervals: number[],
+        intervalType: "time" | "distance"
+    ): Isochrones {
+        const isochrones: Isochrone[] = []
+
+        response.features.forEach((feature, index) => {
+            if (feature.geometry.type !== "Point") {
+                isochrones.push(
+                    new Isochrone(
+                        location,
+                        intervals[index],
+                        intervalType,
+                        feature
+                    )
+                )
+            }
+        })
+
+        return new Isochrones(isochrones, response)
     }
 
     public matrix: (

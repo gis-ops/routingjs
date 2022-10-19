@@ -23,6 +23,7 @@ export interface BaseRouter {
     isochrones?: (
         location: [number, number],
         profile: string,
+        intervals: number[],
         isochronesOpts: { [k: string]: any },
         dryRun: boolean
     ) => Promise<Isochrones>

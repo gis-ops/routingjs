@@ -35,4 +35,23 @@ describe("Valhalla returns responses", () => {
                 }
             })
     })
+
+    it("gets an isochrone response", async () => {
+        const v = new Valhalla("http://valhalla1.openstreetmap.de")
+        await v
+            .isochrones(
+                [8.512516, 47.380742],
+                "auto",
+                [15, 20],
+                undefined,
+                false
+            )
+            .then((i) => {
+                console.log(i)
+                if (i !== undefined) {
+                    expect(i).toHaveProperty("isochrones")
+                    expect(i.isochrones).toHaveLength(2)
+                }
+            })
+    })
 })
