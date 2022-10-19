@@ -14,11 +14,11 @@ export interface BaseRouter {
     ) => Promise<Directions | undefined>
 
     matrix: (
-        locations: number[][],
+        locations: [number, number][],
         profile: string,
         matrixOpts: { [k: string]: any },
         dryRun: boolean
-    ) => Promise<Matrix>
+    ) => Promise<Matrix | undefined>
 
     isochrones?: (
         location: [number, number],

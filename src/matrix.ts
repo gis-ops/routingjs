@@ -3,8 +3,8 @@ import { ValhallaMatrixResponse } from "./parameters/valhalla"
 
 class Matrix {
     constructor(
-        public readonly duration?: number,
-        public readonly distance?: number,
+        public readonly durations?: (number | null | undefined)[][],
+        public readonly distances?: (number | null | undefined)[][],
         public readonly raw?: ValhallaMatrixResponse | OSRMTableResponse
     ) {}
 }

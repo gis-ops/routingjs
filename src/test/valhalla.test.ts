@@ -54,4 +54,24 @@ describe("Valhalla returns responses", () => {
                 }
             })
     })
+
+    it("gets an matrix response", async () => {
+        const v = new Valhalla("http://valhalla1.openstreetmap.de")
+        await v
+            .matrix(
+                [
+                    [8.512516, 47.380742],
+                    [8.557835, 47.359467],
+                ],
+                "auto"
+            )
+            .then((m) => {
+                console.log(m)
+                if (m !== undefined) {
+                    expect(m).toHaveProperty("durations")
+                    expect(m).toHaveProperty("distances")
+                    expect(m.durations).toHaveLength(2)
+                }
+            })
+    })
 })

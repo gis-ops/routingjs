@@ -109,8 +109,8 @@ export interface ValhallaMatrixResponse {
 }
 
 interface ValhallaMatrixItem {
-    distance: number
-    time: number
+    distance?: number | null
+    time?: number | null
     from_index: number
     to_index: number
 }

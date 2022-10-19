@@ -17,6 +17,8 @@ import {
     ValhallaDirectionsType,
     ValhallaIsochroneParams,
     ValhallaLocation,
+    ValhallaMatrixParams,
+    ValhallaMatrixResponse,
     ValhallaRequestUnit,
     ValhallaRouteParams,
     ValhallaRouteResponse,
@@ -54,6 +56,12 @@ interface ValhallaIsochroneOpts extends ValhallaBaseOpts {
     denoise?: number
     generalize?: number
     showLocations?: boolean
+}
+
+interface ValhallaMatrixOpts extends ValhallaBaseOpts {
+    sources?: number[]
+    destinations?: number[]
+    units?: ValhallaRequestUnit
 }
 
 class Valhalla implements BaseRouter {
@@ -123,13 +131,14 @@ class Valhalla implements BaseRouter {
             (directionsOpts.costingOpts !== undefined &&
                 Object.keys(directionsOpts.costingOpts).length) ||
             directionsOpts.preference !== undefined
-        )
+        ) {
             params.costing_options = {
                 [profile]: {
                     ...directionsOpts.costingOpts,
                     shortest: directionsOpts.preference ? true : undefined,
                 },
             }
+        }
 
         if (
             directionsOpts.language ||
@@ -414,12 +423,140 @@ class Valhalla implements BaseRouter {
         return new Isochrones(isochrones, response)
     }
 
-    public matrix: (
-        locations: number[][],
-        profile: string,
-        matrixOpts: { [k: string]: any },
-        dryRun: boolean
-    ) => Promise<Matrix>
+    public async matrix(
+        locations: [number, number][],
+        profile: ValhallaCostingType,
+        matrixOpts?: ValhallaMatrixOpts,
+        dryRun: boolean = false
+    ): Promise<Matrix | undefined> {
+        const auth: MapboxAuthParams | undefined = this.apiKey
+            ? { access_token: this.apiKey }
+            : undefined
+        const params = Valhalla.getMatrixParams(locations, profile, matrixOpts)
+
+        return this.client
+            .request("/sources_to_targets", undefined, params, auth, dryRun)
+            .then((res) => {
+                return Valhalla.parseMatrixResponse(
+                    res as ValhallaMatrixResponse,
+                    matrixOpts?.units ? matrixOpts.units : "km"
+                ) as Matrix
+            })
+            .catch((error) => {
+                console.log(error)
+                return new Matrix()
+            })
+    }
+
+    public static getMatrixParams(
+        locations: [number, number][],
+        profile: ValhallaCostingType,
+        matrixOpts: ValhallaMatrixOpts = {}
+    ): ValhallaMatrixParams {
+        const matrixLocations = Valhalla._buildLocations(locations)
+
+        let sourceCoords = matrixLocations
+
+        if (matrixOpts.sources) {
+            sourceCoords = sourceCoords.filter((source, index) => {
+                matrixOpts.sources?.includes(index)
+            })
+        }
+
+        let destCoords = matrixLocations
+
+        if (matrixOpts.destinations) {
+            destCoords = destCoords.filter((source, index) => {
+                matrixOpts.destinations?.includes(index)
+            })
+        }
+
+        const params: ValhallaMatrixParams = {
+            costing: profile,
+            sources: sourceCoords,
+            targets: destCoords,
+        }
+
+        if (
+            (matrixOpts.costingOpts !== undefined &&
+                Object.keys(matrixOpts.costingOpts).length) ||
+            matrixOpts.preference !== undefined
+        ) {
+            params.costing_options = {
+                [profile]: {
+                    ...matrixOpts.costingOpts,
+                    shortest: matrixOpts.preference ? true : undefined,
+                },
+            }
+        }
+
+        if (matrixOpts.avoidLocations) {
+            const avoidLocations: [number, number][] = []
+            matrixOpts.avoidLocations.forEach((avoid_location) => {
+                if (Array.isArray(avoid_location)) {
+                    avoidLocations.push(avoid_location)
+                } else if (avoid_location.type === "Feature") {
+                    // GeoJSON Position object can have elevation coordinate
+                    avoidLocations.push([
+                        avoid_location.geometry.coordinates[0],
+                        avoid_location.geometry.coordinates[1],
+                    ])
+                } else {
+                    // geometry obj only
+                    avoidLocations.push([
+                        avoid_location.coordinates[0],
+                        avoid_location.coordinates[1],
+                    ])
+                }
+            })
+            params.exclude_locations = avoidLocations
+        }
+
+        if (matrixOpts.avoidPolygons) {
+            const avoidPolygons: [number, number][][][] = []
+
+            matrixOpts.avoidPolygons.forEach((avoid_polygon) => {
+                if (Array.isArray(avoid_polygon)) {
+                    avoidPolygons.push(avoid_polygon)
+                } else if (avoid_polygon.type === "Feature") {
+                    const outerRing: [number, number][][] =
+                        avoid_polygon.geometry.coordinates.map((ring) => {
+                            return ring.map((pos) => {
+                                return [pos[0], pos[1]] // strip possible elevation
+                            })
+                        })
+                    avoidPolygons.push(outerRing)
+                }
+                params.exclude_polygons = avoidPolygons
+            })
+        }
+
+        if (matrixOpts.id) {
+            params.id = matrixOpts.id
+        }
+
+        return params
+    }
+
+    public static parseMatrixResponse(
+        response: ValhallaMatrixResponse,
+        units: ValhallaRequestUnit
+    ): Matrix {
+        const factor = units === "miles" || units === "mi" ? 0.621371 : 1
+        const durations = response.sources_to_targets?.map((origin) =>
+            origin.map((dest) => dest.time)
+        )
+        const distances = response.sources_to_targets?.map((origin) =>
+            origin.map((dest) => {
+                if (dest.distance) {
+                    return Math.round(dest.distance * 1000 * factor)
+                } else {
+                    return null
+                }
+            })
+        )
+        return new Matrix(durations, distances, response)
+    }
 
     protected static _buildLocations(
         coordinates: [number, number][] | [number, number]
