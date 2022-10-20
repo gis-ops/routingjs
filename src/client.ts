@@ -80,7 +80,7 @@ class Client implements ClientInterface {
 
     async request(
         url: string,
-        getParams?: OSRMRouteParams | OSRMTableParams,
+        getParams?: Partial<OSRMRouteParams> | Partial<OSRMTableParams>,
         postParams?:
             | ValhallaIsochroneParams
             | ValhallaRouteParams

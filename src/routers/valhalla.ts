@@ -67,7 +67,7 @@ interface ValhallaMatrixOpts extends ValhallaBaseOpts {
 class Valhalla implements BaseRouter {
     client: Client
     constructor(
-        public readonly baseUrl: string,
+        public readonly baseUrl: string = "https://valhalla1.openstreetmap.de",
         public readonly apiKey?: string,
         public readonly userAgent?: string,
         public readonly timeout: number = options.defaultTimeout,

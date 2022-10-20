@@ -1,19 +1,22 @@
 interface OSRMBaseParams {
     coordinates: string
     profile: string
-    bearings?: (number | null)[][]
-    radiuses?: (number | null)[]
-    hint?: string[]
+    bearings?: string
+    radiuses?: string
+    hint?: string
 }
 
 export interface OSRMRouteParams extends OSRMBaseParams {
-    alternatives?: boolean
-    steps?: boolean
-    annotations?: boolean
-    geometries?: "polyline" | "polyline6" | "geojson"
-    overview?: "simplified" | "full" | false
-    continue_straight?: "default" | boolean
+    alternatives?: string
+    steps?: string
+    annotations?: string
+    geometries?: OSRMGeometryType
+    overview?: OSRMOverviewType
+    continue_straight?: string
 }
+
+export type OSRMGeometryType = "polyline" | "polyline6" | "geojson"
+export type OSRMOverviewType = "simplified" | "full" | "false"
 
 interface OSRMBaseResponse {
     code: OSRMResponseCode

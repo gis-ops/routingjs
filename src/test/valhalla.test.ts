@@ -1,7 +1,8 @@
 import Valhalla from "../routers/valhalla"
+
 describe("Valhalla returns responses", () => {
     it("gets a directions response", async () => {
-        const v = new Valhalla("http://valhalla1.openstreetmap.de")
+        const v = new Valhalla()
         await v
             .directions(
                 [
@@ -37,7 +38,7 @@ describe("Valhalla returns responses", () => {
     })
 
     it("gets an isochrone response", async () => {
-        const v = new Valhalla("http://valhalla1.openstreetmap.de")
+        const v = new Valhalla()
         await v
             .isochrones(
                 [8.512516, 47.380742],
@@ -56,7 +57,7 @@ describe("Valhalla returns responses", () => {
     })
 
     it("gets an matrix response", async () => {
-        const v = new Valhalla("http://valhalla1.openstreetmap.de")
+        const v = new Valhalla()
         await v
             .matrix(
                 [
