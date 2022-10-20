@@ -1,14 +1,16 @@
+import { decode } from "@googlemaps/polyline-codec"
 import { AxiosRequestConfig } from "axios"
 import Client from "client"
-import { Directions } from "direction"
+import { Direction, DirectionFeat, Directions } from "direction"
+import Matrix from "matrix"
 import options from "options"
 import {
+    OSRMGeometryObject,
     OSRMGeometryType,
     OSRMOverviewType,
     OSRMRouteParams,
     OSRMRouteResponse,
 } from "parameters/osrm"
-import { Direction } from "readline"
 import { BaseRouter } from "routers"
 
 interface OSRMDirectionsOpts {
@@ -56,9 +58,15 @@ class OSRM implements BaseRouter {
             .join(";")
 
         const params = OSRM.getDirectionParams(directionsOpts)
-
+        console.log(coords)
         return this.client
-            .request(`/route/v1/${profile}/${coords}`, params)
+            .request(
+                `/route/v1/${profile}/${coords}`,
+                params,
+                undefined,
+                undefined,
+                dryRun
+            )
             .then((res) => {
                 console.log(res)
                 return OSRM.parseDirectionsResponse(
@@ -119,8 +127,61 @@ class OSRM implements BaseRouter {
             params.overview = directionsOpts.overview
         }
 
+        console.log(params)
+
         return params
     }
 
-    public static parseDirectionsResponse(): Directions | Direction {}
+    public static parseDirectionsResponse(
+        response: OSRMRouteResponse,
+        geometryFormat?: OSRMGeometryType
+    ): Directions {
+        const directions = response.routes.map((route) => {
+            const feature: DirectionFeat = {
+                type: "Feature",
+                geometry: OSRM.parseGeometry(route.geometry, geometryFormat),
+                properties: {
+                    duration: route.duration
+                        ? Math.round(route.duration)
+                        : null,
+                    distance: route.distance
+                        ? Math.round(route.distance)
+                        : null,
+                },
+            }
+            return new Direction(feature, route)
+        })
+
+        return new Directions(directions, response)
+    }
+
+    protected static parseGeometry(
+        routeGeometry: string | OSRMGeometryObject,
+        geometryFormat?: OSRMGeometryType
+    ): OSRMGeometryObject {
+        if (geometryFormat !== "geojson") {
+            const path = decode(
+                routeGeometry as string,
+                geometryFormat === undefined || geometryFormat === "polyline"
+                    ? 5
+                    : 6
+            ) as [number, number][]
+
+            return {
+                coordinates: path,
+                type: "LineString",
+            }
+        } else {
+            return routeGeometry as OSRMGeometryObject
+        }
+    }
+
+    public matrix: (
+        locations: [number, number][],
+        profile: string,
+        matrixOpts: { [k: string]: any },
+        dryRun: boolean
+    ) => Promise<Matrix | undefined>
 }
+
+export default OSRM

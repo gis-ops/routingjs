@@ -251,10 +251,10 @@ class Valhalla implements BaseRouter {
             response.alternates?.map((res) => {
                 return this.parseDirectionsResponse(res, "alternative")
             })
-            return new Directions([
-                new Direction(feat, response),
-                ...directions,
-            ])
+            return new Directions(
+                [new Direction(feat, response), ...directions],
+                response
+            )
         } else {
             return new Direction(feat, response)
         }
@@ -548,7 +548,7 @@ class Valhalla implements BaseRouter {
         )
         const distances = response.sources_to_targets?.map((origin) =>
             origin.map((dest) => {
-                if (dest.distance) {
+                if (dest.distance !== undefined && dest.distance !== null) {
                     return Math.round(dest.distance * 1000 * factor)
                 } else {
                     return null

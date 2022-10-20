@@ -9,13 +9,16 @@ describe("Valhalla returns responses", () => {
                     [8.512516, 47.380742],
                     [8.557835, 47.359467],
                 ],
-                "auto"
-                //true
+                "auto",
+                undefined,
+                false
             )
             .then((d) => {
                 console.log(d)
                 if (d !== undefined) {
                     expect(d).toHaveProperty("directions")
+                    expect(d).toHaveProperty("raw")
+                    expect(d.raw).toBeDefined()
                     expect(d.directions).toHaveLength(1)
                     if (d.directions !== undefined) {
                         expect(d.directions[0]).toHaveProperty("feature")
@@ -64,7 +67,9 @@ describe("Valhalla returns responses", () => {
                     [8.512516, 47.380742],
                     [8.557835, 47.359467],
                 ],
-                "auto"
+                "auto",
+                undefined,
+                false
             )
             .then((m) => {
                 console.log(m)

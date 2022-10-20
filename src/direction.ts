@@ -10,8 +10,8 @@ export class Directions {
 }
 
 interface DirectionProps {
-    duration: number
-    distance: number
+    duration: number | null
+    distance: number | null
 }
 
 export type DirectionFeat = Feature<LineString, DirectionProps>

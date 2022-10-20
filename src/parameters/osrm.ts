@@ -24,14 +24,19 @@ interface OSRMBaseResponse {
 
 export interface OSRMRouteResponse extends OSRMBaseResponse {
     waypoints?: OSRMWayPoint[]
-    routes?: OSRMRoute[]
+    routes: OSRMRoute[]
 }
 
 export interface OSRMRoute {
-    geometry?: string | { [k: string]: any }
-    legs?: OSRMLeg[]
-    distance?: number
-    duration?: number
+    geometry: string | OSRMGeometryObject
+    legs: OSRMLeg[]
+    distance: number
+    duration: number
+}
+
+export interface OSRMGeometryObject {
+    coordinates: [number, number][]
+    type: "LineString"
 }
 
 interface OSRMLeg {

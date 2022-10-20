@@ -95,8 +95,7 @@ class Client implements ClientInterface {
         | OSRMTableResponse
         | undefined
     > {
-        const urlObj = new URL(url, this.baseURL)
-
+        const urlObj = new URL(`${this.baseURL}${url}`)
         if (postParams !== undefined) {
             if (auth !== undefined) {
                 for (const [k, v] of Object.entries(auth)) {
@@ -124,7 +123,7 @@ class Client implements ClientInterface {
         } else {
             if (dryRun === true) {
                 const requestInfo = `
-                URL: ${this.baseURL}${urlObj.toString()}
+                URL: ${urlObj.toString()}
                 Method: GET
                 Parameters: ${JSON.stringify(getParams)}
             `
@@ -137,8 +136,7 @@ class Client implements ClientInterface {
                 })
                 .then((res) => res.data)
                 .catch((error) => {
-                    console.log("Something happend in the client!")
-                    throw error
+                    throw new Error("Request failed.")
                 })
         }
     }
