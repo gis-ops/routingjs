@@ -97,13 +97,13 @@ interface OSRMAnnotation {
 }
 
 export interface OSRMTableParams extends OSRMBaseParams {
-    [key: string]: any
-    sources: number[]
-    destinations: number[]
+    sources: string
+    destinations: string
 }
 
 export interface OSRMTableResponse extends OSRMBaseResponse {
     durations: number[][]
+    distances: number[][]
     sources: OSRMWayPoint[]
     destinations: OSRMWayPoint[]
 }

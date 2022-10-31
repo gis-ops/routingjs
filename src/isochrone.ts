@@ -1,9 +1,9 @@
-import { Feature, FeatureCollection } from "geojson"
+import { Feature, FeatureCollection, LineString, Polygon } from "geojson"
 
 export class Isochrones {
     constructor(
-        public readonly isochrones?: Isochrone[],
-        public readonly raw?: FeatureCollection
+        public readonly isochrones: Isochrone[],
+        public readonly raw: FeatureCollection
     ) {}
 }
 
@@ -12,6 +12,6 @@ export class Isochrone {
         public readonly center: [number, number],
         public readonly interval: number,
         public readonly intervalType: string,
-        public readonly feature: Feature
+        public readonly feature: Feature<LineString | Polygon, any>
     ) {}
 }

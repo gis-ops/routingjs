@@ -3,12 +3,15 @@ import axios, {
     AxiosProxyConfig,
     AxiosRequestConfig,
     AxiosInstance,
+    AxiosError,
 } from "axios"
 import axiosRetry, {
     IAxiosRetryConfig,
     isNetworkOrIdempotentRequestError,
 } from "axios-retry"
+import { RoutingJSAPIError, RoutingJSClientError } from "error"
 import { FeatureCollection } from "geojson"
+import { ORSRouteParams } from "parameters/openrouteservice"
 import options from "./options"
 import {
     OSRMRouteParams,
@@ -23,7 +26,7 @@ import {
     ValhallaMatrixResponse,
     ValhallaRouteParams,
     ValhallaRouteResponse,
-} from "./parameters/valhalla"
+} from "./valhalla"
 
 interface ClientInterface {
     readonly baseURL: string
@@ -38,20 +41,23 @@ class Client implements ClientInterface {
     protected axiosInstance: Axios
     protected axiosOptions: AxiosRequestConfig
     public readonly proxy?: false | AxiosProxyConfig
-    public readonly headers: { [k: string]: string }
+    //public readonly headers?: { [k: string]: string | number }
 
     constructor(
         public baseURL: string,
         public userAgent: string = options.defaultUserAgent,
-        //public readonly headers: { [k: string]: string | number },
         public readonly timeout = options.defaultTimeout,
         public retryOverQueryLimit: boolean,
+        public readonly headers?: { [k: string]: string | number },
         public maxRetries: number = options.defaultMaxRetries,
         public readonly skipAPIError: boolean = false,
         public additionalAxiosOpts?: AxiosRequestConfig
     ) {
-        this.headers = { "Content-Type": "application/json" }
-        this.headers["User-Agent"] = userAgent
+        this.headers = {
+            ...options.defaultHeaders,
+            "User-Agent": userAgent,
+            ...this.headers,
+        }
         this.axiosOptions = {
             headers: this.headers,
             timeout,
@@ -84,16 +90,17 @@ class Client implements ClientInterface {
         postParams?:
             | ValhallaIsochroneParams
             | ValhallaRouteParams
-            | ValhallaMatrixParams,
+            | ValhallaMatrixParams
+            | ORSRouteParams,
         auth?: MapboxAuthParams,
-        dryRun: boolean = false
+        dryRun?: boolean
     ): Promise<
         | ValhallaRouteResponse
         | ValhallaMatrixResponse
         | FeatureCollection
         | OSRMRouteResponse
         | OSRMTableResponse
-        | undefined
+        | string
     > {
         const urlObj = new URL(`${this.baseURL}${url}`)
         if (postParams !== undefined) {
@@ -108,17 +115,15 @@ class Client implements ClientInterface {
                 Method: POST
                 Parameters: ${JSON.stringify(postParams)}
             `
-                console.log(requestInfo)
                 return new Promise((resolve) => {
-                    resolve(undefined)
+                    resolve(requestInfo)
                 })
             }
             return this.axiosInstance
                 .post(urlObj.toString(), postParams)
                 .then((res) => res.data)
                 .catch((error) => {
-                    console.log("Something happend in the client!")
-                    throw error
+                    throw new RoutingJSClientError(error.message)
                 })
         } else {
             if (dryRun === true) {
@@ -127,17 +132,20 @@ class Client implements ClientInterface {
                 Method: GET
                 Parameters: ${JSON.stringify(getParams)}
             `
-                console.log(requestInfo)
-                return new Promise((resolve) => resolve(undefined))
+                return new Promise((resolve) => resolve(requestInfo))
             }
             return this.axiosInstance
                 .get(urlObj.toString(), {
                     params: getParams,
                 })
-                .then((res) => res.data)
                 .catch((error) => {
-                    throw new Error("Request failed.")
+                    throw new RoutingJSAPIError(
+                        `Request failed with error message ${
+                            (error as AxiosError).status
+                        }: ${(error as AxiosError).message}`
+                    )
                 })
+                .then((res) => res.data)
         }
     }
 }
