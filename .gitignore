@@ -104,3 +104,8 @@ dist
 .tern-port
 
 .vscode/
+*.osrm*
+*.tar
+*.txt
+**/valhalla.json
+**/*-tiles*

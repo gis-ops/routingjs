@@ -9,16 +9,16 @@ import axiosRetry, {
     IAxiosRetryConfig,
     isNetworkOrIdempotentRequestError,
 } from "axios-retry"
-import { RoutingJSAPIError, RoutingJSClientError } from "error"
+import { RoutingJSAPIError } from "error"
 import { FeatureCollection } from "geojson"
-import { ORSRouteParams } from "parameters/openrouteservice"
+import { ORSMatrixParams, ORSRouteParams } from "./ors/parameters"
 import options from "./options"
 import {
     OSRMRouteParams,
     OSRMRouteResponse,
     OSRMTableParams,
     OSRMTableResponse,
-} from "./parameters/osrm"
+} from "./osrm/parameters"
 import {
     MapboxAuthParams,
     ValhallaIsochroneParams,
@@ -26,7 +26,7 @@ import {
     ValhallaMatrixResponse,
     ValhallaRouteParams,
     ValhallaRouteResponse,
-} from "./valhalla"
+} from "./valhalla/parameters"
 
 interface ClientInterface {
     readonly baseURL: string
@@ -91,7 +91,8 @@ class Client implements ClientInterface {
             | ValhallaIsochroneParams
             | ValhallaRouteParams
             | ValhallaMatrixParams
-            | ORSRouteParams,
+            | ORSRouteParams
+            | ORSMatrixParams,
         auth?: MapboxAuthParams,
         dryRun?: boolean
     ): Promise<
@@ -123,7 +124,11 @@ class Client implements ClientInterface {
                 .post(urlObj.toString(), postParams)
                 .then((res) => res.data)
                 .catch((error) => {
-                    throw new RoutingJSClientError(error.message)
+                    throw new RoutingJSAPIError(
+                        `Request failed with status ${
+                            (error as AxiosError).response?.status
+                        }: ${JSON.stringify(error as AxiosError)}`
+                    )
                 })
         } else {
             if (dryRun === true) {

@@ -1,7 +1,7 @@
-import Client from "client"
-import { Directions } from "direction"
-import { Isochrones } from "isochrone"
-import Matrix from "matrix"
+import Client from "./Client"
+import { Directions } from "./Direction"
+import { Isochrones } from "./Isochrone"
+import Matrix from "./Matrix"
 
 export interface BaseRouter {
     client: Client

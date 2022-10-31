@@ -1,15 +1,12 @@
 import { Feature, LineString } from "geojson"
-import { ORSRoute, ORSRouteResponse } from "parameters/openrouteservice"
-import { OSRMRoute, OSRMRouteResponse } from "./parameters/osrm"
-import { ValhallaRouteResponse } from "./valhalla"
+import { ORSRoute } from "./ors/parameters"
+import { OSRMRoute } from "./osrm/parameters"
+import { ValhallaRouteResponse } from "./valhalla/parameters"
 
-export class Directions {
+export class Directions<T> {
     constructor(
         public readonly directions: Direction[],
-        public readonly raw:
-            | ValhallaRouteResponse
-            | OSRMRouteResponse
-            | ORSRouteResponse
+        public readonly raw: T
     ) {}
 }
 

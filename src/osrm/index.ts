@@ -1,9 +1,9 @@
 import { decode } from "@googlemaps/polyline-codec"
 import { AxiosRequestConfig } from "axios"
-import Client from "client"
-import { Direction, DirectionFeat, Directions } from "direction"
+import Client from "../Client"
+import { Direction, DirectionFeat, Directions } from "../Direction"
 import { RoutingJSAPIError, RoutingJSError } from "error"
-import Matrix from "matrix"
+import Matrix from "../Matrix"
 import options from "options"
 import {
     OSRMGeometryObject,
@@ -13,8 +13,8 @@ import {
     OSRMRouteResponse,
     OSRMTableParams,
     OSRMTableResponse,
-} from "parameters/osrm"
-import { BaseRouter } from "routers"
+} from "./parameters"
+import { BaseRouter } from "../BaseRouter"
 
 interface OSRMBaseOpts {
     radiuses?: (number | null)[]
@@ -65,7 +65,7 @@ class OSRM implements BaseRouter {
         profile: string,
         directionsOpts?: OSRMDirectionsOpts,
         dryRun?: false
-    ): Promise<Directions>
+    ): Promise<Directions<OSRMRouteResponse>>
     public async directions(
         locations: [number, number][],
         profile: string,
@@ -77,7 +77,7 @@ class OSRM implements BaseRouter {
         profile: string = "driving",
         directionsOpts: OSRMDirectionsOpts = {},
         dryRun: boolean = false
-    ): Promise<Directions | string> {
+    ): Promise<Directions<OSRMRouteResponse> | string> {
         const coords = locations
             .map((tuple) => `${tuple[0]},${tuple[1]}`)
             .join(";")
@@ -95,7 +95,7 @@ class OSRM implements BaseRouter {
             .then((res) => {
                 return OSRM.parseDirectionsResponse(
                     res as OSRMRouteResponse
-                ) as Directions
+                ) as Directions<OSRMRouteResponse>
             })
             .catch((reason) => {
                 throw new RoutingJSError("Something went wrong")
@@ -156,7 +156,7 @@ class OSRM implements BaseRouter {
     public static parseDirectionsResponse(
         response: OSRMRouteResponse,
         geometryFormat?: OSRMGeometryType
-    ): Directions {
+    ): Directions<OSRMRouteResponse> {
         const directions = response.routes.map((route) => {
             const feature: DirectionFeat = {
                 type: "Feature",
@@ -202,7 +202,7 @@ class OSRM implements BaseRouter {
         profile: string,
         matrixOpts?: OSRMMatrixOpts,
         dryRun?: false
-    ): Promise<Matrix>
+    ): Promise<Matrix<OSRMTableResponse>>
     public async matrix(
         locations: [number, number][],
         profile: string,
@@ -214,7 +214,7 @@ class OSRM implements BaseRouter {
         profile: string,
         matrixOpts: OSRMMatrixOpts = {},
         dryRun?: boolean
-    ): Promise<Matrix | string> {
+    ): Promise<Matrix<OSRMTableResponse> | string> {
         const coords = locations
             .map((tuple) => `${tuple[0]},${tuple[1]}`)
             .join(";")
@@ -232,7 +232,7 @@ class OSRM implements BaseRouter {
             .then((res) => {
                 return OSRM.parseMatrixResponse(
                     res as OSRMTableResponse
-                ) as Matrix
+                ) as Matrix<OSRMTableResponse>
             })
             .catch((error) => {
                 throw new RoutingJSAPIError(error.message)
@@ -272,7 +272,9 @@ class OSRM implements BaseRouter {
         return params
     }
 
-    public static parseMatrixResponse(response: OSRMTableResponse): Matrix {
+    public static parseMatrixResponse(
+        response: OSRMTableResponse
+    ): Matrix<OSRMTableResponse> {
         return new Matrix(response.durations, response.distances, response)
     }
 }
