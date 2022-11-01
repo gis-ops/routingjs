@@ -8,14 +8,14 @@
         "composite": false,
         "esModuleInterop": true,
         "lib": ["es2020"],
-        "module": "commonjs",
+        "module": "ESNext",
         "moduleResolution": "node",
         "noImplicitAny": true,
         "noUnusedLocals": true,
         "outDir": "dist",
         "sourceMap": true,
         "strictNullChecks": true,
-        "target": "es2020"
+        "target": "ESNext"
     },
     "include": ["src"],
     "exclude": ["node_modules", "dist", "**/*.test.ts"]

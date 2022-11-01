@@ -1,6 +1,7 @@
-module.exports = {
+export default {
     parserOptions: {
         project: "./tsconfig.eslint.json",
+        ecmaVersion: 2020,
         tsconfigRootDir: __dirname,
         sourceType: "module",
     },
