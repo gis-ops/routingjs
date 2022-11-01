@@ -18,7 +18,7 @@ Future support for other service (like the ones _routingpy_ is supporting) might
 ## Examples
 
 ```js
-const v = new Valhalla("http://valhalla1.openstreetmap.de")
+const v = new Valhalla()  // URL defaults to http://valhalla1.openstreetmap.de
 v.directions(
     [
         [8.512516, 47.380742],
@@ -27,5 +27,12 @@ v.directions(
     "auto"
 ).then((d) => {
     // do stuff with the directions response
+    d.directions.forEach((direction) => {
+        console.log(direction.feature)
+    })
 })
 ```
+
+## Bundle
+
+We use `rollup.js` to build the file bundles, both for the whole package as well as for each router (see [`rollup.config.js`](https://github.com/gis-ops/routing-js/blob/main/rollup.config.js)). You can run that bundling process with `npm run bundle`.
