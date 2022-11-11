@@ -320,6 +320,7 @@ class ORS implements BaseRouter {
             )
             .then((res) => {
                 if (typeof res === "object") {
+                    console.log(res)
                     return ORS.parseMatrixResponse(
                         res as ORSMatrixResponse
                     ) as Matrix<ORSMatrixResponse>
