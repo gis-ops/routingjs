@@ -23,11 +23,11 @@ export interface GraphHopperRouteParams extends GraphHopperBaseParams {
     heading_penalty?: number
     pass_through?: boolean
     algorithm?: GraphHopperAlgorithm
-    "round_trip.distance": number
-    "round_trip.seed": number
-    "alternative_route.max_paths": number
-    "alternative_route.max_weight_factor": number
-    "alternative_route.max_share_factor": number
+    "round_trip.distance"?: number
+    "round_trip.seed"?: number
+    "alternative_route.max_paths"?: number
+    "alternative_route.max_weight_factor"?: number
+    "alternative_route.max_share_factor"?: number
 }
 
 export interface GraphHopperIsochroneParams extends GraphHopperBaseParams {
@@ -51,6 +51,7 @@ export interface GraphHopperMatrixParams extends GraphHopperBaseParams {
 }
 
 export interface GraphHopperRouteResponse {
+    hints?: { [k: string]: any }
     paths: GraphHopperRoutePath[]
     info: GraphHopperResponseInfo
 }
@@ -68,7 +69,7 @@ export interface GraphHopperMatrixResponse {
     hints?: GraphHopperMatrixHint[]
 }
 
-type GraphHopperProfile =
+export type GraphHopperProfile =
     | "car"
     | "car_delivery"
     | "car_avoid_ferry"
@@ -118,13 +119,14 @@ interface GraphHopperCustomModel {
 }
 
 type GraphHopperAlgorithm = "round_trip" | "alternative_route"
-interface GraphHopperRoutePath {
+export interface GraphHopperRoutePath {
     distance: number
     time: number
     ascend: number
     descend: number
     points: LineString | string
     snapped_waypoints: LineString | string
+    points_encoded: boolean
     bbox: [number, number, number, number]
     instructions: GraphHopperInstruction[]
     details: { [Property in keyof GraphHopperDetail]: any }

@@ -27,6 +27,7 @@ import {
     ValhallaRouteParams,
     ValhallaRouteResponse,
 } from "./valhalla/parameters"
+import { GraphHopperRouteParams } from "graphhopper/parameters"
 
 interface ClientInterface {
     readonly baseURL: string
@@ -92,7 +93,8 @@ class Client implements ClientInterface {
             | ValhallaRouteParams
             | ValhallaMatrixParams
             | ORSRouteParams
-            | ORSMatrixParams,
+            | ORSMatrixParams
+            | GraphHopperRouteParams,
         auth?: MapboxAuthParams,
         dryRun?: boolean
     ): Promise<
