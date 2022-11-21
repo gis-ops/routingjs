@@ -1,9 +1,6 @@
 import { Feature, Geometry } from "geojson"
-import { ORSIsochroneResponse } from "ors/parameters"
-import { ValhallaIsochroneResponse } from "valhalla/parameters"
 
-export class Isochrones<T = undefined> {
-    T: ORSIsochroneResponse | ValhallaIsochroneResponse
+export class Isochrones<T> {
     constructor(
         public readonly isochrones: Isochrone[],
         public readonly raw: T

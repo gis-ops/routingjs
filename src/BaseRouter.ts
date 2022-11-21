@@ -11,14 +11,14 @@ export interface BaseRouter {
         profile: string,
         directionsOpts?: { [k: string]: any },
         dryRun?: boolean
-    ) => Promise<Directions | string>
+    ) => Promise<Directions<Record<string, any>> | string>
 
     matrix: (
         locations: [number, number][],
         profile: string,
         matrixOpts?: { [k: string]: any },
         dryRun?: boolean
-    ) => Promise<Matrix | string>
+    ) => Promise<Matrix<Record<string, any>> | string>
 
     isochrones?: (
         location: [number, number],
@@ -26,5 +26,5 @@ export interface BaseRouter {
         intervals: number[],
         isochronesOpts?: { [k: string]: any },
         dryRun?: boolean
-    ) => Promise<Isochrones | string>
+    ) => Promise<Isochrones<Record<string, any>> | string>
 }

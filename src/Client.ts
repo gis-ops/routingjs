@@ -11,7 +11,11 @@ import axiosRetry, {
 } from "axios-retry"
 import { RoutingJSAPIError } from "error"
 import { FeatureCollection } from "geojson"
-import { ORSMatrixParams, ORSRouteParams } from "./ors/parameters"
+import {
+    ORSIsochroneParams,
+    ORSMatrixParams,
+    ORSRouteParams,
+} from "./ors/parameters"
 import options from "./options"
 import {
     OSRMRouteParams,
@@ -27,7 +31,11 @@ import {
     ValhallaRouteParams,
     ValhallaRouteResponse,
 } from "./valhalla/parameters"
-import { GraphHopperRouteParams } from "graphhopper/parameters"
+import {
+    GraphHopperIsochroneGetParams,
+    GraphHopperMatrixParams,
+    GraphHopperRouteParams,
+} from "graphhopper/parameters"
 
 interface ClientInterface {
     readonly baseURL: string
@@ -67,6 +75,10 @@ class Client implements ClientInterface {
 
         this.axiosInstance = axios.create(this.axiosOptions)
         this.proxy = additionalAxiosOpts?.proxy
+        this.axiosInstance.interceptors.request.use((request) => {
+            console.log("Starting Request", JSON.stringify(request, null, 2))
+            return request
+        })
 
         const retryOpts: IAxiosRetryConfig = {
             retries: maxRetries,
@@ -87,14 +99,24 @@ class Client implements ClientInterface {
 
     async request(
         url: string,
-        getParams?: Partial<OSRMRouteParams> | Partial<OSRMTableParams>,
+        getParams?:
+            | Partial<OSRMRouteParams>
+            | Partial<OSRMTableParams>
+            | (
+                  | {
+                        [k in keyof GraphHopperIsochroneGetParams]: GraphHopperIsochroneGetParams[k]
+                    }
+                  | { key: string }
+              ),
         postParams?:
             | ValhallaIsochroneParams
             | ValhallaRouteParams
             | ValhallaMatrixParams
             | ORSRouteParams
             | ORSMatrixParams
-            | GraphHopperRouteParams,
+            | ORSIsochroneParams
+            | GraphHopperRouteParams
+            | GraphHopperMatrixParams,
         auth?: MapboxAuthParams,
         dryRun?: boolean
     ): Promise<
@@ -141,6 +163,9 @@ class Client implements ClientInterface {
             `
                 return new Promise((resolve) => resolve(requestInfo))
             }
+            console.log(urlObj.toString())
+            console.log(getParams)
+
             return this.axiosInstance
                 .get(urlObj.toString(), {
                     params: getParams,

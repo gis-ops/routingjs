@@ -109,3 +109,4 @@ dist
 *.txt
 **/valhalla.json
 **/*-tiles*
+**/*.osm-gh/

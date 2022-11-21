@@ -1,10 +1,10 @@
 import { Feature, LineString } from "geojson"
-import { ORSRoute, ORSRouteResponse } from "./ors/parameters"
-import { OSRMRoute, OSRMRouteResponse } from "./osrm/parameters"
+import { GraphHopperRoutePath } from "graphhopper/parameters"
+import { ORSRoute } from "./ors/parameters"
+import { OSRMRoute } from "./osrm/parameters"
 import { ValhallaRouteResponse } from "./valhalla/parameters"
 
-export class Directions<T = undefined> {
-    T: ValhallaRouteResponse | OSRMRouteResponse | ORSRouteResponse
+export class Directions<T> {
     constructor(
         public readonly directions: Direction[],
         public readonly raw: T
@@ -21,6 +21,10 @@ export type DirectionFeat = Feature<LineString | null, DirectionProps>
 export class Direction {
     constructor(
         public readonly feature: DirectionFeat,
-        public readonly raw?: ValhallaRouteResponse | OSRMRoute | ORSRoute
+        public readonly raw?:
+            | ValhallaRouteResponse
+            | OSRMRoute
+            | ORSRoute
+            | GraphHopperRoutePath
     ) {}
 }

@@ -8,7 +8,7 @@ import { dirname } from "path"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-export default [".", "valhalla", "osrm", "ors"].map((pkg) => {
+export default [".", "valhalla", "osrm", "ors", "graphhopper"].map((pkg) => {
     const base = path.join(__dirname, "src", pkg)
     const outputFile =
         pkg === "." ? path.join(base, "..", "dist") : path.join(base, "dist")

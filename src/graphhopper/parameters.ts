@@ -32,10 +32,19 @@ export interface GraphHopperRouteParams extends GraphHopperBaseParams {
 
 export interface GraphHopperIsochroneParams extends GraphHopperBaseParams {
     point: [number, number]
-    time_limit: number
-    distance: number
-    buckets: number
-    reverse_flow: boolean
+    time_limit?: number
+    distance_limit?: number
+    buckets?: number
+    reverse_flow?: boolean
+}
+
+export interface GraphHopperIsochroneGetParams {
+    point: string
+    profile: string
+    distance_limit?: string
+    time_limit?: string
+    buckets?: string
+    reverse_flow?: string
 }
 
 export interface GraphHopperMatrixParams extends GraphHopperBaseParams {
@@ -57,14 +66,14 @@ export interface GraphHopperRouteResponse {
 }
 
 export interface GraphHopperIsochroneResponse {
-    polygons: Feature<Polygon, GraphHopperIsochroneProps>
+    polygons: Feature<Polygon, GraphHopperIsochroneProps>[]
     copyrights: string[]
 }
 
 export interface GraphHopperMatrixResponse {
-    distances?: number[]
-    times?: number[]
-    weights?: number[]
+    distances?: number[][]
+    times?: number[][]
+    weights?: number[][]
     info: GraphHopperResponseInfo
     hints?: GraphHopperMatrixHint[]
 }

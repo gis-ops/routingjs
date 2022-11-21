@@ -43,7 +43,7 @@ interface ValhallaBaseOpts {
     dateTime?: ValhallaDateTime
 }
 
-interface ValhallaDirectionOpts extends ValhallaBaseOpts {
+export interface ValhallaDirectionOpts extends ValhallaBaseOpts {
     instructions?: boolean
     alternatives?: number
     units?: ValhallaRequestUnit
