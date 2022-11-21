@@ -12,7 +12,7 @@ on:
 
 jobs:
     tests:
-        if: github.event.review.state == 'approved' ||  github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        #if: github.event.review.state == 'approved' ||  github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         runs-on: ubuntu-latest
         strategy:
             matrix:
@@ -20,7 +20,7 @@ jobs:
         steps:
             - name: Checkout
             - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+              uses: actions/setup-node@v3
               with:
                   node-version: "16.x"
             - name: Docker pull and create QGIS container
