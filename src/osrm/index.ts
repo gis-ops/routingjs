@@ -45,7 +45,6 @@ class OSRM implements BaseRouter {
         public readonly timeout: number = options.defaultTimeout,
         public readonly retryOverQueryLimit: boolean = false,
         public readonly maxRetries: number = options.defaultMaxRetries,
-        public readonly skipApiError: boolean = false,
         protected readonly axiosOpts?: AxiosRequestConfig
     ) {
         this.client = new Client(
@@ -55,7 +54,6 @@ class OSRM implements BaseRouter {
             retryOverQueryLimit,
             headers,
             maxRetries,
-            skipApiError,
             axiosOpts
         )
     }
@@ -74,9 +72,9 @@ class OSRM implements BaseRouter {
     ): Promise<string>
     public async directions(
         locations: [number, number][],
-        profile: string = "driving",
+        profile = "driving",
         directionsOpts: OSRMDirectionsOpts = {},
-        dryRun: boolean = false
+        dryRun = false
     ): Promise<Directions<OSRMRouteResponse> | string> {
         const coords = locations
             .map((tuple) => `${tuple[0]},${tuple[1]}`)
@@ -85,20 +83,18 @@ class OSRM implements BaseRouter {
         const params = OSRM.getDirectionParams(directionsOpts)
 
         return this.client
-            .request(
-                `/route/v1/${profile}/${coords}`,
-                params,
-                undefined,
-                undefined,
-                dryRun
-            )
+            .request({
+                endpoint: `/route/v1/${profile}/${coords}`,
+                getParams: params,
+                dryRun,
+            })
             .then((res) => {
                 return OSRM.parseDirectionsResponse(
                     res as OSRMRouteResponse
                 ) as Directions<OSRMRouteResponse>
             })
-            .catch((reason) => {
-                throw new RoutingJSError("Something went wrong")
+            .catch((error) => {
+                throw new RoutingJSError(error.message)
             })
     }
 
@@ -222,13 +218,11 @@ class OSRM implements BaseRouter {
         const params = OSRM.getMatrixParams(matrixOpts)
 
         return this.client
-            .request(
-                `/table/v1/${profile}/${coords}`,
-                params,
-                undefined,
-                undefined,
-                dryRun
-            )
+            .request({
+                endpoint: `/table/v1/${profile}/${coords}`,
+                getParams: params,
+                dryRun,
+            })
             .then((res) => {
                 return OSRM.parseMatrixResponse(
                     res as OSRMTableResponse

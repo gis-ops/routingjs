@@ -4,5 +4,5 @@
         "noEmit": true
     },
     "exclude": ["node_modules"],
-    "include": ["src", ".eslintrc.js"]
+    "include": ["src", ".eslintrc.cjs"]
 }

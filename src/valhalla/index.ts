@@ -76,7 +76,6 @@ class Valhalla implements BaseRouter {
         public readonly retryOverQueryLimit: boolean = false,
         public readonly headers?: { [k: string]: string },
         public readonly maxRetries: number = options.defaultMaxRetries,
-        public readonly skipApiError: boolean = false,
         protected readonly axiosOpts?: AxiosRequestConfig
     ) {
         this.client = new Client(
@@ -86,7 +85,6 @@ class Valhalla implements BaseRouter {
             retryOverQueryLimit,
             headers,
             maxRetries,
-            skipApiError,
             axiosOpts
         )
     }
@@ -107,7 +105,7 @@ class Valhalla implements BaseRouter {
         locations: [number, number][],
         profile: ValhallaCostingType,
         directionsOpts: ValhallaDirectionOpts = {},
-        dryRun: boolean = false
+        dryRun = false
     ): Promise<Directions<ValhallaRouteResponse> | string> {
         dryRun = dryRun || false
         const auth: MapboxAuthParams | undefined = this.apiKey
@@ -120,7 +118,7 @@ class Valhalla implements BaseRouter {
         )
 
         return this.client
-            .request("/route", undefined, params, auth, dryRun)
+            .request({ endpoint: "/route", postParams: params, auth, dryRun })
             .then((res) => {
                 if (typeof res === "object") {
                     return Valhalla.parseDirectionsResponse(
@@ -311,7 +309,12 @@ class Valhalla implements BaseRouter {
         )
 
         return this.client
-            .request("/isochrone", undefined, params, auth, dryRun)
+            .request({
+                endpoint: "/isochrone",
+                postParams: params,
+                auth,
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     return Valhalla.parseIsochroneResponse(
@@ -338,7 +341,7 @@ class Valhalla implements BaseRouter {
         isochroneOpts: ValhallaIsochroneOpts = {}
     ): ValhallaIsochroneParams {
         const contours: ValhallaContours[] = []
-        let [key, divisor]: ["time" | "distance", 60 | 1000] =
+        const [key, divisor]: ["time" | "distance", 60 | 1000] =
             isochroneOpts.intervalType !== undefined &&
             isochroneOpts.intervalType === "distance"
                 ? ["distance", 1000]
@@ -481,7 +484,12 @@ class Valhalla implements BaseRouter {
         const params = Valhalla.getMatrixParams(locations, profile, matrixOpts)
 
         return this.client
-            .request("/sources_to_targets", undefined, params, auth, dryRun)
+            .request({
+                endpoint: "/sources_to_targets",
+                postParams: params,
+                auth,
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     return Valhalla.parseMatrixResponse(

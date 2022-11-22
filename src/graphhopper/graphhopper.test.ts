@@ -2,7 +2,7 @@ import GraphHopper from "./index"
 
 describe("GraphHopper returns responses", () => {
     it("gets a directions response", async () => {
-        const g = new GraphHopper(undefined, "http://localhost:8989")
+        const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
         await g
             .directions(
                 [
@@ -21,22 +21,21 @@ describe("GraphHopper returns responses", () => {
                 )
 
                 expect(
-                    g.directions[0].feature.properties!.duration
+                    g.directions[0].feature.properties.duration
                 ).not.toBeNull()
 
                 expect(
-                    g.directions[0].feature.properties!.distance
+                    g.directions[0].feature.properties.distance
                 ).not.toBeNull()
             })
     })
 
-    it("gets an isocrones response", async () => {
-        const g = new GraphHopper(undefined, "http://localhost:8989")
+    it("gets an isochrones response", async () => {
+        const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
         await g.isochrones([1.53789, 42.51007], "car", [600]).then((i) => {
             console.log(i)
             expect(i.raw).toBeDefined()
             expect(i.isochrones).toHaveLength(1)
-            // expect(i.isochrones[0].feature.properties.buckets).toBeDefined()
         })
     })
 })

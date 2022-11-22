@@ -4,12 +4,13 @@ import axios, {
     AxiosRequestConfig,
     AxiosInstance,
     AxiosError,
+    AxiosResponse,
 } from "axios"
 import axiosRetry, {
     IAxiosRetryConfig,
     isNetworkOrIdempotentRequestError,
 } from "axios-retry"
-import { RoutingJSAPIError } from "error"
+import { RoutingJSAPIError, RoutingJSClientError } from "error"
 import { FeatureCollection } from "geojson"
 import {
     ORSIsochroneParams,
@@ -46,20 +47,78 @@ interface ClientInterface {
     readonly maxRetries?: number
 }
 
+/**
+ * Arguments passed to the client's request method.
+ */
+interface requestArgs {
+    /**
+     * @param endpoint - the endpoint the request is directed to. Is concatenated to the base URL
+     */
+    endpoint: string
+    /**
+     * @param getParams - parameters passed with a GET request
+     */
+    getParams?:
+        | Partial<OSRMRouteParams>
+        | Partial<OSRMTableParams>
+        | (
+              | {
+                    [k in keyof GraphHopperIsochroneGetParams]: GraphHopperIsochroneGetParams[k]
+                }
+              | { key: string }
+          )
+    /**
+     * @param postParams - parameters passed with a POST request */
+    postParams?:
+        | ValhallaIsochroneParams
+        | ValhallaRouteParams
+        | ValhallaMatrixParams
+        | ORSRouteParams
+        | ORSMatrixParams
+        | ORSIsochroneParams
+        | GraphHopperRouteParams
+        | GraphHopperMatrixParams
+    /**
+     *  @param auth - optional authentication parameter, currently only used for MapBox Valhalla
+     */
+    auth?: MapboxAuthParams
+    /**
+     * @param dryRun - if true, the actual request is not made, and instead returns a string
+     * containing information about the request to be made (including URL andparameters)
+     */
+    dryRun?: boolean
+}
+
+/**
+ * The client class from which all underlying requests to the routing eninges' servers are made.
+ *
+ * @public
+ *
+ */
 class Client implements ClientInterface {
     protected axiosInstance: Axios
     protected axiosOptions: AxiosRequestConfig
     public readonly proxy?: false | AxiosProxyConfig
-    //public readonly headers?: { [k: string]: string | number }
 
+    /**
+     * Create a new client instance
+     * @param baseURL - the base URL that requests will be made to
+     * @param userAgent - define a custom user agent to be passed in each request header
+     * @param timeout - the time to await a response
+     * @param retryOverQueryLimit - whether or not requests should be retried when
+     *        receiving a status 429 response
+     * @param headers - additional headers to be passed with each request
+     * @param maxRetries - the maximum number of retries made by axios-retry
+     * @param additionalAxiosOpts - any additional options that are passed to the axios instance
+     *
+     */
     constructor(
         public baseURL: string,
         public userAgent: string = options.defaultUserAgent,
         public readonly timeout = options.defaultTimeout,
-        public retryOverQueryLimit: boolean,
+        public retryOverQueryLimit: boolean = false,
         public readonly headers?: { [k: string]: string | number },
         public maxRetries: number = options.defaultMaxRetries,
-        public readonly skipAPIError: boolean = false,
         public additionalAxiosOpts?: AxiosRequestConfig
     ) {
         this.headers = {
@@ -75,10 +134,6 @@ class Client implements ClientInterface {
 
         this.axiosInstance = axios.create(this.axiosOptions)
         this.proxy = additionalAxiosOpts?.proxy
-        this.axiosInstance.interceptors.request.use((request) => {
-            console.log("Starting Request", JSON.stringify(request, null, 2))
-            return request
-        })
 
         const retryOpts: IAxiosRetryConfig = {
             retries: maxRetries,
@@ -97,28 +152,14 @@ class Client implements ClientInterface {
         axiosRetry(this.axiosInstance as AxiosInstance, retryOpts)
     }
 
+    /**
+     * The main request method. Decides whether a GET or POST request is to be made depending on
+     * the passed arguments.
+     *
+     * @param requestArgs - the parameters passed as an object
+     */
     async request(
-        url: string,
-        getParams?:
-            | Partial<OSRMRouteParams>
-            | Partial<OSRMTableParams>
-            | (
-                  | {
-                        [k in keyof GraphHopperIsochroneGetParams]: GraphHopperIsochroneGetParams[k]
-                    }
-                  | { key: string }
-              ),
-        postParams?:
-            | ValhallaIsochroneParams
-            | ValhallaRouteParams
-            | ValhallaMatrixParams
-            | ORSRouteParams
-            | ORSMatrixParams
-            | ORSIsochroneParams
-            | GraphHopperRouteParams
-            | GraphHopperMatrixParams,
-        auth?: MapboxAuthParams,
-        dryRun?: boolean
+        requestArgs: requestArgs
     ): Promise<
         | ValhallaRouteResponse
         | ValhallaMatrixResponse
@@ -127,7 +168,8 @@ class Client implements ClientInterface {
         | OSRMTableResponse
         | string
     > {
-        const urlObj = new URL(`${this.baseURL}${url}`)
+        const { endpoint, getParams, postParams, auth, dryRun } = requestArgs
+        const urlObj = new URL(`${this.baseURL}${endpoint}`)
         if (postParams !== undefined) {
             if (auth !== undefined) {
                 for (const [k, v] of Object.entries(auth)) {
@@ -163,21 +205,31 @@ class Client implements ClientInterface {
             `
                 return new Promise((resolve) => resolve(requestInfo))
             }
-            console.log(urlObj.toString())
-            console.log(getParams)
 
             return this.axiosInstance
                 .get(urlObj.toString(), {
                     params: getParams,
                 })
-                .catch((error) => {
-                    throw new RoutingJSAPIError(
-                        `Request failed with error message ${
-                            (error as AxiosError).status
-                        }: ${(error as AxiosError).message}`
-                    )
+                .catch((error: AxiosError) => {
+                    if (error.response) {
+                        throw new RoutingJSAPIError(
+                            `Request failed with status ${error.response.status}: ${error.message}`
+                        )
+                    } else if (error.request) {
+                        throw new RoutingJSAPIError(
+                            `Request failed with request ${JSON.stringify(
+                                error.request
+                            )}`
+                        )
+                    } else {
+                        // something must have gone wrong in the request setup
+                        throw new RoutingJSClientError(
+                            `Request failed with error ${error.name}.
+                             Message: ${error.message} `
+                        )
+                    }
                 })
-                .then((res) => res.data)
+                .then((res: AxiosResponse) => res.data)
         }
     }
 }

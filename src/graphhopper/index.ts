@@ -17,7 +17,6 @@ import {
 } from "graphhopper/parameters"
 import { Isochrone, Isochrones } from "Isochrone"
 import Matrix from "Matrix"
-import options from "options"
 
 export type GraphHopperDirectionsOpts = Omit<
     GraphHopperRouteParams,
@@ -41,35 +40,94 @@ export interface GraphHopperIsochroneOpts
     interval_type?: "time" | "distance"
 }
 
+interface GraphHopperClientArgs {
+    /**
+     * API key that is passed as part of the URL params
+     */
+    readonly apiKey?: string
+
+    /**
+     * Base URL that all requests are directed to. If not specified,
+     * the default public API at https://api.openrouteservice.org is used (API key required)
+     */
+    readonly baseUrl: string
+
+    /**
+     * overwrites the default user agent header.
+     */
+    readonly userAgent?: string
+
+    /**
+     * additional headers passed to be passed in the request
+     */
+    readonly headers?: { [k: string]: string }
+
+    /**
+     * Custom request timeout
+     */
+    readonly timeout?: number
+
+    /**
+     * Whether requests should be retried on status code 429 responses
+     */
+    readonly retryOverQueryLimit?: boolean
+
+    /**
+     * maximum number of retries performed by axios-retry
+     */
+    readonly maxRetries?: number
+
+    /**
+     * other options passed to the axios instance
+     */
+    readonly axiosOpts?: AxiosRequestConfig
+}
+
+/**
+ * Performs requests to the  GraphHopper API.
+ *
+ * For the full documentation, see  {@link https://docs.graphhopper.com}.
+ */
 class GraphHopper implements BaseRouter {
     client: Client
+    apiKey?: string
 
-    constructor(
-        public readonly apiKey?: string,
-        public readonly baseUrl: string = "https://graphhopper.com/api/1",
-        public readonly userAgent?: string,
-        public readonly headers?: { [k: string]: string },
-        public readonly timeout: number = options.defaultTimeout,
-        public readonly retryOverQueryLimit: boolean = false,
-        public readonly maxRetries: number = options.defaultMaxRetries,
-        public readonly skipApiError: boolean = false,
-        protected readonly axiosOpts?: AxiosRequestConfig
-    ) {
-        if (baseUrl === "https://api.openrouteservice.org" && !apiKey) {
+    constructor(graphHopperClientArgs: GraphHopperClientArgs) {
+        const {
+            apiKey,
+            baseUrl,
+            userAgent,
+            headers,
+            timeout,
+            retryOverQueryLimit,
+            maxRetries,
+            axiosOpts,
+        } = graphHopperClientArgs
+        this.apiKey = apiKey
+        const defaultURL = "https://api.openrouteservice.org"
+
+        if (baseUrl === undefined && !apiKey) {
             throw new RoutingJSError("Please provide an API key for ORS")
         }
 
         this.client = new Client(
-            baseUrl,
+            baseUrl || defaultURL,
             userAgent,
             timeout,
             retryOverQueryLimit,
             headers,
             maxRetries,
-            skipApiError,
             axiosOpts
         )
     }
+
+    /**
+     * Get directions between two or more points. For the complete documentation, please see {@link https://docs.graphhopper.com/#operation/postRoute}.
+     * @param locations - coordinate tuples in lat/lon format
+     * @param profile - one of {@link GraphHopperProfile}
+     * @param directionsOpts - optional parameters that are passed to the route endpoint. See {@link GraphHopperDirectionsOpts}
+     * @param dryRun - if true, the request will not be made and a request info string is returned instead
+     */
     directions(
         locations: [number, number][],
         profile: GraphHopperProfile,
@@ -90,18 +148,16 @@ class GraphHopper implements BaseRouter {
     ): Promise<string | Directions<GraphHopperRouteResponse>> {
         const params: GraphHopperRouteParams = {
             profile,
-            points: locations, //.map(([lat, lon]) => [lon, lat]), // reverse order for POST requests
+            points: locations,
             ...directionsOpts,
         }
 
         return this.client
-            .request(
-                `/route${this.apiKey ? "?key=" + this.apiKey : ""}`,
-                undefined,
-                params,
-                undefined,
-                dryRun
-            )
+            .request({
+                endpoint: `/route${this.apiKey ? "?key=" + this.apiKey : ""}`,
+                postParams: params,
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     return GraphHopper.parseDirectionsResponse(
@@ -167,7 +223,7 @@ class GraphHopper implements BaseRouter {
         isochronesOpts?: GraphHopperIsochroneOpts,
         dryRun?: boolean | undefined
     ): Promise<string | Isochrones<Record<string, any>>> {
-        let params: GraphHopperIsochroneGetParams = {
+        const params: GraphHopperIsochroneGetParams = {
             point: [location[1], location[0]].join(","),
             profile,
         }
@@ -188,13 +244,11 @@ class GraphHopper implements BaseRouter {
         }
 
         return this.client
-            .request(
-                `/isochrone`,
-                { ...params, key: this.apiKey },
-                undefined,
-                undefined,
-                dryRun
-            )
+            .request({
+                endpoint: `/isochrone`,
+                getParams: { ...params, key: this.apiKey },
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     return GraphHopper.parseIsochroneResponse(
@@ -265,13 +319,11 @@ class GraphHopper implements BaseRouter {
         }
 
         return this.client
-            .request(
-                `/matrix${this.apiKey ? "?key=" + this.apiKey : ""}`,
-                undefined,
-                params,
-                undefined,
-                dryRun
-            )
+            .request({
+                endpoint: `/matrix${this.apiKey ? "?key=" + this.apiKey : ""}`,
+                postParams: params,
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     return GraphHopper.parseMatrixResponse(

@@ -73,7 +73,6 @@ class ORS implements BaseRouter {
         public readonly timeout: number = options.defaultTimeout,
         public readonly retryOverQueryLimit: boolean = false,
         public readonly maxRetries: number = options.defaultMaxRetries,
-        public readonly skipApiError: boolean = false,
         protected readonly axiosOpts?: AxiosRequestConfig
     ) {
         if (baseUrl === "https://api.openrouteservice.org" && !apiKey) {
@@ -91,7 +90,6 @@ class ORS implements BaseRouter {
             retryOverQueryLimit,
             headers,
             maxRetries,
-            skipApiError,
             axiosOpts
         )
     }
@@ -118,8 +116,14 @@ class ORS implements BaseRouter {
     ): Promise<Directions<ORSRouteResponse> | string> {
         if (typeof directionsOpts.options === "object") {
             if (
-                directionsOpts.options.hasOwnProperty("restrictions") &&
-                !directionsOpts.options.hasOwnProperty("vehicle_type")
+                Object.prototype.hasOwnProperty.call(
+                    directionsOpts.options,
+                    "restrictions"
+                ) &&
+                !Object.prototype.hasOwnProperty.call(
+                    directionsOpts.options,
+                    "vehicle_type"
+                )
             ) {
                 throw new RoutingJSError(
                     "ORS: options.vehicle_type must be specified for driving-hgv if restrictions are set."
@@ -133,13 +137,11 @@ class ORS implements BaseRouter {
         }
 
         return this.client
-            .request(
-                `/v2/directions/${profile}/${format}`,
-                undefined,
-                params,
-                undefined,
-                dryRun
-            )
+            .request({
+                endpoint: `/v2/directions/${profile}/${format}`,
+                postParams: params,
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     return ORS.parseDirectionsResponse(
@@ -248,13 +250,11 @@ class ORS implements BaseRouter {
         }
 
         return this.client
-            .request(
-                `/v2/isochrones/${profile}`,
-                undefined,
-                params,
-                undefined,
-                dryRun
-            )
+            .request({
+                endpoint: `/v2/isochrones/${profile}`,
+                postParams: params,
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     return ORS.parseIsochroneResponse(
@@ -311,13 +311,11 @@ class ORS implements BaseRouter {
         }
 
         return this.client
-            .request(
-                `/v2/matrix/${profile}/json`,
-                undefined,
-                params,
-                undefined,
-                dryRun
-            )
+            .request({
+                endpoint: `/v2/matrix/${profile}/json`,
+                postParams: params,
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     return ORS.parseMatrixResponse(
