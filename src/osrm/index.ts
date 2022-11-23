@@ -21,7 +21,7 @@ interface OSRMBaseOpts {
     bearings?: ([number, number | null] | null)[]
 }
 
-interface OSRMDirectionsOpts extends OSRMBaseOpts {
+export interface OSRMDirectionsOpts extends OSRMBaseOpts {
     alternatives?: false | number
     steps?: boolean
     continueStraight?: boolean | "default"
@@ -30,7 +30,7 @@ interface OSRMDirectionsOpts extends OSRMBaseOpts {
     overview?: OSRMOverviewType
 }
 
-interface OSRMMatrixOpts extends OSRMDirectionsOpts {
+export interface OSRMMatrixOpts extends OSRMDirectionsOpts {
     sources?: number[]
     destinations?: number[]
 }
@@ -38,6 +38,7 @@ interface OSRMMatrixOpts extends OSRMDirectionsOpts {
 class OSRM implements BaseRouter {
     client: Client
     constructor(
+        // TODO: change signature to args obj
         public readonly baseUrl: string = "https://routing.openstreetmap.de/routed-bike",
         public readonly apiKey?: string,
         public readonly userAgent?: string,

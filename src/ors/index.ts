@@ -30,7 +30,7 @@ interface ORSBaseOpts {
     units?: ORSUnit
 }
 
-interface OSRMDirectionsOpts extends ORSBaseOpts {
+export interface ORSDirectionsOpts extends ORSBaseOpts {
     preference?: ORSPreference
     alternative_routes?: ORSAlternateRouteParam
     language?: string
@@ -50,12 +50,12 @@ interface OSRMDirectionsOpts extends ORSBaseOpts {
     options?: object
 }
 
-interface ORSMatrixOpts extends ORSBaseOpts {
+export interface ORSMatrixOpts extends ORSBaseOpts {
     metrics?: ("distance" | "duration")[]
     resolve_locations?: boolean
 }
 
-interface OSRIsochroneOpts extends ORSBaseOpts {
+export interface ORSIsochroneOpts extends ORSBaseOpts {
     interval_type?: "time" | "distance"
     location_type?: "start" | "destination"
     smoothing?: number
@@ -66,7 +66,7 @@ interface OSRIsochroneOpts extends ORSBaseOpts {
 class ORS implements BaseRouter {
     client: Client
     constructor(
-        public readonly apiKey?: string,
+        public readonly apiKey?: string, // FIXME change signature to args obj
         public readonly baseUrl: string = "https://api.openrouteservice.org",
         public readonly userAgent?: string,
         public readonly headers?: { [k: string]: string },
@@ -96,21 +96,21 @@ class ORS implements BaseRouter {
     directions(
         locations: [number, number][],
         profile: ORSProfile,
-        directionsOpts?: OSRMDirectionsOpts,
+        directionsOpts?: ORSDirectionsOpts,
         dryRun?: false,
         format?: ORSFormat
     ): Promise<Directions<ORSRouteResponse>>
     directions(
         locations: [number, number][],
         profile: ORSProfile,
-        directionsOpts: OSRMDirectionsOpts,
+        directionsOpts: ORSDirectionsOpts,
         dryRun: true,
         format?: ORSFormat
     ): Promise<string>
     public async directions(
         locations: [number, number][],
         profile: ORSProfile,
-        directionsOpts: OSRMDirectionsOpts = {},
+        directionsOpts: ORSDirectionsOpts = {},
         dryRun?: boolean,
         format: ORSFormat = "json"
     ): Promise<Directions<ORSRouteResponse> | string> {
@@ -221,21 +221,21 @@ class ORS implements BaseRouter {
         location: [number, number],
         profile: string,
         intervals: number[],
-        isochronesOpts?: OSRIsochroneOpts,
+        isochronesOpts?: ORSIsochroneOpts,
         dryRun?: false
     ): Promise<Isochrones<ORSIsochroneResponse>>
     isochrones(
         location: [number, number],
         profile: string,
         intervals: number[],
-        isochronesOpts: OSRIsochroneOpts,
+        isochronesOpts: ORSIsochroneOpts,
         dryRun: true
     ): Promise<string>
     async isochrones(
         location: [number, number],
         profile: string,
         intervals: number[],
-        isochronesOpts: OSRIsochroneOpts = {},
+        isochronesOpts: ORSIsochroneOpts = {},
         dryRun?: boolean
     ): Promise<Isochrones<ORSIsochroneResponse> | string> {
         const { interval_type, ...rest } = isochronesOpts

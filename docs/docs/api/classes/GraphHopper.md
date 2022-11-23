@@ -28,7 +28,7 @@ For the full documentation, see  [https://docs.graphhopper.com](https://docs.gra
 
 #### Defined in
 
-[graphhopper/index.ts:95](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L95)
+[graphhopper/index.ts:95](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L95)
 
 ## Properties
 
@@ -38,7 +38,7 @@ For the full documentation, see  [https://docs.graphhopper.com](https://docs.gra
 
 #### Defined in
 
-[graphhopper/index.ts:93](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L93)
+[graphhopper/index.ts:93](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L93)
 
 ___
 
@@ -52,7 +52,7 @@ BaseRouter.client
 
 #### Defined in
 
-[graphhopper/index.ts:92](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L92)
+[graphhopper/index.ts:92](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L92)
 
 ## Methods
 
@@ -81,7 +81,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[graphhopper/index.ts:131](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L131)
+[graphhopper/index.ts:131](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L131)
 
 ▸ **directions**(`locations`, `profile`, `directionsOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -104,7 +104,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[graphhopper/index.ts:137](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L137)
+[graphhopper/index.ts:137](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L137)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 | `location` | [`number`, `number`] |
 | `profile` | `GraphHopperProfile` |
 | `intervals` | [`number`] |
-| `isochronesOpts?` | `GraphHopperIsochroneOpts` |
+| `isochronesOpts?` | [`GraphHopperIsochroneOpts`](../interfaces/GraphHopperIsochroneOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
@@ -132,7 +132,7 @@ BaseRouter.isochrones
 
 #### Defined in
 
-[graphhopper/index.ts:205](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L205)
+[graphhopper/index.ts:205](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L205)
 
 ▸ **isochrones**(`location`, `profile`, `intervals`, `isochronesOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -143,7 +143,7 @@ BaseRouter.isochrones
 | `location` | [`number`, `number`] |
 | `profile` | `GraphHopperProfile` |
 | `intervals` | [`number`] |
-| `isochronesOpts` | `GraphHopperIsochroneOpts` |
+| `isochronesOpts` | [`GraphHopperIsochroneOpts`](../interfaces/GraphHopperIsochroneOpts.md) |
 | `dryRun` | ``true`` |
 
 #### Returns
@@ -156,7 +156,7 @@ BaseRouter.isochrones
 
 #### Defined in
 
-[graphhopper/index.ts:212](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L212)
+[graphhopper/index.ts:212](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L212)
 
 ___
 
@@ -170,7 +170,7 @@ ___
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `GraphHopperProfile` |
-| `matrixOpts?` | `GraphHopperMatrixOpts` |
+| `matrixOpts?` | [`GraphHopperMatrixOpts`](../interfaces/GraphHopperMatrixOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
@@ -183,7 +183,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[graphhopper/index.ts:283](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L283)
+[graphhopper/index.ts:283](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L283)
 
 ▸ **matrix**(`locations`, `profile`, `matrixOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -193,7 +193,7 @@ BaseRouter.matrix
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `GraphHopperProfile` |
-| `matrixOpts` | `GraphHopperMatrixOpts` |
+| `matrixOpts` | [`GraphHopperMatrixOpts`](../interfaces/GraphHopperMatrixOpts.md) |
 | `dryRun` | ``true`` |
 
 #### Returns
@@ -206,7 +206,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[graphhopper/index.ts:289](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L289)
+[graphhopper/index.ts:289](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L289)
 
 ___
 
@@ -226,7 +226,7 @@ ___
 
 #### Defined in
 
-[graphhopper/index.ts:172](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L172)
+[graphhopper/index.ts:172](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L172)
 
 ___
 
@@ -248,7 +248,7 @@ ___
 
 #### Defined in
 
-[graphhopper/index.ts:265](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L265)
+[graphhopper/index.ts:265](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L265)
 
 ___
 
@@ -268,4 +268,4 @@ ___
 
 #### Defined in
 
-[graphhopper/index.ts:338](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/graphhopper/index.ts#L338)
+[graphhopper/index.ts:338](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L338)

@@ -31,7 +31,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[osrm/index.ts:40](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L40)
+[osrm/index.ts:40](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L40)
 
 ## Properties
 
@@ -41,7 +41,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[osrm/index.ts:42](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L42)
+[osrm/index.ts:42](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L42)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:48](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L48)
+[osrm/index.ts:48](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L48)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:41](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L41)
+[osrm/index.ts:41](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L41)
 
 ___
 
@@ -75,7 +75,7 @@ BaseRouter.client
 
 #### Defined in
 
-[osrm/index.ts:39](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L39)
+[osrm/index.ts:39](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L39)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:44](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L44)
+[osrm/index.ts:44](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L44)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:47](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L47)
+[osrm/index.ts:47](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L47)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:46](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L46)
+[osrm/index.ts:46](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L46)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:45](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L45)
+[osrm/index.ts:45](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L45)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:43](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L43)
+[osrm/index.ts:43](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L43)
 
 ## Methods
 
@@ -143,7 +143,7 @@ ___
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `string` |
-| `directionsOpts?` | `OSRMDirectionsOpts` |
+| `directionsOpts?` | [`OSRMDirectionsOpts`](../interfaces/OSRMDirectionsOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
@@ -156,7 +156,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[osrm/index.ts:61](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L61)
+[osrm/index.ts:61](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L61)
 
 ▸ **directions**(`locations`, `profile`, `directionsOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -166,7 +166,7 @@ BaseRouter.directions
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `string` |
-| `directionsOpts` | `OSRMDirectionsOpts` |
+| `directionsOpts` | [`OSRMDirectionsOpts`](../interfaces/OSRMDirectionsOpts.md) |
 | `dryRun` | ``true`` |
 
 #### Returns
@@ -179,7 +179,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[osrm/index.ts:67](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L67)
+[osrm/index.ts:67](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L67)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `string` |
-| `matrixOpts?` | `OSRMMatrixOpts` |
+| `matrixOpts?` | [`OSRMMatrixOpts`](../interfaces/OSRMMatrixOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
@@ -206,7 +206,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[osrm/index.ts:196](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L196)
+[osrm/index.ts:196](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L196)
 
 ▸ **matrix**(`locations`, `profile`, `matrixOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -216,7 +216,7 @@ BaseRouter.matrix
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `string` |
-| `matrixOpts` | `OSRMMatrixOpts` |
+| `matrixOpts` | [`OSRMMatrixOpts`](../interfaces/OSRMMatrixOpts.md) |
 | `dryRun` | ``true`` |
 
 #### Returns
@@ -229,7 +229,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[osrm/index.ts:202](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L202)
+[osrm/index.ts:202](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L202)
 
 ___
 
@@ -241,7 +241,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `directionsOpts` | `OSRMDirectionsOpts` |
+| `directionsOpts` | [`OSRMDirectionsOpts`](../interfaces/OSRMDirectionsOpts.md) |
 
 #### Returns
 
@@ -249,7 +249,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:101](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L101)
+[osrm/index.ts:101](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L101)
 
 ___
 
@@ -261,7 +261,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `matrixOpts` | `OSRMMatrixOpts` |
+| `matrixOpts` | [`OSRMMatrixOpts`](../interfaces/OSRMMatrixOpts.md) |
 
 #### Returns
 
@@ -269,7 +269,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:236](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L236)
+[osrm/index.ts:236](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L236)
 
 ___
 
@@ -290,7 +290,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:152](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L152)
+[osrm/index.ts:152](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L152)
 
 ___
 
@@ -311,7 +311,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:175](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L175)
+[osrm/index.ts:175](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L175)
 
 ___
 
@@ -331,4 +331,4 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:269](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/osrm/index.ts#L269)
+[osrm/index.ts:269](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L269)

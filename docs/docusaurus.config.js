@@ -6,7 +6,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula")
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: "RoutingJS Documentation",
+    title: "Routing-JS Documentation",
     tagline: "Unified access to Open Source Routing Engines",
     url: "https://your-docusaurus-test-site.com",
     baseUrl: "/",
@@ -99,7 +99,7 @@ const config = {
                             },
                             {
                                 label: "GitHub",
-                                href: "https://github.com/gisops/routingjs",
+                                href: "https://github.com/gisops/routing-js",
                             },
                         ],
                     },
@@ -117,7 +117,13 @@ const config = {
 
             // Plugin / TypeDoc options
             {
-                entryPoints: ["../src/index.ts"],
+                entryPoints: [
+                    "../src/index.ts",
+                    // "../src/valhalla/index.ts",
+                    // "../src/graphhopper/index.ts",
+                    // "../src/ors/index.ts",
+                    // "../src/osrm/index.ts",
+                ],
                 tsconfig: "../tsconfig.json",
             },
         ],

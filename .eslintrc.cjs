@@ -12,7 +12,7 @@ module.exports = {
     },
     plugins: ["@typescript-eslint", "eslint-plugin-tsdoc"],
     rules: {
-        "tsdoc/syntax": "error",
+        "tsdoc/syntax": "warn",
         "@typescript-eslint/no-extra-semi": "off",
     },
     extends: [

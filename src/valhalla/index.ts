@@ -30,16 +30,47 @@ import { Isochrone, Isochrones } from "../Isochrone"
 import { RoutingJSError } from "error"
 
 interface ValhallaBaseOpts {
+    /** A request ID that will be returned in the response */
     id?: string
+    /**
+     * Convenience argument to set the cost metric, one of ['shortest', 'fastest']. Note,
+            that shortest is not guaranteed to be absolute shortest for motor vehicle profiles. It's called ``preference``
+            to be in line with the already existing parameter in the ORS adapter.
+     */
     preference?: "shortest" | "fastest"
+    /**
+     * Profiles can have several options that can be adjusted to develop the route path,
+            as well as for estimating time along the path. Only specify the actual options dict, the profile
+            will be filled automatically. For more information, visit:
+            https://github.com/valhalla/valhalla/blob/master/docs/api/turn-by-turn/api-reference.md#costing-options
+     */
     costingOpts?:
         | ValhallaCostingOptsAuto
         | ValhallaCostingOptsTruck
         | ValhallaCostingOptsBicycle
         | ValhallaCostingOptsMotorcycle
         | ValhallaCostingOptsPedestrian
+    /**
+     * A set of locations to exclude or avoid within a route.
+     */
     avoidLocations?: ([number, number] | Point | Feature<Point, any>)[]
+    /**
+     * Roads intersecting these polygons
+            will be avoided during path finding. If you only need to avoid a few specific roads, it's much more
+            efficient to use avoid_locations. Valhalla will close open rings (i.e. copy the first coordingate to the
+            last position).
+     */
     avoidPolygons?: ([number, number][][] | Polygon | Feature<Polygon, any>)[]
+    /**
+     * This is the local date and time at the location. Field `type`: 0: Current departure time,
+       1: Specified departure time. Field `value`: the date and time is specified
+       in ISO 8601 format (YYYY-MM-DDThh:mm), local time.
+
+        @example
+        ```js
+        date_time = {type: 0, value: 2021-03-03T08:06:23}
+        ```
+     */
     dateTime?: ValhallaDateTime
 }
 
@@ -51,7 +82,7 @@ export interface ValhallaDirectionOpts extends ValhallaBaseOpts {
     directionsType?: ValhallaDirectionsType
 }
 
-interface ValhallaIsochroneOpts extends ValhallaBaseOpts {
+export interface ValhallaIsochroneOpts extends ValhallaBaseOpts {
     intervalType?: "time" | "distance"
     colors?: string[]
     polygons?: boolean
@@ -60,7 +91,7 @@ interface ValhallaIsochroneOpts extends ValhallaBaseOpts {
     showLocations?: boolean
 }
 
-interface ValhallaMatrixOpts extends ValhallaBaseOpts {
+export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
     sources?: number[]
     destinations?: number[]
     units?: ValhallaRequestUnit
@@ -69,6 +100,7 @@ interface ValhallaMatrixOpts extends ValhallaBaseOpts {
 class Valhalla implements BaseRouter {
     client: Client
     constructor(
+        // TODO: change signature to args obj
         public readonly baseUrl: string = "https://valhalla1.openstreetmap.de",
         public readonly apiKey?: string,
         public readonly userAgent?: string,

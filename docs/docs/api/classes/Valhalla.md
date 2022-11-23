@@ -31,7 +31,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[valhalla/index.ts:71](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L71)
+[valhalla/index.ts:102](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L102)
 
 ## Properties
 
@@ -41,7 +41,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[valhalla/index.ts:73](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L73)
+[valhalla/index.ts:104](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L104)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:79](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L79)
+[valhalla/index.ts:110](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L110)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:72](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L72)
+[valhalla/index.ts:103](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L103)
 
 ___
 
@@ -75,7 +75,7 @@ BaseRouter.client
 
 #### Defined in
 
-[valhalla/index.ts:70](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L70)
+[valhalla/index.ts:101](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L101)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:77](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L77)
+[valhalla/index.ts:108](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L108)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:78](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L78)
+[valhalla/index.ts:109](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L109)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:76](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L76)
+[valhalla/index.ts:107](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L107)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:75](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L75)
+[valhalla/index.ts:106](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L106)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:74](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L74)
+[valhalla/index.ts:105](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L105)
 
 ## Methods
 
@@ -143,7 +143,7 @@ ___
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `ValhallaCostingType` |
-| `directionsOpts?` | `ValhallaDirectionOpts` |
+| `directionsOpts?` | [`ValhallaDirectionOpts`](../interfaces/ValhallaDirectionOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
@@ -156,7 +156,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[valhalla/index.ts:92](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L92)
+[valhalla/index.ts:123](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L123)
 
 ▸ **directions**(`locations`, `profile`, `directionsOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -166,7 +166,7 @@ BaseRouter.directions
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `ValhallaCostingType` |
-| `directionsOpts` | `ValhallaDirectionOpts` |
+| `directionsOpts` | [`ValhallaDirectionOpts`](../interfaces/ValhallaDirectionOpts.md) |
 | `dryRun` | ``true`` |
 
 #### Returns
@@ -179,7 +179,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[valhalla/index.ts:98](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L98)
+[valhalla/index.ts:129](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L129)
 
 ___
 
@@ -194,7 +194,7 @@ ___
 | `location` | [`number`, `number`] |
 | `profile` | `ValhallaCostingType` |
 | `intervals` | `number`[] |
-| `isochronesOpts?` | `ValhallaIsochroneOpts` |
+| `isochronesOpts?` | [`ValhallaIsochroneOpts`](../interfaces/ValhallaIsochroneOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
@@ -207,7 +207,7 @@ BaseRouter.isochrones
 
 #### Defined in
 
-[valhalla/index.ts:280](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L280)
+[valhalla/index.ts:311](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L311)
 
 ▸ **isochrones**(`location`, `profile`, `intervals`, `isochronesOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -218,7 +218,7 @@ BaseRouter.isochrones
 | `location` | [`number`, `number`] |
 | `profile` | `ValhallaCostingType` |
 | `intervals` | `number`[] |
-| `isochronesOpts` | `ValhallaIsochroneOpts` |
+| `isochronesOpts` | [`ValhallaIsochroneOpts`](../interfaces/ValhallaIsochroneOpts.md) |
 | `dryRun` | ``true`` |
 
 #### Returns
@@ -231,7 +231,7 @@ BaseRouter.isochrones
 
 #### Defined in
 
-[valhalla/index.ts:287](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L287)
+[valhalla/index.ts:318](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L318)
 
 ___
 
@@ -245,7 +245,7 @@ ___
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `ValhallaCostingType` |
-| `matrixOpts?` | `ValhallaMatrixOpts` |
+| `matrixOpts?` | [`ValhallaMatrixOpts`](../interfaces/ValhallaMatrixOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
@@ -258,7 +258,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[valhalla/index.ts:463](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L463)
+[valhalla/index.ts:494](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L494)
 
 ▸ **matrix**(`locations`, `profile`, `matrixOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -268,7 +268,7 @@ BaseRouter.matrix
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `ValhallaCostingType` |
-| `matrixOpts` | `ValhallaMatrixOpts` |
+| `matrixOpts` | [`ValhallaMatrixOpts`](../interfaces/ValhallaMatrixOpts.md) |
 | `dryRun` | ``true`` |
 
 #### Returns
@@ -281,7 +281,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[valhalla/index.ts:469](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L469)
+[valhalla/index.ts:500](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L500)
 
 ___
 
@@ -301,7 +301,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:618](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L618)
+[valhalla/index.ts:649](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L649)
 
 ___
 
@@ -315,7 +315,7 @@ ___
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `ValhallaCostingType` |
-| `directionsOpts` | `ValhallaDirectionOpts` |
+| `directionsOpts` | [`ValhallaDirectionOpts`](../interfaces/ValhallaDirectionOpts.md) |
 
 #### Returns
 
@@ -323,7 +323,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:136](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L136)
+[valhalla/index.ts:167](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L167)
 
 ___
 
@@ -338,7 +338,7 @@ ___
 | `location` | [`number`, `number`] |
 | `profile` | `ValhallaCostingType` |
 | `intervals` | `number`[] |
-| `isochroneOpts` | `ValhallaIsochroneOpts` |
+| `isochroneOpts` | [`ValhallaIsochroneOpts`](../interfaces/ValhallaIsochroneOpts.md) |
 
 #### Returns
 
@@ -346,7 +346,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:337](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L337)
+[valhalla/index.ts:368](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L368)
 
 ___
 
@@ -360,7 +360,7 @@ ___
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
 | `profile` | `ValhallaCostingType` |
-| `matrixOpts` | `ValhallaMatrixOpts` |
+| `matrixOpts` | [`ValhallaMatrixOpts`](../interfaces/ValhallaMatrixOpts.md) |
 
 #### Returns
 
@@ -368,7 +368,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:508](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L508)
+[valhalla/index.ts:539](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L539)
 
 ___
 
@@ -389,7 +389,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:228](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L228)
+[valhalla/index.ts:259](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L259)
 
 ___
 
@@ -412,7 +412,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:441](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L441)
+[valhalla/index.ts:472](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L472)
 
 ___
 
@@ -433,4 +433,4 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:598](https://github.com/chrstnbwnkl/routing-js/blob/dcef747/src/valhalla/index.ts#L598)
+[valhalla/index.ts:629](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L629)
