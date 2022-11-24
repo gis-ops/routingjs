@@ -8,7 +8,7 @@ custom_edit_url: null
 
 ## Hierarchy
 
-- `Omit`<`GraphHopperIsochroneParams`, ``"point"`` \| ``"profile"`` \| ``"time_limit"`` \| ``"distance_limit"``\>
+- `Omit`<[`GraphHopperIsochroneParams`](GraphHopperIsochroneParams.md), ``"point"`` \| ``"profile"`` \| ``"time_limit"`` \| ``"distance_limit"``\>
 
   ↳ **`GraphHopperIsochroneOpts`**
 
@@ -24,7 +24,7 @@ Omit.buckets
 
 #### Defined in
 
-[graphhopper/parameters.ts:37](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L37)
+[src/graphhopper/parameters.ts:37](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L37)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[graphhopper/index.ts:40](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L40)
+[src/graphhopper/index.ts:39](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L39)
 
 ___
 
@@ -48,4 +48,4 @@ Omit.reverse\_flow
 
 #### Defined in
 
-[graphhopper/parameters.ts:38](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L38)
+[src/graphhopper/parameters.ts:38](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L38)

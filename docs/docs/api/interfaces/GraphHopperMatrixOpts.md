@@ -8,7 +8,7 @@ custom_edit_url: null
 
 ## Hierarchy
 
-- `Omit`<`GraphHopperMatrixParams`, ``"from_points"`` \| ``"to_points"`` \| ``"profile"``\>
+- `Omit`<[`GraphHopperMatrixParams`](GraphHopperMatrixParams.md), ``"from_points"`` \| ``"to_points"`` \| ``"profile"``\>
 
   ↳ **`GraphHopperMatrixOpts`**
 
@@ -20,7 +20,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[graphhopper/index.ts:32](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L32)
+[src/graphhopper/index.ts:31](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L31)
 
 ___
 
@@ -34,7 +34,7 @@ Omit.fail\_fast
 
 #### Defined in
 
-[graphhopper/parameters.ts:59](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L59)
+[src/graphhopper/parameters.ts:59](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L59)
 
 ___
 
@@ -48,7 +48,7 @@ Omit.from\_curbsides
 
 #### Defined in
 
-[graphhopper/parameters.ts:56](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L56)
+[src/graphhopper/parameters.ts:56](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L56)
 
 ___
 
@@ -62,7 +62,7 @@ Omit.from\_point\_hints
 
 #### Defined in
 
-[graphhopper/parameters.ts:53](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L53)
+[src/graphhopper/parameters.ts:53](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L53)
 
 ___
 
@@ -76,7 +76,7 @@ Omit.out\_arrays
 
 #### Defined in
 
-[graphhopper/parameters.ts:58](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L58)
+[src/graphhopper/parameters.ts:58](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L58)
 
 ___
 
@@ -90,7 +90,7 @@ Omit.snap\_preventions
 
 #### Defined in
 
-[graphhopper/parameters.ts:55](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L55)
+[src/graphhopper/parameters.ts:55](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L55)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[graphhopper/index.ts:31](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L31)
+[src/graphhopper/index.ts:30](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L30)
 
 ___
 
@@ -114,7 +114,7 @@ Omit.to\_curbsides
 
 #### Defined in
 
-[graphhopper/parameters.ts:57](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L57)
+[src/graphhopper/parameters.ts:57](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L57)
 
 ___
 
@@ -128,4 +128,4 @@ Omit.to\_point\_hints
 
 #### Defined in
 
-[graphhopper/parameters.ts:54](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/parameters.ts#L54)
+[src/graphhopper/parameters.ts:54](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/parameters.ts#L54)

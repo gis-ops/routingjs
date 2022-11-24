@@ -26,7 +26,7 @@ ValhallaBaseOpts.avoidLocations
 
 #### Defined in
 
-[valhalla/index.ts:56](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L56)
+[src/valhalla/index.ts:54](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L54)
 
 ___
 
@@ -45,13 +45,13 @@ ValhallaBaseOpts.avoidPolygons
 
 #### Defined in
 
-[valhalla/index.ts:63](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L63)
+[src/valhalla/index.ts:61](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L61)
 
 ___
 
 ### costingOpts
 
-• `Optional` **costingOpts**: `ValhallaCostingOptsAuto` \| `ValhallaCostingOptsTruck` \| `ValhallaCostingOptsBicycle` \| `ValhallaCostingOptsMotorcycle` \| `ValhallaCostingOptsPedestrian`
+• `Optional` **costingOpts**: [`ValhallaCostingOptsAuto`](ValhallaCostingOptsAuto.md) \| [`ValhallaCostingOptsTruck`](ValhallaCostingOptsTruck.md) \| [`ValhallaCostingOptsBicycle`](ValhallaCostingOptsBicycle.md) \| [`ValhallaCostingOptsMotorcycle`](ValhallaCostingOptsMotorcycle.md) \| [`ValhallaCostingOptsPedestrian`](ValhallaCostingOptsPedestrian.md)
 
 Profiles can have several options that can be adjusted to develop the route path,
        as well as for estimating time along the path. Only specify the actual options dict, the profile
@@ -64,13 +64,13 @@ ValhallaBaseOpts.costingOpts
 
 #### Defined in
 
-[valhalla/index.ts:47](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L47)
+[src/valhalla/index.ts:45](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L45)
 
 ___
 
 ### dateTime
 
-• `Optional` **dateTime**: `ValhallaDateTime`
+• `Optional` **dateTime**: [`ValhallaDateTime`](ValhallaDateTime.md)
 
 This is the local date and time at the location. Field `type`: 0: Current departure time,
   1: Specified departure time. Field `value`: the date and time is specified
@@ -88,7 +88,7 @@ ValhallaBaseOpts.dateTime
 
 #### Defined in
 
-[valhalla/index.ts:74](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L74)
+[src/valhalla/index.ts:72](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L72)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:96](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L96)
+[src/valhalla/index.ts:142](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L142)
 
 ___
 
@@ -114,7 +114,7 @@ ValhallaBaseOpts.id
 
 #### Defined in
 
-[valhalla/index.ts:34](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L34)
+[src/valhalla/index.ts:32](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L32)
 
 ___
 
@@ -132,7 +132,7 @@ ValhallaBaseOpts.preference
 
 #### Defined in
 
-[valhalla/index.ts:40](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L40)
+[src/valhalla/index.ts:38](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L38)
 
 ___
 
@@ -142,14 +142,14 @@ ___
 
 #### Defined in
 
-[valhalla/index.ts:95](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L95)
+[src/valhalla/index.ts:141](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L141)
 
 ___
 
 ### units
 
-• `Optional` **units**: `ValhallaRequestUnit`
+• `Optional` **units**: [`ValhallaRequestUnit`](../modules.md#valhallarequestunit)
 
 #### Defined in
 
-[valhalla/index.ts:97](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L97)
+[src/valhalla/index.ts:143](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L143)

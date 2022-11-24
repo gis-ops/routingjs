@@ -82,10 +82,11 @@ class GraphHopper implements BaseRouter {
 
     /**
      * Get directions between two or more points. For the complete documentation, please see {@link https://docs.graphhopper.com/#operation/postRoute}.
+     *
      * @param locations - coordinate tuples in lat/lon format
      * @param profile - one of {@link GraphHopperProfile}
      * @param directionsOpts - optional parameters that are passed to the route endpoint. See {@link GraphHopperDirectionsOpts}
-     * @param dryRun - if true, the request will not be made and a request info string is returned instead
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
      */
     directions(
         locations: [number, number][],
@@ -127,7 +128,11 @@ class GraphHopper implements BaseRouter {
                 }
             })
     }
-
+    /**
+     *
+     * @param response - the response from the server
+     * @returns a new {@link Directions} object
+     */
     public static parseDirectionsResponse(
         response: GraphHopperRouteResponse
     ): Directions<GraphHopperRouteResponse> {
@@ -161,6 +166,18 @@ class GraphHopper implements BaseRouter {
         )
     }
 
+    /**
+     * Gets isochrones or equidistants for a range of time/distance values around a given set of coordinates.
+     *
+     *
+     * @param location - One coordinate pair denoting the location.
+     * @param profile - Specifies the mode of transport.
+     * @param intervals - Maximum range to calculate distances/durations for. You can also specify the `buckets` variable to break the single value into more isochrones. For compatibility reasons, this parameter is expressed as list. In meters or seconds depending on `interval_type`.
+     * @param isochronesOpts - additional options specific to the isochrone endpoint.
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
+     *
+     * @see {@link https://docs.graphhopper.com/#tag/Isochrone-API} for the full documentation.
+     */
     isochrones(
         location: [number, number],
         profile: GraphHopperProfile,
@@ -221,6 +238,14 @@ class GraphHopper implements BaseRouter {
             })
     }
 
+    /**
+     * Parses an isochrone response and returns an {@link Isochrones} object.
+     *
+     * @param response - a graphhopper isochrone response
+     * @param center - the originally requested location
+     * @param intervalType - whether isodistances or isochrones were requested
+     * @returns a new Isochrones instance
+     */
     public static parseIsochroneResponse(
         response: GraphHopperIsochroneResponse,
         center: [number, number],
@@ -239,6 +264,16 @@ class GraphHopper implements BaseRouter {
         )
     }
 
+    /**
+     * Make a request to the `/matrix` endpoint.
+     *
+     * @param locations - Specify multiple points for which the weight-, route-, time- or distance-matrix should be calculated. In this case the starts are identical to the destinations. If there are N points, then NxN entries will be calculated.
+     * @param profile - Specifies the mode of transport.
+     * @param matrixOpts - additional options specific to the matrix endpoint
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
+     *
+     * @see {@link https://docs.graphhopper.com/#tag/Matrix-API} for the full documentation.
+     */
     matrix(
         locations: [number, number][],
         profile: GraphHopperProfile,
@@ -294,6 +329,12 @@ class GraphHopper implements BaseRouter {
             })
     }
 
+    /**
+     * Parse a matrix response.
+     *
+     * @param response - a GraphHopper Matrix response
+     * @returns a new Matrix instance
+     */
     public static parseMatrixResponse(
         response: GraphHopperMatrixResponse
     ): Matrix<GraphHopperMatrixResponse> {
@@ -306,3 +347,4 @@ class GraphHopper implements BaseRouter {
 }
 
 export default GraphHopper
+export * from "./parameters"

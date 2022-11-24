@@ -6,7 +6,8 @@ sidebar_position: 0
 custom_edit_url: null
 ---
 
-Performs requests to the  GraphHopper API.
+Performs requests to the  GraphHopper API. Default public URL is
+https://api.openrouteservice.org.
 
 For the full documentation, see  [https://docs.graphhopper.com](https://docs.graphhopper.com).
 
@@ -18,17 +19,17 @@ For the full documentation, see  [https://docs.graphhopper.com](https://docs.gra
 
 ### constructor
 
-• **new GraphHopper**(`graphHopperClientArgs`)
+• **new GraphHopper**(`clientArgs`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `graphHopperClientArgs` | `GraphHopperClientArgs` |
+| `clientArgs` | `ClientConstructorArgs` |
 
 #### Defined in
 
-[graphhopper/index.ts:95](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L95)
+[src/graphhopper/index.ts:52](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L52)
 
 ## Properties
 
@@ -38,7 +39,7 @@ For the full documentation, see  [https://docs.graphhopper.com](https://docs.gra
 
 #### Defined in
 
-[graphhopper/index.ts:93](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L93)
+[src/graphhopper/index.ts:50](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L50)
 
 ___
 
@@ -52,13 +53,13 @@ BaseRouter.client
 
 #### Defined in
 
-[graphhopper/index.ts:92](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L92)
+[src/graphhopper/index.ts:49](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L49)
 
 ## Methods
 
 ### directions
 
-▸ **directions**(`locations`, `profile`, `directionsOpts?`, `dryRun?`): `Promise`<`Directions`<`GraphHopperRouteResponse`\>\>
+▸ **directions**(`locations`, `profile`, `directionsOpts?`, `dryRun?`): `Promise`<`Directions`<[`GraphHopperRouteResponse`](../interfaces/GraphHopperRouteResponse.md)\>\>
 
 Get directions between two or more points. For the complete documentation, please see [https://docs.graphhopper.com/#operation/postRoute](https://docs.graphhopper.com/#operation/postRoute).
 
@@ -67,13 +68,13 @@ Get directions between two or more points. For the complete documentation, pleas
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `locations` | [`number`, `number`][] | coordinate tuples in lat/lon format |
-| `profile` | `GraphHopperProfile` | one of GraphHopperProfile |
+| `profile` | [`GraphHopperProfile`](../modules.md#graphhopperprofile) | one of [GraphHopperProfile](../modules.md#graphhopperprofile) |
 | `directionsOpts?` | [`GraphHopperDirectionsOpts`](../modules.md#graphhopperdirectionsopts) | optional parameters that are passed to the route endpoint. See [GraphHopperDirectionsOpts](../modules.md#graphhopperdirectionsopts) |
-| `dryRun?` | ``false`` | if true, the request will not be made and a request info string is returned instead |
+| `dryRun?` | ``false`` | if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging |
 
 #### Returns
 
-`Promise`<`Directions`<`GraphHopperRouteResponse`\>\>
+`Promise`<`Directions`<[`GraphHopperRouteResponse`](../interfaces/GraphHopperRouteResponse.md)\>\>
 
 #### Implementation of
 
@@ -81,7 +82,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[graphhopper/index.ts:131](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L131)
+[src/graphhopper/index.ts:90](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L90)
 
 ▸ **directions**(`locations`, `profile`, `directionsOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -90,7 +91,7 @@ BaseRouter.directions
 | Name | Type |
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
-| `profile` | `GraphHopperProfile` |
+| `profile` | [`GraphHopperProfile`](../modules.md#graphhopperprofile) |
 | `directionsOpts` | [`GraphHopperDirectionsOpts`](../modules.md#graphhopperdirectionsopts) |
 | `dryRun` | ``true`` |
 
@@ -104,27 +105,27 @@ BaseRouter.directions
 
 #### Defined in
 
-[graphhopper/index.ts:137](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L137)
+[src/graphhopper/index.ts:96](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L96)
 
 ___
 
 ### isochrones
 
-▸ **isochrones**(`location`, `profile`, `intervals`, `isochronesOpts?`, `dryRun?`): `Promise`<`Isochrones`<`GraphHopperIsochroneResponse`\>\>
+▸ **isochrones**(`location`, `profile`, `intervals`, `isochronesOpts?`, `dryRun?`): `Promise`<`Isochrones`<[`GraphHopperIsochroneResponse`](../interfaces/GraphHopperIsochroneResponse.md)\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `location` | [`number`, `number`] |
-| `profile` | `GraphHopperProfile` |
+| `profile` | [`GraphHopperProfile`](../modules.md#graphhopperprofile) |
 | `intervals` | [`number`] |
 | `isochronesOpts?` | [`GraphHopperIsochroneOpts`](../interfaces/GraphHopperIsochroneOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
 
-`Promise`<`Isochrones`<`GraphHopperIsochroneResponse`\>\>
+`Promise`<`Isochrones`<[`GraphHopperIsochroneResponse`](../interfaces/GraphHopperIsochroneResponse.md)\>\>
 
 #### Implementation of
 
@@ -132,7 +133,7 @@ BaseRouter.isochrones
 
 #### Defined in
 
-[graphhopper/index.ts:205](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L205)
+[src/graphhopper/index.ts:164](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L164)
 
 ▸ **isochrones**(`location`, `profile`, `intervals`, `isochronesOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -141,7 +142,7 @@ BaseRouter.isochrones
 | Name | Type |
 | :------ | :------ |
 | `location` | [`number`, `number`] |
-| `profile` | `GraphHopperProfile` |
+| `profile` | [`GraphHopperProfile`](../modules.md#graphhopperprofile) |
 | `intervals` | [`number`] |
 | `isochronesOpts` | [`GraphHopperIsochroneOpts`](../interfaces/GraphHopperIsochroneOpts.md) |
 | `dryRun` | ``true`` |
@@ -156,26 +157,26 @@ BaseRouter.isochrones
 
 #### Defined in
 
-[graphhopper/index.ts:212](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L212)
+[src/graphhopper/index.ts:171](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L171)
 
 ___
 
 ### matrix
 
-▸ **matrix**(`locations`, `profile`, `matrixOpts?`, `dryRun?`): `Promise`<`Matrix`<`GraphHopperMatrixResponse`\>\>
+▸ **matrix**(`locations`, `profile`, `matrixOpts?`, `dryRun?`): `Promise`<`Matrix`<[`GraphHopperMatrixResponse`](../interfaces/GraphHopperMatrixResponse.md)\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
-| `profile` | `GraphHopperProfile` |
+| `profile` | [`GraphHopperProfile`](../modules.md#graphhopperprofile) |
 | `matrixOpts?` | [`GraphHopperMatrixOpts`](../interfaces/GraphHopperMatrixOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
 
-`Promise`<`Matrix`<`GraphHopperMatrixResponse`\>\>
+`Promise`<`Matrix`<[`GraphHopperMatrixResponse`](../interfaces/GraphHopperMatrixResponse.md)\>\>
 
 #### Implementation of
 
@@ -183,7 +184,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[graphhopper/index.ts:283](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L283)
+[src/graphhopper/index.ts:242](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L242)
 
 ▸ **matrix**(`locations`, `profile`, `matrixOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -192,7 +193,7 @@ BaseRouter.matrix
 | Name | Type |
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
-| `profile` | `GraphHopperProfile` |
+| `profile` | [`GraphHopperProfile`](../modules.md#graphhopperprofile) |
 | `matrixOpts` | [`GraphHopperMatrixOpts`](../interfaces/GraphHopperMatrixOpts.md) |
 | `dryRun` | ``true`` |
 
@@ -206,66 +207,66 @@ BaseRouter.matrix
 
 #### Defined in
 
-[graphhopper/index.ts:289](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L289)
+[src/graphhopper/index.ts:248](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L248)
 
 ___
 
 ### parseDirectionsResponse
 
-▸ `Static` **parseDirectionsResponse**(`response`): `Directions`<`GraphHopperRouteResponse`\>
+▸ `Static` **parseDirectionsResponse**(`response`): `Directions`<[`GraphHopperRouteResponse`](../interfaces/GraphHopperRouteResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `response` | `GraphHopperRouteResponse` |
+| `response` | [`GraphHopperRouteResponse`](../interfaces/GraphHopperRouteResponse.md) |
 
 #### Returns
 
-`Directions`<`GraphHopperRouteResponse`\>
+`Directions`<[`GraphHopperRouteResponse`](../interfaces/GraphHopperRouteResponse.md)\>
 
 #### Defined in
 
-[graphhopper/index.ts:172](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L172)
+[src/graphhopper/index.ts:131](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L131)
 
 ___
 
 ### parseIsochroneResponse
 
-▸ `Static` **parseIsochroneResponse**(`response`, `center`, `intervalType`): `Isochrones`<`GraphHopperIsochroneResponse`\>
+▸ `Static` **parseIsochroneResponse**(`response`, `center`, `intervalType`): `Isochrones`<[`GraphHopperIsochroneResponse`](../interfaces/GraphHopperIsochroneResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `response` | `GraphHopperIsochroneResponse` |
+| `response` | [`GraphHopperIsochroneResponse`](../interfaces/GraphHopperIsochroneResponse.md) |
 | `center` | [`number`, `number`] |
 | `intervalType` | ``"time"`` \| ``"distance"`` |
 
 #### Returns
 
-`Isochrones`<`GraphHopperIsochroneResponse`\>
+`Isochrones`<[`GraphHopperIsochroneResponse`](../interfaces/GraphHopperIsochroneResponse.md)\>
 
 #### Defined in
 
-[graphhopper/index.ts:265](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L265)
+[src/graphhopper/index.ts:224](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L224)
 
 ___
 
 ### parseMatrixResponse
 
-▸ `Static` **parseMatrixResponse**(`response`): `Matrix`<`GraphHopperMatrixResponse`\>
+▸ `Static` **parseMatrixResponse**(`response`): `Matrix`<[`GraphHopperMatrixResponse`](../interfaces/GraphHopperMatrixResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `response` | `GraphHopperMatrixResponse` |
+| `response` | [`GraphHopperMatrixResponse`](../interfaces/GraphHopperMatrixResponse.md) |
 
 #### Returns
 
-`Matrix`<`GraphHopperMatrixResponse`\>
+`Matrix`<[`GraphHopperMatrixResponse`](../interfaces/GraphHopperMatrixResponse.md)\>
 
 #### Defined in
 
-[graphhopper/index.ts:338](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/graphhopper/index.ts#L338)
+[src/graphhopper/index.ts:297](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/graphhopper/index.ts#L297)

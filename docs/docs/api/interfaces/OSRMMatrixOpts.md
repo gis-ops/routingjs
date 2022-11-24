@@ -24,7 +24,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[osrm/index.ts:25](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L25)
+[src/osrm/index.ts:23](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L23)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:28](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L28)
+[src/osrm/index.ts:26](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L26)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:21](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L21)
+[src/osrm/index.ts:19](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L19)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:27](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L27)
+[src/osrm/index.ts:25](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L25)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:35](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L35)
+[src/osrm/index.ts:33](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L33)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:29](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L29)
+[src/osrm/index.ts:27](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L27)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:30](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L30)
+[src/osrm/index.ts:28](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L28)
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:20](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L20)
+[src/osrm/index.ts:18](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L18)
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:34](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L34)
+[src/osrm/index.ts:32](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L32)
 
 ___
 
@@ -142,4 +142,4 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:26](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L26)
+[src/osrm/index.ts:24](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L24)

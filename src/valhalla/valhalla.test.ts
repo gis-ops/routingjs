@@ -21,11 +21,11 @@ describe("Valhalla returns responses", () => {
                 )
 
                 expect(
-                    d.directions[0].feature.properties!.duration
+                    d.directions[0].feature.properties.duration
                 ).not.toBeNull()
 
                 expect(
-                    d.directions[0].feature.properties!.distance
+                    d.directions[0].feature.properties.distance
                 ).not.toBeNull()
             })
     })

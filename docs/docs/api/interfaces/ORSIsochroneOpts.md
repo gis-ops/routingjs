@@ -16,11 +16,11 @@ custom_edit_url: null
 
 ### attributes
 
-• `Optional` **attributes**: `ORSIsoAttribute`[]
+• `Optional` **attributes**: [`ORSIsoAttribute`](../modules.md#orsisoattribute)[]
 
 #### Defined in
 
-[ors/index.ts:62](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L62)
+[src/ors/index.ts:60](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L60)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:63](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L63)
+[src/ors/index.ts:61](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L61)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:59](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L59)
+[src/ors/index.ts:57](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L57)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:60](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L60)
+[src/ors/index.ts:58](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L58)
 
 ___
 
@@ -60,13 +60,13 @@ ___
 
 #### Defined in
 
-[ors/index.ts:61](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L61)
+[src/ors/index.ts:59](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L59)
 
 ___
 
 ### units
 
-• `Optional` **units**: `ORSUnit`
+• `Optional` **units**: [`ORSUnit`](../modules.md#orsunit)
 
 #### Inherited from
 
@@ -74,4 +74,4 @@ ORSBaseOpts.units
 
 #### Defined in
 
-[ors/index.ts:30](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L30)
+[src/ors/index.ts:28](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L28)

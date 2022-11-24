@@ -16,21 +16,21 @@ custom_edit_url: null
 
 ### alternative\_routes
 
-• `Optional` **alternative\_routes**: `ORSAlternateRouteParam`
+• `Optional` **alternative\_routes**: [`ORSAlternateRouteParam`](ORSAlternateRouteParam.md)
 
 #### Defined in
 
-[ors/index.ts:35](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L35)
+[src/ors/index.ts:33](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L33)
 
 ___
 
 ### attributes
 
-• `Optional` **attributes**: `ORSAttribute`[]
+• `Optional` **attributes**: [`ORSAttribute`](../modules.md#orsattribute)[]
 
 #### Defined in
 
-[ors/index.ts:42](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L42)
+[src/ors/index.ts:40](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L40)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:45](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L45)
+[src/ors/index.ts:43](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L43)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:46](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L46)
+[src/ors/index.ts:44](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L44)
 
 ___
 
@@ -60,17 +60,17 @@ ___
 
 #### Defined in
 
-[ors/index.ts:47](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L47)
+[src/ors/index.ts:45](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L45)
 
 ___
 
 ### extra\_info
 
-• `Optional` **extra\_info**: `ORSExtraInfo`[]
+• `Optional` **extra\_info**: [`ORSExtraInfo`](../modules.md#orsextrainfo)[]
 
 #### Defined in
 
-[ors/index.ts:48](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L48)
+[src/ors/index.ts:46](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L46)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:37](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L37)
+[src/ors/index.ts:35](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L35)
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:38](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L38)
+[src/ors/index.ts:36](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L36)
 
 ___
 
@@ -100,17 +100,17 @@ ___
 
 #### Defined in
 
-[ors/index.ts:39](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L39)
+[src/ors/index.ts:37](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L37)
 
 ___
 
 ### instructions\_format
 
-• `Optional` **instructions\_format**: `ORSInstructionFormat`
+• `Optional` **instructions\_format**: [`ORSInstructionFormat`](../modules.md#orsinstructionformat)
 
 #### Defined in
 
-[ors/index.ts:40](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L40)
+[src/ors/index.ts:38](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L38)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:36](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L36)
+[src/ors/index.ts:34](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L34)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:43](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L43)
+[src/ors/index.ts:41](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L41)
 
 ___
 
@@ -140,17 +140,17 @@ ___
 
 #### Defined in
 
-[ors/index.ts:50](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L50)
+[src/ors/index.ts:48](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L48)
 
 ___
 
 ### preference
 
-• `Optional` **preference**: `ORSPreference`
+• `Optional` **preference**: [`ORSPreference`](../modules.md#orspreference)
 
 #### Defined in
 
-[ors/index.ts:34](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L34)
+[src/ors/index.ts:32](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L32)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:44](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L44)
+[src/ors/index.ts:42](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L42)
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in
 
-[ors/index.ts:41](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L41)
+[src/ors/index.ts:39](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L39)
 
 ___
 
@@ -180,13 +180,13 @@ ___
 
 #### Defined in
 
-[ors/index.ts:49](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L49)
+[src/ors/index.ts:47](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L47)
 
 ___
 
 ### units
 
-• `Optional` **units**: `ORSUnit`
+• `Optional` **units**: [`ORSUnit`](../modules.md#orsunit)
 
 #### Inherited from
 
@@ -194,4 +194,4 @@ ORSBaseOpts.units
 
 #### Defined in
 
-[ors/index.ts:30](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L30)
+[src/ors/index.ts:28](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L28)

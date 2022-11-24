@@ -115,15 +115,9 @@ const config = {
         [
             "docusaurus-plugin-typedoc",
 
-            // Plugin / TypeDoc options
             {
-                entryPoints: [
-                    "../src/index.ts",
-                    // "../src/valhalla/index.ts",
-                    // "../src/graphhopper/index.ts",
-                    // "../src/ors/index.ts",
-                    // "../src/osrm/index.ts",
-                ],
+                entryPoints: ["../src/index.ts"],
+                mode: "library",
                 tsconfig: "../tsconfig.json",
             },
         ],

@@ -26,7 +26,7 @@ ValhallaBaseOpts.avoidLocations
 
 #### Defined in
 
-[valhalla/index.ts:56](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L56)
+[src/valhalla/index.ts:54](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L54)
 
 ___
 
@@ -45,7 +45,7 @@ ValhallaBaseOpts.avoidPolygons
 
 #### Defined in
 
-[valhalla/index.ts:63](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L63)
+[src/valhalla/index.ts:61](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L61)
 
 ___
 
@@ -53,15 +53,18 @@ ___
 
 • `Optional` **colors**: `string`[]
 
+The color for the output of the contour. Specify it as a Hex value, but without the #, such as
+"color":"ff0000" for red. If no color is specified, the isochrone service will assign a default color to the output.
+
 #### Defined in
 
-[valhalla/index.ts:87](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L87)
+[src/valhalla/index.ts:117](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L117)
 
 ___
 
 ### costingOpts
 
-• `Optional` **costingOpts**: `ValhallaCostingOptsAuto` \| `ValhallaCostingOptsTruck` \| `ValhallaCostingOptsBicycle` \| `ValhallaCostingOptsMotorcycle` \| `ValhallaCostingOptsPedestrian`
+• `Optional` **costingOpts**: [`ValhallaCostingOptsAuto`](ValhallaCostingOptsAuto.md) \| [`ValhallaCostingOptsTruck`](ValhallaCostingOptsTruck.md) \| [`ValhallaCostingOptsBicycle`](ValhallaCostingOptsBicycle.md) \| [`ValhallaCostingOptsMotorcycle`](ValhallaCostingOptsMotorcycle.md) \| [`ValhallaCostingOptsPedestrian`](ValhallaCostingOptsPedestrian.md)
 
 Profiles can have several options that can be adjusted to develop the route path,
        as well as for estimating time along the path. Only specify the actual options dict, the profile
@@ -74,13 +77,13 @@ ValhallaBaseOpts.costingOpts
 
 #### Defined in
 
-[valhalla/index.ts:47](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L47)
+[src/valhalla/index.ts:45](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L45)
 
 ___
 
 ### dateTime
 
-• `Optional` **dateTime**: `ValhallaDateTime`
+• `Optional` **dateTime**: [`ValhallaDateTime`](ValhallaDateTime.md)
 
 This is the local date and time at the location. Field `type`: 0: Current departure time,
   1: Specified departure time. Field `value`: the date and time is specified
@@ -98,7 +101,7 @@ ValhallaBaseOpts.dateTime
 
 #### Defined in
 
-[valhalla/index.ts:74](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L74)
+[src/valhalla/index.ts:72](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L72)
 
 ___
 
@@ -106,9 +109,13 @@ ___
 
 • `Optional` **denoise**: `number`
 
+Can be used to remove smaller contours. In range [0, 1]. A value of 1 will only return the largest contour
+for a given time value. A value of 0.5 drops any contours that are less than half the area of the largest
+contour in the set of contours for that same time value. Default 1.
+
 #### Defined in
 
-[valhalla/index.ts:89](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L89)
+[src/valhalla/index.ts:127](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L127)
 
 ___
 
@@ -116,9 +123,12 @@ ___
 
 • `Optional` **generalize**: `number`
 
+A floating point value in meters used as the tolerance for Douglas-Peucker generalization.
+Note: Generalization of contours can lead to self-intersections, as well as intersections of adjacent contours.
+
 #### Defined in
 
-[valhalla/index.ts:90](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L90)
+[src/valhalla/index.ts:132](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L132)
 
 ___
 
@@ -134,7 +144,7 @@ ValhallaBaseOpts.id
 
 #### Defined in
 
-[valhalla/index.ts:34](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L34)
+[src/valhalla/index.ts:32](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L32)
 
 ___
 
@@ -142,9 +152,12 @@ ___
 
 • `Optional` **intervalType**: ``"time"`` \| ``"distance"``
 
+Set 'time' for isochrones or 'distance' for equidistants.
+Default 'time'.
+
 #### Defined in
 
-[valhalla/index.ts:86](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L86)
+[src/valhalla/index.ts:112](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L112)
 
 ___
 
@@ -152,9 +165,11 @@ ___
 
 • `Optional` **polygons**: `boolean`
 
+Controls whether polygons or linestrings are returned in GeoJSON geometry. Default False.
+
 #### Defined in
 
-[valhalla/index.ts:88](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L88)
+[src/valhalla/index.ts:121](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L121)
 
 ___
 
@@ -172,7 +187,7 @@ ValhallaBaseOpts.preference
 
 #### Defined in
 
-[valhalla/index.ts:40](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L40)
+[src/valhalla/index.ts:38](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L38)
 
 ___
 
@@ -180,6 +195,9 @@ ___
 
 • `Optional` **showLocations**: `boolean`
 
+A boolean indicating whether the input locations should be returned as MultiPoint features: one feature for the exact input coordinates and one feature
+for the coordinates of the network node it snapped to. Default false.
+
 #### Defined in
 
-[valhalla/index.ts:91](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L91)
+[src/valhalla/index.ts:137](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L137)

@@ -20,7 +20,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[ors/index.ts:54](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L54)
+[src/ors/index.ts:52](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L52)
 
 ___
 
@@ -30,13 +30,13 @@ ___
 
 #### Defined in
 
-[ors/index.ts:55](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L55)
+[src/ors/index.ts:53](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L53)
 
 ___
 
 ### units
 
-• `Optional` **units**: `ORSUnit`
+• `Optional` **units**: [`ORSUnit`](../modules.md#orsunit)
 
 #### Inherited from
 
@@ -44,4 +44,4 @@ ORSBaseOpts.units
 
 #### Defined in
 
-[ors/index.ts:30](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/ors/index.ts#L30)
+[src/ors/index.ts:28](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/ors/index.ts#L28)

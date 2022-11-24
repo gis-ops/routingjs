@@ -14,54 +14,27 @@ custom_edit_url: null
 
 ### constructor
 
-• **new Valhalla**(`baseUrl?`, `apiKey?`, `userAgent?`, `timeout?`, `retryOverQueryLimit?`, `headers?`, `maxRetries?`, `axiosOpts?`)
+• **new Valhalla**(`clientArgs`)
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `baseUrl` | `string` | `"https://valhalla1.openstreetmap.de"` |
-| `apiKey?` | `string` | `undefined` |
-| `userAgent?` | `string` | `undefined` |
-| `timeout` | `number` | `options.defaultTimeout` |
-| `retryOverQueryLimit` | `boolean` | `false` |
-| `headers?` | `Object` | `undefined` |
-| `maxRetries` | `number` | `options.defaultMaxRetries` |
-| `axiosOpts?` | `AxiosRequestConfig`<`any`\> | `undefined` |
+| Name | Type |
+| :------ | :------ |
+| `clientArgs` | `ClientConstructorArgs` |
 
 #### Defined in
 
-[valhalla/index.ts:102](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L102)
+[src/valhalla/index.ts:149](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L149)
 
 ## Properties
 
 ### apiKey
 
-• `Optional` `Readonly` **apiKey**: `string`
+• `Optional` **apiKey**: `string`
 
 #### Defined in
 
-[valhalla/index.ts:104](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L104)
-
-___
-
-### axiosOpts
-
-• `Protected` `Optional` `Readonly` **axiosOpts**: `AxiosRequestConfig`<`any`\>
-
-#### Defined in
-
-[valhalla/index.ts:110](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L110)
-
-___
-
-### baseUrl
-
-• `Readonly` **baseUrl**: `string` = `"https://valhalla1.openstreetmap.de"`
-
-#### Defined in
-
-[valhalla/index.ts:103](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L103)
+[src/valhalla/index.ts:148](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L148)
 
 ___
 
@@ -75,80 +48,32 @@ BaseRouter.client
 
 #### Defined in
 
-[valhalla/index.ts:101](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L101)
-
-___
-
-### headers
-
-• `Optional` `Readonly` **headers**: `Object`
-
-#### Index signature
-
-▪ [k: `string`]: `string`
-
-#### Defined in
-
-[valhalla/index.ts:108](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L108)
-
-___
-
-### maxRetries
-
-• `Readonly` **maxRetries**: `number` = `options.defaultMaxRetries`
-
-#### Defined in
-
-[valhalla/index.ts:109](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L109)
-
-___
-
-### retryOverQueryLimit
-
-• `Readonly` **retryOverQueryLimit**: `boolean` = `false`
-
-#### Defined in
-
-[valhalla/index.ts:107](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L107)
-
-___
-
-### timeout
-
-• `Readonly` **timeout**: `number` = `options.defaultTimeout`
-
-#### Defined in
-
-[valhalla/index.ts:106](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L106)
-
-___
-
-### userAgent
-
-• `Optional` `Readonly` **userAgent**: `string`
-
-#### Defined in
-
-[valhalla/index.ts:105](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L105)
+[src/valhalla/index.ts:147](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L147)
 
 ## Methods
 
 ### directions
 
-▸ **directions**(`locations`, `profile`, `directionsOpts?`, `dryRun?`): `Promise`<`Directions`<`ValhallaRouteResponse`\>\>
+▸ **directions**(`locations`, `profile`, `directionsOpts?`, `dryRun?`): `Promise`<`Directions`<[`ValhallaRouteResponse`](../interfaces/ValhallaRouteResponse.md)\>\>
+
+Makes a request to Valhalla's `/route` endpoint.
+
+**`See`**
+
+[ValhallaCostingType](../modules.md#valhallacostingtype) for available profiles
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `locations` | [`number`, `number`][] |
-| `profile` | `ValhallaCostingType` |
-| `directionsOpts?` | [`ValhallaDirectionOpts`](../interfaces/ValhallaDirectionOpts.md) |
-| `dryRun?` | ``false`` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `locations` | [`number`, `number`][] | The coordinates tuple the route should be calculated from in order of visit. |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) | Specifies the mode of transport |
+| `directionsOpts?` | [`ValhallaDirectionOpts`](../interfaces/ValhallaDirectionOpts.md) | Additional parameters, such as costing options. |
+| `dryRun?` | ``false`` | if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging |
 
 #### Returns
 
-`Promise`<`Directions`<`ValhallaRouteResponse`\>\>
+`Promise`<`Directions`<[`ValhallaRouteResponse`](../interfaces/ValhallaRouteResponse.md)\>\>
 
 #### Implementation of
 
@@ -156,7 +81,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[valhalla/index.ts:123](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L123)
+[src/valhalla/index.ts:185](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L185)
 
 ▸ **directions**(`locations`, `profile`, `directionsOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -165,7 +90,7 @@ BaseRouter.directions
 | Name | Type |
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
-| `profile` | `ValhallaCostingType` |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) |
 | `directionsOpts` | [`ValhallaDirectionOpts`](../interfaces/ValhallaDirectionOpts.md) |
 | `dryRun` | ``true`` |
 
@@ -179,27 +104,27 @@ BaseRouter.directions
 
 #### Defined in
 
-[valhalla/index.ts:129](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L129)
+[src/valhalla/index.ts:191](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L191)
 
 ___
 
 ### isochrones
 
-▸ **isochrones**(`location`, `profile`, `intervals`, `isochronesOpts?`, `dryRun?`): `Promise`<`Isochrones`<`ValhallaIsochroneResponse`\>\>
+▸ **isochrones**(`location`, `profile`, `intervals`, `isochronesOpts?`, `dryRun?`): `Promise`<`Isochrones`<[`ValhallaIsochroneResponse`](../interfaces/ValhallaIsochroneResponse.md)\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `location` | [`number`, `number`] |
-| `profile` | `ValhallaCostingType` |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) |
 | `intervals` | `number`[] |
 | `isochronesOpts?` | [`ValhallaIsochroneOpts`](../interfaces/ValhallaIsochroneOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
 
-`Promise`<`Isochrones`<`ValhallaIsochroneResponse`\>\>
+`Promise`<`Isochrones`<[`ValhallaIsochroneResponse`](../interfaces/ValhallaIsochroneResponse.md)\>\>
 
 #### Implementation of
 
@@ -207,7 +132,7 @@ BaseRouter.isochrones
 
 #### Defined in
 
-[valhalla/index.ts:311](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L311)
+[src/valhalla/index.ts:376](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L376)
 
 ▸ **isochrones**(`location`, `profile`, `intervals`, `isochronesOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -216,7 +141,7 @@ BaseRouter.isochrones
 | Name | Type |
 | :------ | :------ |
 | `location` | [`number`, `number`] |
-| `profile` | `ValhallaCostingType` |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) |
 | `intervals` | `number`[] |
 | `isochronesOpts` | [`ValhallaIsochroneOpts`](../interfaces/ValhallaIsochroneOpts.md) |
 | `dryRun` | ``true`` |
@@ -231,26 +156,26 @@ BaseRouter.isochrones
 
 #### Defined in
 
-[valhalla/index.ts:318](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L318)
+[src/valhalla/index.ts:383](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L383)
 
 ___
 
 ### matrix
 
-▸ **matrix**(`locations`, `profile`, `matrixOpts?`, `dryRun?`): `Promise`<`Matrix`<`ValhallaMatrixResponse`\>\>
+▸ **matrix**(`locations`, `profile`, `matrixOpts?`, `dryRun?`): `Promise`<`Matrix`<[`ValhallaMatrixResponse`](../interfaces/ValhallaMatrixResponse.md)\>\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
-| `profile` | `ValhallaCostingType` |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) |
 | `matrixOpts?` | [`ValhallaMatrixOpts`](../interfaces/ValhallaMatrixOpts.md) |
 | `dryRun?` | ``false`` |
 
 #### Returns
 
-`Promise`<`Matrix`<`ValhallaMatrixResponse`\>\>
+`Promise`<`Matrix`<[`ValhallaMatrixResponse`](../interfaces/ValhallaMatrixResponse.md)\>\>
 
 #### Implementation of
 
@@ -258,7 +183,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[valhalla/index.ts:494](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L494)
+[src/valhalla/index.ts:563](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L563)
 
 ▸ **matrix**(`locations`, `profile`, `matrixOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -267,7 +192,7 @@ BaseRouter.matrix
 | Name | Type |
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
-| `profile` | `ValhallaCostingType` |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) |
 | `matrixOpts` | [`ValhallaMatrixOpts`](../interfaces/ValhallaMatrixOpts.md) |
 | `dryRun` | ``true`` |
 
@@ -281,13 +206,13 @@ BaseRouter.matrix
 
 #### Defined in
 
-[valhalla/index.ts:500](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L500)
+[src/valhalla/index.ts:569](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L569)
 
 ___
 
 ### \_buildLocations
 
-▸ `Static` `Protected` **_buildLocations**(`coordinates`): `ValhallaLocation`[]
+▸ `Static` `Protected` **_buildLocations**(`coordinates`): [`ValhallaLocation`](../interfaces/ValhallaLocation.md)[]
 
 #### Parameters
 
@@ -297,140 +222,140 @@ ___
 
 #### Returns
 
-`ValhallaLocation`[]
+[`ValhallaLocation`](../interfaces/ValhallaLocation.md)[]
 
 #### Defined in
 
-[valhalla/index.ts:649](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L649)
+[src/valhalla/index.ts:720](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L720)
 
 ___
 
 ### getDirectionParams
 
-▸ `Static` `Protected` **getDirectionParams**(`locations`, `profile`, `directionsOpts?`): `ValhallaRouteParams`
+▸ `Static` `Protected` **getDirectionParams**(`locations`, `profile`, `directionsOpts?`): [`ValhallaRouteParams`](../interfaces/ValhallaRouteParams.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
-| `profile` | `ValhallaCostingType` |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) |
 | `directionsOpts` | [`ValhallaDirectionOpts`](../interfaces/ValhallaDirectionOpts.md) |
 
 #### Returns
 
-`ValhallaRouteParams`
+[`ValhallaRouteParams`](../interfaces/ValhallaRouteParams.md)
 
 #### Defined in
 
-[valhalla/index.ts:167](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L167)
+[src/valhalla/index.ts:229](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L229)
 
 ___
 
 ### getIsochroneParams
 
-▸ `Static` **getIsochroneParams**(`location`, `profile`, `intervals`, `isochroneOpts?`): `ValhallaIsochroneParams`
+▸ `Static` **getIsochroneParams**(`location`, `profile`, `intervals`, `isochroneOpts?`): [`ValhallaIsochroneParams`](../interfaces/ValhallaIsochroneParams.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `location` | [`number`, `number`] |
-| `profile` | `ValhallaCostingType` |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) |
 | `intervals` | `number`[] |
 | `isochroneOpts` | [`ValhallaIsochroneOpts`](../interfaces/ValhallaIsochroneOpts.md) |
 
 #### Returns
 
-`ValhallaIsochroneParams`
+[`ValhallaIsochroneParams`](../interfaces/ValhallaIsochroneParams.md)
 
 #### Defined in
 
-[valhalla/index.ts:368](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L368)
+[src/valhalla/index.ts:433](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L433)
 
 ___
 
 ### getMatrixParams
 
-▸ `Static` **getMatrixParams**(`locations`, `profile`, `matrixOpts?`): `ValhallaMatrixParams`
+▸ `Static` **getMatrixParams**(`locations`, `profile`, `matrixOpts?`): [`ValhallaMatrixParams`](../interfaces/ValhallaMatrixParams.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `locations` | [`number`, `number`][] |
-| `profile` | `ValhallaCostingType` |
+| `profile` | [`ValhallaCostingType`](../modules.md#valhallacostingtype) |
 | `matrixOpts` | [`ValhallaMatrixOpts`](../interfaces/ValhallaMatrixOpts.md) |
 
 #### Returns
 
-`ValhallaMatrixParams`
+[`ValhallaMatrixParams`](../interfaces/ValhallaMatrixParams.md)
 
 #### Defined in
 
-[valhalla/index.ts:539](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L539)
+[src/valhalla/index.ts:608](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L608)
 
 ___
 
 ### parseDirectionsResponse
 
-▸ `Static` **parseDirectionsResponse**(`response`, `type?`): `Direction` \| `Directions`<`ValhallaRouteResponse`\>
+▸ `Static` **parseDirectionsResponse**(`response`, `type?`): `Direction` \| `Directions`<[`ValhallaRouteResponse`](../interfaces/ValhallaRouteResponse.md)\>
 
 #### Parameters
 
 | Name | Type | Default value |
 | :------ | :------ | :------ |
-| `response` | `ValhallaRouteResponse` | `undefined` |
+| `response` | [`ValhallaRouteResponse`](../interfaces/ValhallaRouteResponse.md) | `undefined` |
 | `type` | ``"main"`` \| ``"alternative"`` | `"main"` |
 
 #### Returns
 
-`Direction` \| `Directions`<`ValhallaRouteResponse`\>
+`Direction` \| `Directions`<[`ValhallaRouteResponse`](../interfaces/ValhallaRouteResponse.md)\>
 
 #### Defined in
 
-[valhalla/index.ts:259](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L259)
+[src/valhalla/index.ts:323](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L323)
 
 ___
 
 ### parseIsochroneResponse
 
-▸ `Static` **parseIsochroneResponse**(`response`, `location`, `intervals`, `intervalType`): `Isochrones`<`ValhallaIsochroneResponse`\>
+▸ `Static` **parseIsochroneResponse**(`response`, `location`, `intervals`, `intervalType`): `Isochrones`<[`ValhallaIsochroneResponse`](../interfaces/ValhallaIsochroneResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `response` | `ValhallaIsochroneResponse` |
+| `response` | [`ValhallaIsochroneResponse`](../interfaces/ValhallaIsochroneResponse.md) |
 | `location` | [`number`, `number`] |
 | `intervals` | `number`[] |
 | `intervalType` | ``"time"`` \| ``"distance"`` |
 
 #### Returns
 
-`Isochrones`<`ValhallaIsochroneResponse`\>
+`Isochrones`<[`ValhallaIsochroneResponse`](../interfaces/ValhallaIsochroneResponse.md)\>
 
 #### Defined in
 
-[valhalla/index.ts:472](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L472)
+[src/valhalla/index.ts:540](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L540)
 
 ___
 
 ### parseMatrixResponse
 
-▸ `Static` **parseMatrixResponse**(`response`, `units`): `Matrix`<`ValhallaMatrixResponse`\>
+▸ `Static` **parseMatrixResponse**(`response`, `units`): `Matrix`<[`ValhallaMatrixResponse`](../interfaces/ValhallaMatrixResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `response` | `ValhallaMatrixResponse` |
-| `units` | `ValhallaRequestUnit` |
+| `response` | [`ValhallaMatrixResponse`](../interfaces/ValhallaMatrixResponse.md) |
+| `units` | [`ValhallaRequestUnit`](../modules.md#valhallarequestunit) |
 
 #### Returns
 
-`Matrix`<`ValhallaMatrixResponse`\>
+`Matrix`<[`ValhallaMatrixResponse`](../interfaces/ValhallaMatrixResponse.md)\>
 
 #### Defined in
 
-[valhalla/index.ts:629](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/valhalla/index.ts#L629)
+[src/valhalla/index.ts:700](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/valhalla/index.ts#L700)

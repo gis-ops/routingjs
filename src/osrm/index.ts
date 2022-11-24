@@ -279,3 +279,4 @@ class OSRM implements BaseRouter {
 }
 
 export default OSRM
+export * from "./parameters"

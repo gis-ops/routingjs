@@ -73,19 +73,67 @@ interface ValhallaBaseOpts {
 }
 
 export interface ValhallaDirectionOpts extends ValhallaBaseOpts {
+    /**
+     * Whether to return turn-by-turn instructions. Named for compatibility with other
+     *  providers. Valhalla's parameter here is 'narrative'.
+     */
     instructions?: boolean
+    /** A number denoting how many alternate routes should be provided.
+     * There may be no alternates or less alternates than the user specifies.
+     *  Alternates are not yet supported on multipoint routes (that is, routes with
+     * more than 2 locations). They are also not supported on time dependent routes.
+     */
     alternatives?: number
+    /**
+     * Distance units for output. Allowable unit types are miles (or mi) and kilometers (or km).
+     * If no unit type is specified, the units default to kilometers.
+     */
     units?: ValhallaRequestUnit
+    /**
+     * The language of the narration instructions based on the IETF BCP 47 language tag string.
+     * If no language is specified or the specified language is unsupported, United States-based
+     * English (en-US) is used.
+     *
+     * See here for a list of supported languages: {@link https://valhalla.readthedocs.io/en/latest/api/turn-by-turn/api-reference/#supported-language-tags}
+     */
     language?: string
+    /**
+     * 'none': no instructions are returned. 'maneuvers': only maneuvers are returned.
+     * 'instructions': maneuvers with instructions are returned. Default 'instructions'
+     */
     directionsType?: ValhallaDirectionsType
 }
 
 export interface ValhallaIsochroneOpts extends ValhallaBaseOpts {
+    /**
+     * Set 'time' for isochrones or 'distance' for equidistants.
+     * Default 'time'.
+     */
     intervalType?: "time" | "distance"
+    /**
+     * The color for the output of the contour. Specify it as a Hex value, but without the #, such as
+     * "color":"ff0000" for red. If no color is specified, the isochrone service will assign a default color to the output.
+     */
     colors?: string[]
+    /**
+     * Controls whether polygons or linestrings are returned in GeoJSON geometry. Default False.
+     */
     polygons?: boolean
+    /**
+     * Can be used to remove smaller contours. In range [0, 1]. A value of 1 will only return the largest contour
+     * for a given time value. A value of 0.5 drops any contours that are less than half the area of the largest
+     * contour in the set of contours for that same time value. Default 1.
+     */
     denoise?: number
+    /**
+     * A floating point value in meters used as the tolerance for Douglas-Peucker generalization.
+     * Note: Generalization of contours can lead to self-intersections, as well as intersections of adjacent contours.
+     */
     generalize?: number
+    /**
+     * A boolean indicating whether the input locations should be returned as MultiPoint features: one feature for the exact input coordinates and one feature
+     * for the coordinates of the network node it snapped to. Default false.
+     */
     showLocations?: boolean
 }
 
@@ -125,6 +173,15 @@ class Valhalla implements BaseRouter {
         )
     }
 
+    /**
+     * Makes a request to Valhalla's `/route` endpoint.
+     *
+     * @param locations - The coordinates tuple the route should be calculated from in order of visit.
+     * @param profile - Specifies the mode of transport
+     * @param directionsOpts - Additional parameters, such as costing options.
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
+     * @see {@link ValhallaCostingType} for available profiles
+     */
     public async directions(
         locations: [number, number][],
         profile: ValhallaCostingType,
@@ -208,6 +265,7 @@ class Valhalla implements BaseRouter {
         if (directionsOpts.avoidLocations) {
             const avoidLocations: [number, number][] = []
             directionsOpts.avoidLocations.forEach((avoid_location) => {
+                // TODO: convert to loop
                 if (Array.isArray(avoid_location)) {
                     avoidLocations.push(avoid_location)
                 } else if (avoid_location.type === "Feature") {
@@ -231,6 +289,7 @@ class Valhalla implements BaseRouter {
             const avoidPolygons: [number, number][][][] = []
 
             directionsOpts.avoidPolygons.forEach((avoid_polygon) => {
+                // TODO: convert to loop
                 if (Array.isArray(avoid_polygon)) {
                     avoidPolygons.push(avoid_polygon)
                 } else if (avoid_polygon.type === "Feature") {
@@ -275,6 +334,7 @@ class Valhalla implements BaseRouter {
         }
 
         response.trip?.legs?.forEach((leg) => {
+            // TODO: convert to loop
             if (leg.shape) {
                 geometry.push(
                     ...(decode(leg.shape, 6) as unknown as [number, number][])
@@ -384,6 +444,7 @@ class Valhalla implements BaseRouter {
                 : ["time", 60]
 
         intervals.forEach((interval, index) => {
+            // TODO: convert to loop
             const contourObj: ValhallaContours = {
                 [key]: interval / divisor,
             }
@@ -421,6 +482,7 @@ class Valhalla implements BaseRouter {
         if (isochroneOpts.avoidLocations) {
             const avoidLocations: [number, number][] = []
             isochroneOpts.avoidLocations.forEach((avoid_location) => {
+                // TODO: convert to loop
                 if (Array.isArray(avoid_location)) {
                     avoidLocations.push(avoid_location)
                 } else if (avoid_location.type === "Feature") {
@@ -444,6 +506,7 @@ class Valhalla implements BaseRouter {
             const avoidPolygons: [number, number][][][] = []
 
             isochroneOpts.avoidPolygons.forEach((avoid_polygon) => {
+                // TODO: convert to loop
                 if (Array.isArray(avoid_polygon)) {
                     avoidPolygons.push(avoid_polygon)
                 } else if (avoid_polygon.type === "Feature") {
@@ -482,6 +545,7 @@ class Valhalla implements BaseRouter {
     ): Isochrones<ValhallaIsochroneResponse> {
         const isochrones: Isochrone[] = []
         response.features.forEach((feature, index) => {
+            // TODO: convert to loop
             if (feature.geometry.type !== "Point") {
                 isochrones.push(
                     new Isochrone(
@@ -586,6 +650,7 @@ class Valhalla implements BaseRouter {
         if (matrixOpts.avoidLocations) {
             const avoidLocations: [number, number][] = []
             matrixOpts.avoidLocations.forEach((avoid_location) => {
+                // TODO: convert to loop
                 if (Array.isArray(avoid_location)) {
                     avoidLocations.push(avoid_location)
                 } else if (avoid_location.type === "Feature") {
@@ -609,6 +674,7 @@ class Valhalla implements BaseRouter {
             const avoidPolygons: [number, number][][][] = []
 
             matrixOpts.avoidPolygons.forEach((avoid_polygon) => {
+                // TODO: convert to loop
                 if (Array.isArray(avoid_polygon)) {
                     avoidPolygons.push(avoid_polygon)
                 } else if (avoid_polygon.type === "Feature") {
@@ -658,6 +724,7 @@ class Valhalla implements BaseRouter {
 
         if (Array.isArray(coordinates[0])) {
             ;(coordinates as number[][]).forEach((coordPair) => {
+                // TODO: convert to loop
                 const locObj = { lon: coordPair[0], lat: coordPair[1] }
                 locations.push(locObj)
             })
@@ -674,3 +741,4 @@ class Valhalla implements BaseRouter {
 }
 
 export default Valhalla
+export * from "./parameters"

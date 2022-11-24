@@ -14,54 +14,27 @@ custom_edit_url: null
 
 ### constructor
 
-• **new OSRM**(`baseUrl?`, `apiKey?`, `userAgent?`, `headers?`, `timeout?`, `retryOverQueryLimit?`, `maxRetries?`, `axiosOpts?`)
+• **new OSRM**(`clientArgs`)
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `baseUrl` | `string` | `"https://routing.openstreetmap.de/routed-bike"` |
-| `apiKey?` | `string` | `undefined` |
-| `userAgent?` | `string` | `undefined` |
-| `headers?` | `Object` | `undefined` |
-| `timeout` | `number` | `options.defaultTimeout` |
-| `retryOverQueryLimit` | `boolean` | `false` |
-| `maxRetries` | `number` | `options.defaultMaxRetries` |
-| `axiosOpts?` | `AxiosRequestConfig`<`any`\> | `undefined` |
+| Name | Type |
+| :------ | :------ |
+| `clientArgs` | `ClientConstructorArgs` |
 
 #### Defined in
 
-[osrm/index.ts:40](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L40)
+[src/osrm/index.ts:39](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L39)
 
 ## Properties
 
 ### apiKey
 
-• `Optional` `Readonly` **apiKey**: `string`
+• `Optional` **apiKey**: `string`
 
 #### Defined in
 
-[osrm/index.ts:42](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L42)
-
-___
-
-### axiosOpts
-
-• `Protected` `Optional` `Readonly` **axiosOpts**: `AxiosRequestConfig`<`any`\>
-
-#### Defined in
-
-[osrm/index.ts:48](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L48)
-
-___
-
-### baseUrl
-
-• `Readonly` **baseUrl**: `string` = `"https://routing.openstreetmap.de/routed-bike"`
-
-#### Defined in
-
-[osrm/index.ts:41](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L41)
+[src/osrm/index.ts:38](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L38)
 
 ___
 
@@ -75,61 +48,7 @@ BaseRouter.client
 
 #### Defined in
 
-[osrm/index.ts:39](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L39)
-
-___
-
-### headers
-
-• `Optional` `Readonly` **headers**: `Object`
-
-#### Index signature
-
-▪ [k: `string`]: `string`
-
-#### Defined in
-
-[osrm/index.ts:44](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L44)
-
-___
-
-### maxRetries
-
-• `Readonly` **maxRetries**: `number` = `options.defaultMaxRetries`
-
-#### Defined in
-
-[osrm/index.ts:47](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L47)
-
-___
-
-### retryOverQueryLimit
-
-• `Readonly` **retryOverQueryLimit**: `boolean` = `false`
-
-#### Defined in
-
-[osrm/index.ts:46](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L46)
-
-___
-
-### timeout
-
-• `Readonly` **timeout**: `number` = `options.defaultTimeout`
-
-#### Defined in
-
-[osrm/index.ts:45](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L45)
-
-___
-
-### userAgent
-
-• `Optional` `Readonly` **userAgent**: `string`
-
-#### Defined in
-
-[osrm/index.ts:43](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L43)
+[src/osrm/index.ts:37](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L37)
 
 ## Methods
 
@@ -156,7 +75,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[osrm/index.ts:61](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L61)
+[src/osrm/index.ts:66](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L66)
 
 ▸ **directions**(`locations`, `profile`, `directionsOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -179,7 +98,7 @@ BaseRouter.directions
 
 #### Defined in
 
-[osrm/index.ts:67](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L67)
+[src/osrm/index.ts:72](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L72)
 
 ___
 
@@ -206,7 +125,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[osrm/index.ts:196](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L196)
+[src/osrm/index.ts:201](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L201)
 
 ▸ **matrix**(`locations`, `profile`, `matrixOpts`, `dryRun`): `Promise`<`string`\>
 
@@ -229,7 +148,7 @@ BaseRouter.matrix
 
 #### Defined in
 
-[osrm/index.ts:202](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L202)
+[src/osrm/index.ts:207](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L207)
 
 ___
 
@@ -249,7 +168,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:101](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L101)
+[src/osrm/index.ts:106](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L106)
 
 ___
 
@@ -269,7 +188,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:236](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L236)
+[src/osrm/index.ts:241](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L241)
 
 ___
 
@@ -290,7 +209,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:152](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L152)
+[src/osrm/index.ts:157](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L157)
 
 ___
 
@@ -311,7 +230,7 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:175](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L175)
+[src/osrm/index.ts:180](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L180)
 
 ___
 
@@ -331,4 +250,4 @@ ___
 
 #### Defined in
 
-[osrm/index.ts:269](https://github.com/chrstnbwnkl/routing-js/blob/f20a7c7/src/osrm/index.ts#L269)
+[src/osrm/index.ts:274](https://github.com/chrstnbwnkl/routing-js/blob/dffa888/src/osrm/index.ts#L274)
