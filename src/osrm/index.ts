@@ -1,10 +1,8 @@
 import { decode } from "@googlemaps/polyline-codec"
-import { AxiosRequestConfig } from "axios"
 import Client from "../Client"
 import { Direction, DirectionFeat, Directions } from "../Direction"
 import { RoutingJSAPIError, RoutingJSError } from "error"
 import Matrix from "../Matrix"
-import options from "options"
 import {
     OSRMGeometryObject,
     OSRMGeometryType,
@@ -14,7 +12,7 @@ import {
     OSRMTableParams,
     OSRMTableResponse,
 } from "./parameters"
-import { BaseRouter } from "../BaseRouter"
+import { BaseRouter, ClientConstructorArgs } from "../BaseRouter"
 
 interface OSRMBaseOpts {
     radiuses?: (number | null)[]
@@ -37,19 +35,25 @@ export interface OSRMMatrixOpts extends OSRMDirectionsOpts {
 
 class OSRM implements BaseRouter {
     client: Client
-    constructor(
-        // TODO: change signature to args obj
-        public readonly baseUrl: string = "https://routing.openstreetmap.de/routed-bike",
-        public readonly apiKey?: string,
-        public readonly userAgent?: string,
-        public readonly headers?: { [k: string]: string },
-        public readonly timeout: number = options.defaultTimeout,
-        public readonly retryOverQueryLimit: boolean = false,
-        public readonly maxRetries: number = options.defaultMaxRetries,
-        protected readonly axiosOpts?: AxiosRequestConfig
-    ) {
-        this.client = new Client(
+    apiKey?: string
+    constructor(clientArgs: ClientConstructorArgs) {
+        const {
+            apiKey,
             baseUrl,
+            userAgent,
+            headers,
+            timeout,
+            retryOverQueryLimit,
+            maxRetries,
+            axiosOpts,
+        } = clientArgs
+
+        this.apiKey = apiKey // TODO: add to requests
+
+        const defaultURL = "https://routing.openstreetmap.de/routed-bike"
+
+        this.client = new Client(
+            baseUrl || defaultURL,
             userAgent,
             timeout,
             retryOverQueryLimit,

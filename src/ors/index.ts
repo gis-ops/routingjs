@@ -1,9 +1,7 @@
-import { AxiosRequestConfig } from "axios"
 import Client from "../Client"
 import { Direction, Directions } from "../Direction"
 import { RoutingJSError } from "error"
 import { DirectionFeat } from "../Direction"
-import options from "options"
 import {
     ORSAlternateRouteParam,
     ORSAttribute,
@@ -21,7 +19,7 @@ import {
     ORSRouteResponse,
     ORSUnit,
 } from "./parameters"
-import { BaseRouter } from "../BaseRouter"
+import { BaseRouter, ClientConstructorArgs } from "../BaseRouter"
 import { decode } from "@googlemaps/polyline-codec"
 import Matrix from "../Matrix"
 import { Isochrone, Isochrones } from "Isochrone"
@@ -65,26 +63,28 @@ export interface ORSIsochroneOpts extends ORSBaseOpts {
 
 class ORS implements BaseRouter {
     client: Client
-    constructor(
-        public readonly apiKey?: string, // FIXME change signature to args obj
-        public readonly baseUrl: string = "https://api.openrouteservice.org",
-        public readonly userAgent?: string,
-        public readonly headers?: { [k: string]: string },
-        public readonly timeout: number = options.defaultTimeout,
-        public readonly retryOverQueryLimit: boolean = false,
-        public readonly maxRetries: number = options.defaultMaxRetries,
-        protected readonly axiosOpts?: AxiosRequestConfig
-    ) {
-        if (baseUrl === "https://api.openrouteservice.org" && !apiKey) {
-            throw new RoutingJSError("Please provide an API key for ORS")
-        }
+    apiKey?: string
+    constructor(clientArgs: ClientConstructorArgs) {
+        const {
+            apiKey,
+            baseUrl,
+            userAgent,
+            timeout,
+            retryOverQueryLimit,
+            maxRetries,
+            axiosOpts,
+        } = clientArgs
+
+        let { headers } = clientArgs
 
         if (apiKey) {
             headers = { ...headers, Authorization: apiKey }
         }
 
+        const defaultURL = "https://api.openrouteservice.org"
+
         this.client = new Client(
-            baseUrl,
+            baseUrl || defaultURL,
             userAgent,
             timeout,
             retryOverQueryLimit,

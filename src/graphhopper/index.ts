@@ -1,6 +1,5 @@
 import { decode } from "@googlemaps/polyline-codec"
-import { AxiosRequestConfig } from "axios"
-import { BaseRouter } from "BaseRouter"
+import { BaseRouter, ClientConstructorArgs } from "BaseRouter"
 import Client from "Client"
 import { Direction, Directions } from "Direction"
 import { RoutingJSError } from "error"
@@ -40,51 +39,9 @@ export interface GraphHopperIsochroneOpts
     interval_type?: "time" | "distance"
 }
 
-interface GraphHopperClientArgs {
-    /**
-     * API key that is passed as part of the URL params
-     */
-    readonly apiKey?: string
-
-    /**
-     * Base URL that all requests are directed to. If not specified,
-     * the default public API at https://api.openrouteservice.org is used (API key required)
-     */
-    readonly baseUrl: string
-
-    /**
-     * overwrites the default user agent header.
-     */
-    readonly userAgent?: string
-
-    /**
-     * additional headers passed to be passed in the request
-     */
-    readonly headers?: { [k: string]: string }
-
-    /**
-     * Custom request timeout
-     */
-    readonly timeout?: number
-
-    /**
-     * Whether requests should be retried on status code 429 responses
-     */
-    readonly retryOverQueryLimit?: boolean
-
-    /**
-     * maximum number of retries performed by axios-retry
-     */
-    readonly maxRetries?: number
-
-    /**
-     * other options passed to the axios instance
-     */
-    readonly axiosOpts?: AxiosRequestConfig
-}
-
 /**
- * Performs requests to the  GraphHopper API.
+ * Performs requests to the  GraphHopper API. Default public URL is
+ * https://api.openrouteservice.org.
  *
  * For the full documentation, see  {@link https://docs.graphhopper.com}.
  */
@@ -92,7 +49,7 @@ class GraphHopper implements BaseRouter {
     client: Client
     apiKey?: string
 
-    constructor(graphHopperClientArgs: GraphHopperClientArgs) {
+    constructor(clientArgs: ClientConstructorArgs) {
         const {
             apiKey,
             baseUrl,
@@ -102,12 +59,14 @@ class GraphHopper implements BaseRouter {
             retryOverQueryLimit,
             maxRetries,
             axiosOpts,
-        } = graphHopperClientArgs
+        } = clientArgs
         this.apiKey = apiKey
         const defaultURL = "https://api.openrouteservice.org"
 
         if (baseUrl === undefined && !apiKey) {
-            throw new RoutingJSError("Please provide an API key for ORS")
+            throw new RoutingJSError(
+                "Please provide an API key for GraphHopper"
+            )
         }
 
         this.client = new Client(

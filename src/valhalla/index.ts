@@ -1,9 +1,7 @@
-import { AxiosRequestConfig } from "axios"
 import { Feature, LineString, Point, Polygon } from "geojson"
 import Client from "../Client"
 import { Direction, DirectionFeat, Directions } from "../Direction"
 import Matrix from "../Matrix"
-import options from "options"
 import {
     MapboxAuthParams,
     ValhallaContours,
@@ -24,7 +22,7 @@ import {
     ValhallaRouteParams,
     ValhallaRouteResponse,
 } from "./parameters"
-import { BaseRouter } from "../BaseRouter"
+import { BaseRouter, ClientConstructorArgs } from "../BaseRouter"
 import { decode } from "@googlemaps/polyline-codec"
 import { Isochrone, Isochrones } from "../Isochrone"
 import { RoutingJSError } from "error"
@@ -99,19 +97,25 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
 
 class Valhalla implements BaseRouter {
     client: Client
-    constructor(
-        // TODO: change signature to args obj
-        public readonly baseUrl: string = "https://valhalla1.openstreetmap.de",
-        public readonly apiKey?: string,
-        public readonly userAgent?: string,
-        public readonly timeout: number = options.defaultTimeout,
-        public readonly retryOverQueryLimit: boolean = false,
-        public readonly headers?: { [k: string]: string },
-        public readonly maxRetries: number = options.defaultMaxRetries,
-        protected readonly axiosOpts?: AxiosRequestConfig
-    ) {
-        this.client = new Client(
+    apiKey?: string
+    constructor(clientArgs: ClientConstructorArgs) {
+        const {
+            apiKey,
             baseUrl,
+            userAgent,
+            headers,
+            timeout,
+            retryOverQueryLimit,
+            maxRetries,
+            axiosOpts,
+        } = clientArgs
+
+        this.apiKey = apiKey // TODO: add to requests
+
+        const defaultURL = "https://valhalla1.openstreetmap.de"
+
+        this.client = new Client(
+            baseUrl || defaultURL,
             userAgent,
             timeout,
             retryOverQueryLimit,

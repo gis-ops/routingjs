@@ -2,9 +2,9 @@ import ORS from "."
 
 describe("ORS returns responses", () => {
     it("gets a direction response", async () => {
-        const ors = new ORS(
-            "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294"
-        )
+        const ors = new ORS({
+            apiKey: "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294",
+        })
 
         await ors
             .directions(
@@ -23,9 +23,9 @@ describe("ORS returns responses", () => {
     })
 
     it("gets an isochrone response", async () => {
-        const ors = new ORS(
-            "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294"
-        )
+        const ors = new ORS({
+            apiKey: "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294",
+        })
 
         await ors
             .isochrones([1.51886, 42.5063], "driving-car", [150, 300])
@@ -35,9 +35,9 @@ describe("ORS returns responses", () => {
     })
 
     it("gets a matrix response", async () => {
-        const ors = new ORS(
-            "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294"
-        )
+        const ors = new ORS({
+            apiKey: "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294",
+        })
 
         await ors
             .matrix(

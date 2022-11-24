@@ -2,7 +2,7 @@ import Valhalla from "."
 
 describe("Valhalla returns responses", () => {
     it("gets a directions response", async () => {
-        const v = new Valhalla("http://localhost:8002")
+        const v = new Valhalla({ baseUrl: "http://localhost:8002" })
         await v
             .directions(
                 [
@@ -31,7 +31,7 @@ describe("Valhalla returns responses", () => {
     })
 
     it("gets an isochrone response", async () => {
-        const v = new Valhalla("http://localhost:8002")
+        const v = new Valhalla({ baseUrl: "http://localhost:8002" })
         await v
             .isochrones([1.52601, 42.50823], "pedestrian", [30, 90])
             .then((i) => {
@@ -41,7 +41,7 @@ describe("Valhalla returns responses", () => {
     })
 
     it("gets an isochrone response", async () => {
-        const v = new Valhalla("http://localhost:8002")
+        const v = new Valhalla({ baseUrl: "http://localhost:8002" })
         await v
             .isochrones([1.52601, 42.50823], "pedestrian", [30, 90], {
                 polygons: true,
@@ -58,7 +58,7 @@ describe("Valhalla returns responses", () => {
     })
 
     it("gets an matrix response", async () => {
-        const v = new Valhalla("http://localhost:8002")
+        const v = new Valhalla({ baseUrl: "http://localhost:8002" })
         await v
             .matrix(
                 [
