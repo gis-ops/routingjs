@@ -217,21 +217,21 @@ class ORS implements BaseRouter {
         }
     }
 
-    isochrones(
+    reachability(
         location: [number, number],
         profile: string,
         intervals: number[],
         isochronesOpts?: ORSIsochroneOpts,
         dryRun?: false
     ): Promise<Isochrones<ORSIsochroneResponse>>
-    isochrones(
+    reachability(
         location: [number, number],
         profile: string,
         intervals: number[],
         isochronesOpts: ORSIsochroneOpts,
         dryRun: true
     ): Promise<string>
-    async isochrones(
+    async reachability(
         location: [number, number],
         profile: string,
         intervals: number[],

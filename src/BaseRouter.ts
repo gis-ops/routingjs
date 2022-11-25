@@ -64,7 +64,7 @@ export interface BaseRouter {
         dryRun?: boolean
     ) => Promise<Matrix<Record<string, any>> | string>
 
-    isochrones?: (
+    reachability?: (
         location: [number, number],
         profile: string,
         intervals: number[],

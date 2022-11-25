@@ -373,21 +373,21 @@ class Valhalla implements BaseRouter {
         }
     }
 
-    public async isochrones(
+    public async reachability(
         location: [number, number],
         profile: ValhallaCostingType,
         intervals: number[],
         isochronesOpts?: ValhallaIsochroneOpts,
         dryRun?: false
     ): Promise<Isochrones<ValhallaIsochroneResponse>>
-    public async isochrones(
+    public async reachability(
         location: [number, number],
         profile: ValhallaCostingType,
         intervals: number[],
         isochronesOpts: ValhallaIsochroneOpts,
         dryRun: true
     ): Promise<string>
-    public async isochrones(
+    public async reachability(
         location: [number, number],
         profile: ValhallaCostingType,
         intervals: number[],

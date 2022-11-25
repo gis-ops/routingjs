@@ -178,21 +178,21 @@ class GraphHopper implements BaseRouter {
      *
      * @see {@link https://docs.graphhopper.com/#tag/Isochrone-API} for the full documentation.
      */
-    isochrones(
+    reachability(
         location: [number, number],
         profile: GraphHopperProfile,
         intervals: [number],
         isochronesOpts?: GraphHopperIsochroneOpts,
         dryRun?: false
     ): Promise<Isochrones<GraphHopperIsochroneResponse>>
-    isochrones(
+    reachability(
         location: [number, number],
         profile: GraphHopperProfile,
         intervals: [number],
         isochronesOpts: GraphHopperIsochroneOpts,
         dryRun: true
     ): Promise<string>
-    public async isochrones(
+    public async reachability(
         location: [number, number],
         profile: GraphHopperProfile,
         intervals: [number],
