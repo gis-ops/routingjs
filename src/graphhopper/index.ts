@@ -17,16 +17,23 @@ import {
 import { Isochrone, Isochrones } from "Isochrone"
 import Matrix from "Matrix"
 
+/**
+ * `points` and `profile` properties are passed using the `directions()` method's top level args for
+ * consistency.
+ *
+ */
 export type GraphHopperDirectionsOpts = Omit<
     GraphHopperRouteParams,
     "points" | "profile"
 >
 
-export interface GraphHopperMatrixOpts
-    extends Omit<
-        GraphHopperMatrixParams,
-        "from_points" | "to_points" | "profile"
-    > {
+/** Omitted properties are passed using the `.matrix()` top level function arguments for consistency. */
+type GraphHopperMatrixBaseOpts = Omit<
+    GraphHopperMatrixParams,
+    "from_points" | "to_points" | "profile"
+>
+
+export interface GraphHopperMatrixOpts extends GraphHopperMatrixBaseOpts {
     sources?: number[]
     destinations?: number[]
 }
@@ -112,6 +119,20 @@ class GraphHopper implements BaseRouter {
             ...directionsOpts,
         }
 
+        if (
+            directionsOpts?.custom_model ||
+            directionsOpts?.headings ||
+            directionsOpts?.heading_penalty ||
+            directionsOpts?.pass_through ||
+            directionsOpts?.algorithm ||
+            directionsOpts?.["round_trip.distance"] ||
+            directionsOpts?.["round_trip.seed"] ||
+            directionsOpts?.["alternative_route.max_paths"] ||
+            directionsOpts?.["alternative_route.max_share_factor"] ||
+            directionsOpts?.["alternative_route.max_weight_factor"]
+        ) {
+            params["ch.disable"] = true // automatically detects whether contraction hierarchies need to be disabled
+        }
         return this.client
             .request({
                 endpoint: `/route${this.apiKey ? "?key=" + this.apiKey : ""}`,
@@ -129,6 +150,7 @@ class GraphHopper implements BaseRouter {
             })
     }
     /**
+     * Parse a response object returned from the `/route` endpoint and returns an {@link Isochrone } object.
      *
      * @param response - the response from the server
      * @returns a new {@link Directions} object
@@ -168,7 +190,6 @@ class GraphHopper implements BaseRouter {
 
     /**
      * Gets isochrones or equidistants for a range of time/distance values around a given set of coordinates.
-     *
      *
      * @param location - One coordinate pair denoting the location.
      * @param profile - Specifies the mode of transport.
@@ -239,7 +260,7 @@ class GraphHopper implements BaseRouter {
     }
 
     /**
-     * Parses an isochrone response and returns an {@link Isochrones} object.
+     * Parses a response returned from the `/isochrone` endpoint and returns an {@link Isochrones} object.
      *
      * @param response - a graphhopper isochrone response
      * @param center - the originally requested location
@@ -265,7 +286,11 @@ class GraphHopper implements BaseRouter {
     }
 
     /**
-     * Make a request to the `/matrix` endpoint.
+     * Makes a request to the `/matrix` endpoint.
+     *
+     * @remarks
+     *
+     * Currently not available on the open source version.
      *
      * @param locations - Specify multiple points for which the weight-, route-, time- or distance-matrix should be calculated. In this case the starts are identical to the destinations. If there are N points, then NxN entries will be calculated.
      * @param profile - Specifies the mode of transport.
@@ -273,6 +298,7 @@ class GraphHopper implements BaseRouter {
      * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
      *
      * @see {@link https://docs.graphhopper.com/#tag/Matrix-API} for the full documentation.
+     *
      */
     matrix(
         locations: [number, number][],
@@ -330,7 +356,7 @@ class GraphHopper implements BaseRouter {
     }
 
     /**
-     * Parse a matrix response.
+     * Parse a response returned from the `/matrix` endpoint.
      *
      * @param response - a GraphHopper Matrix response
      * @returns a new Matrix instance

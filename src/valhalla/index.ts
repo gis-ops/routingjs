@@ -360,10 +360,11 @@ class Valhalla implements BaseRouter {
         }
 
         if (type === "main") {
-            const directions: Direction[] = []
-            response.alternates?.map((res) => {
-                return this.parseDirectionsResponse(res, "alternative")
-            })
+            const directions: Direction[] = [
+                ...(response.alternates?.map((res) => {
+                    return this.parseDirectionsResponse(res, "alternative")
+                }) as Direction[]),
+            ]
             return new Directions(
                 [new Direction(feat, response), ...directions],
                 response

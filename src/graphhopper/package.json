@@ -2,19 +2,13 @@
     "name": "@routing-js/graphhopper",
     "version": "1.0.0",
     "description": "RoutingJS GraphHopper Module",
-    "main": "dist/js/index.js",
+    "main": "dist/index.js",
     "files": [
         "dist"
     ],
     "typings": "dist/js/index.d.ts",
     "sideEffects": false,
-    "scripts": {
-        "test": "jest",
-        "format": "prettier --write src/{*.ts,**/*.ts}",
-        "build": "tsc",
-        "build:watch": "tsc --watch",
-        "postinstall": "npx husky install"
-    },
+    "scripts": {},
     "repository": {
         "type": "git",
         "url": "git+https://github.com/chrstnbwnkl/routing-js.git"

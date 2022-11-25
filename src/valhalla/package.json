@@ -2,19 +2,14 @@
     "name": "@routing-js/valhalla",
     "version": "1.0.0",
     "description": "RoutingJS Valhalla Module",
-    "main": "dist/js/index.js",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
     "files": [
         "dist"
     ],
     "typings": "dist/js/index.d.ts",
     "sideEffects": false,
-    "scripts": {
-        "test": "jest",
-        "format": "prettier --write src/{*.ts,**/*.ts}",
-        "build": "tsc",
-        "build:watch": "tsc --watch",
-        "postinstall": "npx husky install"
-    },
+    "scripts": {},
     "repository": {
         "type": "git",
         "url": "git+https://github.com/chrstnbwnkl/routing-js.git"

@@ -8,13 +8,7 @@
     ],
     "typings": "dist/js/index.d.ts",
     "sideEffects": false,
-    "scripts": {
-        "test": "jest",
-        "format": "prettier --write src/{*.ts,**/*.ts}",
-        "build": "tsc",
-        "build:watch": "tsc --watch",
-        "postinstall": "npx husky install"
-    },
+    "scripts": {},
     "repository": {
         "type": "git",
         "url": "git+https://github.com/chrstnbwnkl/routing-js.git"
