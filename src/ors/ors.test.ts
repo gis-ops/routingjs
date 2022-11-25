@@ -28,7 +28,7 @@ describe("ORS returns responses", () => {
         })
 
         await ors
-            .isochrones([1.51886, 42.5063], "driving-car", [150, 300])
+            .reachability([1.51886, 42.5063], "driving-car", [150, 300])
             .then((i) => {
                 expect(i.isochrones).toHaveLength(2)
             })

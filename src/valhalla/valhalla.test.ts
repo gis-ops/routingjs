@@ -33,7 +33,7 @@ describe("Valhalla returns responses", () => {
     it("gets an isochrone response", async () => {
         const v = new Valhalla({ baseUrl: "http://localhost:8002" })
         await v
-            .isochrones([1.52601, 42.50823], "pedestrian", [30, 90])
+            .reachability([1.52601, 42.50823], "pedestrian", [30, 90])
             .then((i) => {
                 expect(i).toHaveProperty("isochrones")
                 expect(i.isochrones).toHaveLength(2)
@@ -43,7 +43,7 @@ describe("Valhalla returns responses", () => {
     it("gets an isochrone response", async () => {
         const v = new Valhalla({ baseUrl: "http://localhost:8002" })
         await v
-            .isochrones([1.52601, 42.50823], "pedestrian", [30, 90], {
+            .reachability([1.52601, 42.50823], "pedestrian", [30, 90], {
                 polygons: true,
                 id: "test-id",
             })

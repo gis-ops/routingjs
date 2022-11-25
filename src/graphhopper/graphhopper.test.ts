@@ -32,7 +32,7 @@ describe("GraphHopper returns responses", () => {
 
     it("gets an isochrones response", async () => {
         const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
-        await g.isochrones([1.53789, 42.51007], "car", [600]).then((i) => {
+        await g.reachability([1.53789, 42.51007], "car", [600]).then((i) => {
             console.log(i)
             expect(i.raw).toBeDefined()
             expect(i.isochrones).toHaveLength(1)

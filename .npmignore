@@ -80,7 +80,6 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -110,4 +109,7 @@ dist
 **/valhalla.json
 **/*-tiles*
 **/*.osm-gh/
-docs/docs/
+
+*.ts
+/docs/
+/test_data/

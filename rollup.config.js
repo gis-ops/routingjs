@@ -1,4 +1,3 @@
-"use strict"
 import typescript from "@rollup/plugin-typescript"
 import * as path from "path"
 
@@ -16,11 +15,11 @@ export default [".", "valhalla", "osrm", "ors", "graphhopper"].map((pkg) => {
         input: path.join(base, "index.ts"),
         output: [
             {
-                file: path.join(outputFile, "bundle.cjs"),
+                file: path.join(outputFile, "index.cjs"),
                 format: "cjs",
             },
             {
-                file: path.join(outputFile, "bundle.es.js"),
+                file: path.join(outputFile, "index.js"),
                 format: "es",
             },
         ],

@@ -36,7 +36,7 @@ export interface OSRMMatrixOpts extends OSRMDirectionsOpts {
 class OSRM implements BaseRouter {
     client: Client
     apiKey?: string
-    constructor(clientArgs: ClientConstructorArgs) {
+    constructor(clientArgs?: ClientConstructorArgs) {
         const {
             apiKey,
             baseUrl,
@@ -46,21 +46,22 @@ class OSRM implements BaseRouter {
             retryOverQueryLimit,
             maxRetries,
             axiosOpts,
-        } = clientArgs
+        } = clientArgs || {}
 
         this.apiKey = apiKey // TODO: add to requests
 
         const defaultURL = "https://routing.openstreetmap.de/routed-bike"
 
-        this.client = new Client(
-            baseUrl || defaultURL,
-            userAgent,
-            timeout,
-            retryOverQueryLimit,
-            headers,
-            maxRetries,
-            axiosOpts
-        )
+        this.client =
+            new Client(
+                baseUrl || defaultURL,
+                userAgent,
+                timeout,
+                retryOverQueryLimit,
+                headers,
+                maxRetries,
+                axiosOpts
+            ) || {}
     }
 
     public async directions(

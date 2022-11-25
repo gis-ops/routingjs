@@ -64,7 +64,7 @@ export interface ORSIsochroneOpts extends ORSBaseOpts {
 class ORS implements BaseRouter {
     client: Client
     apiKey?: string
-    constructor(clientArgs: ClientConstructorArgs) {
+    constructor(clientArgs?: ClientConstructorArgs) {
         const {
             apiKey,
             baseUrl,
@@ -73,9 +73,9 @@ class ORS implements BaseRouter {
             retryOverQueryLimit,
             maxRetries,
             axiosOpts,
-        } = clientArgs
+        } = clientArgs || {}
 
-        let { headers } = clientArgs
+        let { headers } = clientArgs || {}
 
         if (apiKey) {
             headers = { ...headers, Authorization: apiKey }

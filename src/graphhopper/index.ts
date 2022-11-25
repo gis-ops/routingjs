@@ -49,7 +49,7 @@ class GraphHopper implements BaseRouter {
     client: Client
     apiKey?: string
 
-    constructor(clientArgs: ClientConstructorArgs) {
+    constructor(clientArgs?: ClientConstructorArgs) {
         const {
             apiKey,
             baseUrl,
@@ -59,7 +59,7 @@ class GraphHopper implements BaseRouter {
             retryOverQueryLimit,
             maxRetries,
             axiosOpts,
-        } = clientArgs
+        } = clientArgs || {}
         this.apiKey = apiKey
         const defaultURL = "https://api.openrouteservice.org"
 

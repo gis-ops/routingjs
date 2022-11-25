@@ -146,7 +146,7 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
 class Valhalla implements BaseRouter {
     client: Client
     apiKey?: string
-    constructor(clientArgs: ClientConstructorArgs) {
+    constructor(clientArgs?: ClientConstructorArgs) {
         const {
             apiKey,
             baseUrl,
@@ -156,7 +156,7 @@ class Valhalla implements BaseRouter {
             retryOverQueryLimit,
             maxRetries,
             axiosOpts,
-        } = clientArgs
+        } = clientArgs || {}
 
         this.apiKey = apiKey // TODO: add to requests
 
@@ -234,7 +234,7 @@ class Valhalla implements BaseRouter {
         const params: ValhallaRouteParams = {
             locations: this._buildLocations(locations),
             costing: profile,
-            narrative: directionsOpts.instructions,
+            narrative: directionsOpts.instructions || false,
         }
 
         if (

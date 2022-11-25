@@ -2,8 +2,8 @@
     "name": "routing-js",
     "version": "1.0.0",
     "description": "Library for consistent access to various vehicle routing APIs",
-    "main": "dist/index.js",
-    "module": "dist/my-lib.mjs",
+    "module": "dist/index.js",
+    "main": "dist/index.cjs",
     "files": [
         "dist"
     ],
@@ -15,7 +15,8 @@
         "build": "tsc",
         "build:watch": "tsc --watch",
         "postinstall": "npx husky install",
-        "bundle": "rollup -c"
+        "bundle": "rollup -c",
+        "clear": "rimraf {dist,\"src/**/dist/\"}"
     },
     "repository": {
         "type": "git",
