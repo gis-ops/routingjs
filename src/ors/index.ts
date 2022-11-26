@@ -15,6 +15,7 @@ import {
     ORSMatrixResponse,
     ORSPreference,
     ORSProfile,
+    ORSRoute,
     ORSRouteParams,
     ORSRouteResponse,
     ORSUnit,
@@ -99,7 +100,7 @@ class ORS implements BaseRouter {
         directionsOpts?: ORSDirectionsOpts,
         dryRun?: false,
         format?: ORSFormat
-    ): Promise<Directions<ORSRouteResponse>>
+    ): Promise<Directions<ORSRouteResponse, ORSRoute>>
     directions(
         locations: [number, number][],
         profile: ORSProfile,
@@ -113,7 +114,7 @@ class ORS implements BaseRouter {
         directionsOpts: ORSDirectionsOpts = {},
         dryRun?: boolean,
         format: ORSFormat = "json"
-    ): Promise<Directions<ORSRouteResponse> | string> {
+    ): Promise<Directions<ORSRouteResponse, ORSRoute> | string> {
         if (typeof directionsOpts.options === "object") {
             if (
                 Object.prototype.hasOwnProperty.call(
@@ -142,13 +143,13 @@ class ORS implements BaseRouter {
                 postParams: params,
                 dryRun,
             })
-            .then((res) => {
+            .then((res: ORSRouteResponse) => {
                 if (typeof res === "object") {
                     return ORS.parseDirectionsResponse(
-                        res as ORSRouteResponse,
+                        res,
                         format,
                         directionsOpts.units || "m"
-                    ) as Directions<ORSRouteResponse>
+                    )
                 } else {
                     return res
                 }
@@ -160,7 +161,7 @@ class ORS implements BaseRouter {
         format: ORSFormat,
         units?: ORSUnit,
         alternative_routes?: ORSAlternateRouteParam
-    ): Directions<ORSRouteResponse> {
+    ): Directions<ORSRouteResponse, ORSRoute> {
         let factor = 1
 
         if (units === "km") {
@@ -172,7 +173,7 @@ class ORS implements BaseRouter {
         }
 
         if (format === "geojson") {
-            const routes: Direction[] = []
+            const routes: Direction<ORSRoute>[] = []
             response.features?.forEach((feature) => {
                 feature.properties = {
                     ...feature.properties,
@@ -187,7 +188,7 @@ class ORS implements BaseRouter {
             return new Directions(routes, response)
         } else {
             // format is json
-            const routes: Direction[] = []
+            const routes: Direction<ORSRoute>[] = []
             response.routes?.forEach((route) => {
                 let geom = null
                 if (route.geometry) {
@@ -223,7 +224,7 @@ class ORS implements BaseRouter {
         intervals: number[],
         isochronesOpts?: ORSIsochroneOpts,
         dryRun?: false
-    ): Promise<Isochrones<ORSIsochroneResponse>>
+    ): Promise<Isochrones<ORSIsochroneResponse, any>>
     reachability(
         location: [number, number],
         profile: string,
@@ -237,7 +238,7 @@ class ORS implements BaseRouter {
         intervals: number[],
         isochronesOpts: ORSIsochroneOpts = {},
         dryRun?: boolean
-    ): Promise<Isochrones<ORSIsochroneResponse> | string> {
+    ): Promise<Isochrones<ORSIsochroneResponse, any> | string> {
         const { interval_type, ...rest } = isochronesOpts
         const params: ORSIsochroneParams = {
             locations: [location],
@@ -260,7 +261,7 @@ class ORS implements BaseRouter {
                     return ORS.parseIsochroneResponse(
                         res as ORSIsochroneResponse,
                         interval_type
-                    ) as Isochrones<ORSIsochroneResponse>
+                    ) as Isochrones<ORSIsochroneResponse, any>
                 } else {
                     return res
                 }
@@ -270,10 +271,10 @@ class ORS implements BaseRouter {
     public static parseIsochroneResponse(
         response: ORSIsochroneResponse,
         intervalType?: "time" | "distance"
-    ): Isochrones<ORSIsochroneResponse> {
-        const isochrones: Isochrone[] = []
+    ): Isochrones<ORSIsochroneResponse, any> {
+        const isochrones: Isochrone<any>[] = []
 
-        response.features.forEach((feature, index) => {
+        response.features.forEach((feature) => {
             isochrones.push(
                 new Isochrone(
                     feature.properties.center,

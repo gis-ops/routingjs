@@ -187,7 +187,7 @@ class Valhalla implements BaseRouter {
         profile: ValhallaCostingType,
         directionsOpts?: ValhallaDirectionOpts,
         dryRun?: false
-    ): Promise<Directions<ValhallaRouteResponse>>
+    ): Promise<Directions<ValhallaRouteResponse, ValhallaRouteResponse>>
     public async directions(
         locations: [number, number][],
         profile: ValhallaCostingType,
@@ -199,7 +199,9 @@ class Valhalla implements BaseRouter {
         profile: ValhallaCostingType,
         directionsOpts: ValhallaDirectionOpts = {},
         dryRun = false
-    ): Promise<Directions<ValhallaRouteResponse> | string> {
+    ): Promise<
+        Directions<ValhallaRouteResponse, ValhallaRouteResponse> | string
+    > {
         dryRun = dryRun || false
         const auth: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
@@ -214,14 +216,17 @@ class Valhalla implements BaseRouter {
             .request({ endpoint: "/route", postParams: params, auth, dryRun })
             .then((res) => {
                 if (typeof res === "object") {
-                    return Valhalla.parseDirectionsResponse(
-                        res as ValhallaRouteResponse
-                    ) as Directions<ValhallaRouteResponse>
+                    console.log(JSON.stringify(res))
+                    return this.parseDirectionsResponse(
+                        res as ValhallaRouteResponse,
+                        "main"
+                    )
                 } else {
                     return res // return the request info string
                 }
             })
             .catch((error) => {
+                console.log(JSON.stringify(error))
                 throw new RoutingJSError(error.message)
             })
     }
@@ -320,10 +325,20 @@ class Valhalla implements BaseRouter {
         return params
     }
 
-    public static parseDirectionsResponse(
+    parseDirectionsResponse(
+        response: ValhallaRouteResponse,
+        type: "main"
+    ): Directions<ValhallaRouteResponse, ValhallaRouteResponse>
+    parseDirectionsResponse(
+        response: ValhallaRouteResponse,
+        type: "alternative"
+    ): Direction<ValhallaRouteResponse>
+    public parseDirectionsResponse(
         response: ValhallaRouteResponse,
         type: "main" | "alternative" = "main"
-    ): Directions<ValhallaRouteResponse> | Direction {
+    ):
+        | Directions<ValhallaRouteResponse, ValhallaRouteResponse>
+        | Direction<ValhallaRouteResponse> {
         const geometry: [number, number][] = []
         let [duration, distance] = [0, 0]
         let factor = 1
@@ -360,11 +375,16 @@ class Valhalla implements BaseRouter {
         }
 
         if (type === "main") {
-            const directions: Direction[] = [
-                ...(response.alternates?.map((res) => {
-                    return this.parseDirectionsResponse(res, "alternative")
-                }) as Direction[]),
-            ]
+            const directions: Direction<ValhallaRouteResponse>[] =
+                response.alternates
+                    ? response.alternates.map((res) => {
+                          return this.parseDirectionsResponse(
+                              res,
+                              "alternative"
+                          )
+                      })
+                    : []
+
             return new Directions(
                 [new Direction(feat, response), ...directions],
                 response
@@ -380,7 +400,7 @@ class Valhalla implements BaseRouter {
         intervals: number[],
         isochronesOpts?: ValhallaIsochroneOpts,
         dryRun?: false
-    ): Promise<Isochrones<ValhallaIsochroneResponse>>
+    ): Promise<Isochrones<ValhallaIsochroneResponse, Feature>>
     public async reachability(
         location: [number, number],
         profile: ValhallaCostingType,
@@ -394,7 +414,7 @@ class Valhalla implements BaseRouter {
         intervals: number[],
         isochronesOpts: ValhallaIsochroneOpts = {},
         dryRun?: boolean
-    ): Promise<Isochrones<ValhallaIsochroneResponse> | string> {
+    ): Promise<Isochrones<ValhallaIsochroneResponse, Feature> | string> {
         const auth: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
@@ -421,7 +441,7 @@ class Valhalla implements BaseRouter {
                         isochronesOpts?.intervalType
                             ? isochronesOpts.intervalType
                             : "time"
-                    ) as Isochrones<ValhallaIsochroneResponse>
+                    ) as Isochrones<ValhallaIsochroneResponse, Feature>
                 } else {
                     return res // return the request info string
                 }
@@ -543,8 +563,8 @@ class Valhalla implements BaseRouter {
         location: [number, number],
         intervals: number[],
         intervalType: "time" | "distance"
-    ): Isochrones<ValhallaIsochroneResponse> {
-        const isochrones: Isochrone[] = []
+    ): Isochrones<ValhallaIsochroneResponse, Feature> {
+        const isochrones: Isochrone<Feature>[] = []
         response.features.forEach((feature, index) => {
             // TODO: convert to loop
             if (feature.geometry.type !== "Point") {

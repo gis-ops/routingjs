@@ -1,4 +1,5 @@
 import { Feature, LineString, Polygon } from "geojson"
+import { JSONObject, JSONValue } from "json"
 
 /**
  * Request parameters common across `/route`, `/isochrone` and `/matrix` endpoints.
@@ -260,7 +261,7 @@ export type GraphHopperIsochroneGetParams = {
 export interface GraphHopperMatrixParams extends GraphHopperBaseParams {
     /**
      * The starting points for the routes in an array of [longitude,latitude].
-     * For instance, if you want to calculate three routes from point A such as A->1, A->2, A->3
+     * For instance, if you want to calculate three routes from point A such as A-\>1, A-\>2, A-\>3
      * then you have one from_point parameter and three to_point parameters.
      */
     from_points: [number, number][]
@@ -335,25 +336,52 @@ export interface GraphHopperMatrixParams extends GraphHopperBaseParams {
     fail_fast?: boolean
 }
 
+/** The response object returned by the `/route` endpoint. */
 export interface GraphHopperRouteResponse {
-    hints?: { [k: string]: any }
+    hints?: JSONObject
     paths: GraphHopperRoutePath[]
+    /** Additional information for your request */
     info: GraphHopperResponseInfo
 }
-
+/** The response object returned by the `/isochrone` endpoint. */
 export interface GraphHopperIsochroneResponse {
     polygons: Feature<Polygon, GraphHopperIsochroneProps>[]
     copyrights: string[]
 }
 
+/** The response object returned by the `/matrix` endpoint. */
 export interface GraphHopperMatrixResponse {
+    /**
+     * The distance matrix for the specified points in the same order as the time matrix.
+     * The distances are in meters. If fail_fast=false the matrix will contain null for connections
+     * that could not be found.
+     */
     distances?: number[][]
+    /**
+     * The time matrix for the specified points in the order `[[from1->to1, from1->to2, ...], [from2->to1, from2->to2, ...], ...]`.
+     * The times are in seconds. If `fail_fast=false` the matrix will contain null for connections that could not be found.
+     *
+     */
     times?: number[][]
+    /**
+     * The weight matrix for the specified points in the same order as the time matrix.
+     * The weights for different vehicle profiles can have a different unit but the weights array
+     * is perfectly suited as input for Vehicle Routing Problems as it is currently faster to calculate.
+     * If fail_fast=false the matrix will contain null for connections that could not be found.
+     */
     weights?: number[][]
+    /** Additional information for your request */
     info: GraphHopperResponseInfo
+    /** Optional. Additional response data. */
     hints?: GraphHopperMatrixHint[]
 }
 
+/**
+ * The profile is used to determine the network, speed and other physical attributes to use
+ * for routing the vehicle or pedestrian.
+ *
+ *  @see {@link https://docs.graphhopper.com/#section/Map-Data-and-Routing-Profiles} for full documentation.
+ */
 export type GraphHopperProfile =
     | "car"
     | "car_delivery"
@@ -371,6 +399,10 @@ export type GraphHopperProfile =
     | "mtb"
     | "racingbike"
 
+/**
+ * Specifies on which side a point should be relative to the driver when she leaves/arrives
+ * at a start/target/via point.
+ */
 type GraphHopperCurbside = "any" | "right" | "left"
 
 type GraphHopperDetail =
@@ -401,9 +433,13 @@ type GraphHopperDetail =
     | "bike_network"
     | "get_off_bike"
 
-interface GraphHopperCustomModel {
-    [k: string]: any
-}
+/**
+ * A custom model allows you to modify the default routing behavior of a vehicle profile by
+ * specifying a set of rules in JSON language.
+ *
+ * @see {@link https://docs.graphhopper.com/#section/Custom-Model} for the full documentation.
+ */
+type GraphHopperCustomModel = JSONObject
 
 type GraphHopperSnapPrevention =
     | "motorway"
@@ -455,7 +491,7 @@ export interface GraphHopperRoutePath {
      * In this example, the route uses two streets: The first, Frankfurter Straße, is used
      * between points[0] and points[2], and the second, Zollweg, between points[2] and points[6].
      */
-    details: { [Property in keyof GraphHopperDetail]: any }
+    details: { [Property in keyof GraphHopperDetail]: JSONValue }
     /**
      * An array of indices (zero-based), specifiying the order in which the input points are visited.
      * Only present if the optimize parameter was used.
@@ -464,27 +500,49 @@ export interface GraphHopperRoutePath {
 }
 
 interface GraphHopperInstruction {
+    /**
+     * A description what the user has to do in order to follow the route. The language
+     * depends on the locale parameter.
+     */
     text: string
+    /** The name of the street to turn onto in order to follow the route. */
     street_name: string
+    /** The distance for this instruction, in meters. */
     distance: number
+    /** The duration for this instruction, in milliseconds. */
     time: number
+    /**
+     * Two indices into points, referring to the beginning and the end of the segment of
+     * the route this instruction refers to.
+     */
     interval: [number, number]
     sign: number
+    /**
+     * A number which specifies the sign to show.
+     * @see {@link https://docs.graphhopper.com/#operation/postRoute/200/application/json/paths/instructions/sign} for full documentation.
+     */
     exit_number: number
+    /**
+     * Only available for roundabout instructions (sign is 6). The count of exits at which the
+     * route leaves the roundabout.
+     */
     turn_angle: number
 }
 
 interface GraphHopperResponseInfo {
+    /** Attribution according to our documentation is necessary if no white-label option included. */
     copyright: string
+    /** How long it took to generate the response. */
     took: number
 }
 
 /**
  * Properties of the returned Features.
  */
-interface GraphHopperIsochroneProps {
+export type GraphHopperIsochroneProps = {
     bucket: number
 }
+
 type GraphHopperMatrixOut = "weights" | "times" | "distances"
 
 interface GraphHopperMatrixHint {

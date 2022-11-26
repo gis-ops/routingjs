@@ -1,12 +1,8 @@
 import { Feature, LineString } from "geojson"
-import { GraphHopperRoutePath } from "graphhopper/parameters"
-import { ORSRoute } from "./ors/parameters"
-import { OSRMRoute } from "./osrm/parameters"
-import { ValhallaRouteResponse } from "./valhalla/parameters"
 
-export class Directions<T> {
+export class Directions<T, U> {
     constructor(
-        public readonly directions: Direction[],
+        public readonly directions: Direction<U>[],
         public readonly raw: T
     ) {}
 }
@@ -18,13 +14,9 @@ interface DirectionProps {
 
 export type DirectionFeat = Feature<LineString | null, DirectionProps>
 
-export class Direction {
+export class Direction<T> {
     constructor(
         public readonly feature: DirectionFeat,
-        public readonly raw?:
-            | ValhallaRouteResponse
-            | OSRMRoute
-            | ORSRoute
-            | GraphHopperRoutePath
+        public readonly raw?: T
     ) {}
 }

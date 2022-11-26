@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios"
+import { JSONObject, JSONValue } from "json"
 import Client from "./Client"
 import { Directions } from "./Direction"
 import { Isochrones } from "./Isochrone"
@@ -53,22 +54,22 @@ export interface BaseRouter {
     directions: (
         locations: number[][],
         profile: string,
-        directionsOpts?: { [k: string]: any },
+        directionsOpts?: Record<string | number | symbol, JSONValue>,
         dryRun?: boolean
-    ) => Promise<Directions<Record<string, any>> | string>
+    ) => Promise<Directions<any, any> | string>
 
     matrix: (
         locations: [number, number][],
         profile: string,
-        matrixOpts?: { [k: string]: any },
+        matrixOpts?: JSONObject,
         dryRun?: boolean
-    ) => Promise<Matrix<Record<string, any>> | string>
+    ) => Promise<Matrix<any> | string>
 
     reachability?: (
         location: [number, number],
         profile: string,
         intervals: number[],
-        isochronesOpts?: { [k: string]: any },
+        isochronesOpts?: JSONObject,
         dryRun?: boolean
-    ) => Promise<Isochrones<Record<string, any>> | string>
+    ) => Promise<Isochrones<any, any> | string>
 }

@@ -7,6 +7,7 @@ import {
     OSRMGeometryObject,
     OSRMGeometryType,
     OSRMOverviewType,
+    OSRMRoute,
     OSRMRouteParams,
     OSRMRouteResponse,
     OSRMTableParams,
@@ -69,7 +70,7 @@ class OSRM implements BaseRouter {
         profile: string,
         directionsOpts?: OSRMDirectionsOpts,
         dryRun?: false
-    ): Promise<Directions<OSRMRouteResponse>>
+    ): Promise<Directions<OSRMRouteResponse, OSRMRoute>>
     public async directions(
         locations: [number, number][],
         profile: string,
@@ -81,7 +82,7 @@ class OSRM implements BaseRouter {
         profile = "driving",
         directionsOpts: OSRMDirectionsOpts = {},
         dryRun = false
-    ): Promise<Directions<OSRMRouteResponse> | string> {
+    ): Promise<Directions<OSRMRouteResponse, OSRMRoute> | string> {
         const coords = locations
             .map((tuple) => `${tuple[0]},${tuple[1]}`)
             .join(";")
@@ -94,10 +95,8 @@ class OSRM implements BaseRouter {
                 getParams: params,
                 dryRun,
             })
-            .then((res) => {
-                return OSRM.parseDirectionsResponse(
-                    res as OSRMRouteResponse
-                ) as Directions<OSRMRouteResponse>
+            .then((res: OSRMRouteResponse) => {
+                return OSRM.parseDirectionsResponse(res)
             })
             .catch((error) => {
                 throw new RoutingJSError(error.message)
@@ -158,7 +157,7 @@ class OSRM implements BaseRouter {
     public static parseDirectionsResponse(
         response: OSRMRouteResponse,
         geometryFormat?: OSRMGeometryType
-    ): Directions<OSRMRouteResponse> {
+    ): Directions<OSRMRouteResponse, OSRMRoute> {
         const directions = response.routes.map((route) => {
             const feature: DirectionFeat = {
                 type: "Feature",

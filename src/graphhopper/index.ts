@@ -7,11 +7,13 @@ import { LineString } from "geojson"
 import {
     GraphHopperIsochroneGetParams,
     GraphHopperIsochroneParams,
+    GraphHopperIsochroneProps,
     GraphHopperIsochroneResponse,
     GraphHopperMatrixParams,
     GraphHopperMatrixResponse,
     GraphHopperProfile,
     GraphHopperRouteParams,
+    GraphHopperRoutePath,
     GraphHopperRouteResponse,
 } from "graphhopper/parameters"
 import { Isochrone, Isochrones } from "Isochrone"
@@ -34,6 +36,7 @@ type GraphHopperMatrixBaseOpts = Omit<
 >
 
 export interface GraphHopperMatrixOpts extends GraphHopperMatrixBaseOpts {
+    /**  */
     sources?: number[]
     destinations?: number[]
 }
@@ -100,7 +103,7 @@ class GraphHopper implements BaseRouter {
         profile: GraphHopperProfile,
         directionsOpts?: GraphHopperDirectionsOpts,
         dryRun?: false
-    ): Promise<Directions<GraphHopperRouteResponse>>
+    ): Promise<Directions<GraphHopperRouteResponse, GraphHopperRoutePath>>
     directions(
         locations: [number, number][],
         profile: GraphHopperProfile,
@@ -112,7 +115,9 @@ class GraphHopper implements BaseRouter {
         profile: GraphHopperProfile,
         directionsOpts?: GraphHopperDirectionsOpts,
         dryRun?: boolean | undefined
-    ): Promise<string | Directions<GraphHopperRouteResponse>> {
+    ): Promise<
+        string | Directions<GraphHopperRouteResponse, GraphHopperRoutePath>
+    > {
         const params: GraphHopperRouteParams = {
             profile,
             points: locations,
@@ -143,7 +148,10 @@ class GraphHopper implements BaseRouter {
                 if (typeof res === "object") {
                     return GraphHopper.parseDirectionsResponse(
                         res as GraphHopperRouteResponse
-                    ) as Directions<GraphHopperRouteResponse>
+                    ) as Directions<
+                        GraphHopperRouteResponse,
+                        GraphHopperRoutePath
+                    >
                 } else {
                     return res
                 }
@@ -157,7 +165,7 @@ class GraphHopper implements BaseRouter {
      */
     public static parseDirectionsResponse(
         response: GraphHopperRouteResponse
-    ): Directions<GraphHopperRouteResponse> {
+    ): Directions<GraphHopperRouteResponse, GraphHopperRoutePath> {
         return new Directions(
             response.paths.map((path) => {
                 let geometry = path.points
@@ -205,7 +213,9 @@ class GraphHopper implements BaseRouter {
         intervals: [number],
         isochronesOpts?: GraphHopperIsochroneOpts,
         dryRun?: false
-    ): Promise<Isochrones<GraphHopperIsochroneResponse>>
+    ): Promise<
+        Isochrones<GraphHopperIsochroneResponse, GraphHopperIsochroneProps>
+    >
     reachability(
         location: [number, number],
         profile: GraphHopperProfile,
@@ -219,7 +229,10 @@ class GraphHopper implements BaseRouter {
         intervals: [number],
         isochronesOpts?: GraphHopperIsochroneOpts,
         dryRun?: boolean | undefined
-    ): Promise<string | Isochrones<Record<string, any>>> {
+    ): Promise<
+        | string
+        | Isochrones<GraphHopperIsochroneResponse, GraphHopperIsochroneProps>
+    > {
         const params: GraphHopperIsochroneGetParams = {
             point: [location[1], location[0]].join(","),
             profile,
@@ -252,7 +265,7 @@ class GraphHopper implements BaseRouter {
                         res as GraphHopperIsochroneResponse,
                         location,
                         isochronesOpts?.interval_type || "time"
-                    ) as Isochrones<GraphHopperIsochroneResponse>
+                    )
                 } else {
                     return res
                 }
@@ -271,8 +284,8 @@ class GraphHopper implements BaseRouter {
         response: GraphHopperIsochroneResponse,
         center: [number, number],
         intervalType: "time" | "distance"
-    ): Isochrones<GraphHopperIsochroneResponse> {
-        return new Isochrones(
+    ): Isochrones<GraphHopperIsochroneResponse, GraphHopperIsochroneProps> {
+        const isochrones: Isochrone<GraphHopperIsochroneProps>[] =
             response.polygons.map((poly) => {
                 return new Isochrone(
                     center,
@@ -280,9 +293,8 @@ class GraphHopper implements BaseRouter {
                     intervalType,
                     poly
                 )
-            }),
-            response
-        )
+            })
+        return new Isochrones(isochrones, response)
     }
 
     /**

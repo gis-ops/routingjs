@@ -37,6 +37,7 @@ import {
     GraphHopperMatrixParams,
     GraphHopperRouteParams,
 } from "graphhopper/parameters"
+import { ORSRouteResponse } from "graphhopper/dist"
 
 interface ClientInterface {
     readonly baseURL: string
@@ -166,6 +167,7 @@ class Client implements ClientInterface {
         | FeatureCollection
         | OSRMRouteResponse
         | OSRMTableResponse
+        | ORSRouteResponse
         | string
     > {
         const { endpoint, getParams, postParams, auth, dryRun } = requestArgs
