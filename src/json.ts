@@ -1,5 +1,5 @@
 export type JSONValue = string | number | boolean | JSONArray | JSONObject
 export type JSONArray = JSONValue[]
 export interface JSONObject {
-    [k: number]: JSONValue
+    [k: number | string]: JSONValue
 }

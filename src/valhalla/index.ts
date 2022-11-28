@@ -51,14 +51,14 @@ interface ValhallaBaseOpts {
     /**
      * A set of locations to exclude or avoid within a route.
      */
-    avoidLocations?: ([number, number] | Point | Feature<Point, any>)[]
+    avoidLocations?: ([number, number] | Point | Feature<Point>)[]
     /**
      * Roads intersecting these polygons
             will be avoided during path finding. If you only need to avoid a few specific roads, it's much more
             efficient to use avoid_locations. Valhalla will close open rings (i.e. copy the first coordingate to the
             last position).
      */
-    avoidPolygons?: ([number, number][][] | Polygon | Feature<Polygon, any>)[]
+    avoidPolygons?: ([number, number][][] | Polygon | Feature<Polygon>)[]
     /**
      * This is the local date and time at the location. Field `type`: 0: Current departure time,
        1: Specified departure time. Field `value`: the date and time is specified
