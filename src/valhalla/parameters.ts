@@ -417,20 +417,146 @@ export interface ValhallaLocation {
      *
      */
     type?: ValhallaLocationType
+    /**
+     * Preferred direction of travel for the start from the location.
+     *
+     * @remarks
+     *
+     * This can be useful for mobile
+     * routing where a vehicle is traveling in a specific direction along a road, and the route should
+     * start in that direction. The heading is indicated in degrees from north in a clockwise direction,
+     * where north is 0°, east is 90°, south is 180°, and west is 270°.
+     */
     heading?: number
+    /**
+     * How close in degrees a given street's angle must be in order for it to be considered as in the
+     * same direction of the heading parameter.
+     *
+     * @defaultValue
+     * The default value is 60 degrees.
+     */
     heading_tolerance?: number
+    /**
+     * Street name. The street name may be used to assist finding the correct routing location at
+     * the specified latitude, longitude.
+     *
+     * @remarks
+     * This is not currently implemented.
+     */
     street?: string
+    /**
+     * OpenStreetMap identification number for a polyline way. The way ID may be used to assist
+     * finding the correct routing location at the specified latitude, longitude.
+     *
+     * @remarks
+     *
+     * This is not currently implemented.
+     */
     way_id?: number
+    /**
+     * Minimum number of nodes (intersections) reachable for a given edge (road between intersections) to
+     * consider that edge as belonging to a connected region.
+     *
+     * @remarks
+     * When correlating this location to the route network, try to find candidates who are reachable
+     * from this many or more nodes (intersections). If a given candidate edge reaches less than
+     * this number of nodes its considered to be a disconnected island and we'll search for more
+     * candidates until we find at least one that isn't considered a disconnected island. If this
+     * value is larger than the configured service limit it will be clamped to that limit.
+     *
+     * @defaultValue
+     * The default is a minimum of 50 reachable nodes.
+     */
     minimum_reachability?: number
+    /**
+     * The number of meters about this input location within which edges (roads between intersections)
+     * will be considered as candidates for said location. When correlating this location to the
+     * route network, try to only return results within this distance (meters) from this location.
+     * If there are no candidates within this distance it will return the closest candidate within
+     * reason. If this value is larger than the configured service limit it will be clamped to that
+     * limit.
+     *
+     * @defaultValue
+     * The default is 0 meters.
+     */
     radius?: number
+    /**
+     * Whether or not to rank the edge candidates for this location.
+     *
+     * @remarks
+     * The ranking is used as a penalty
+     * within the routing algorithm so that some edges will be penalized more heavily than others.
+     * If true candidates will be ranked according to their distance from the input and various other
+     * attributes. If false the candidates will all be treated as equal which should lead to routes
+     * that are just the most optimal path with emphasis about which edges were selected.
+     */
     rank_candidates?: boolean
+    /**
+     * If the location is not offset from the road centerline or is closest to an intersection this
+     * option has no effect. Otherwise the determined side of street is used to determine whether
+     * or not the location should be visited from the same, opposite or either side of the road with
+     * respect to the side of the road the given locale drives on.
+     *
+     * @remarks
+     *
+     * In Germany (driving on the right
+     * side of the road), passing a value of same will only allow you to leave from or arrive at a
+     * location such that the location will be on your right. In Australia (driving on the left side
+     * of the road), passing a value of same will force the location to be on your left. A value of
+     * opposite will enforce arriving/departing from a location on the opposite side of the road from
+     * that which you would be driving on while a value of either will make no attempt limit the side
+     * of street that is available for the route.
+     */
     preferred_side?: ValhallaPreferredSiteType
+    /**
+     * Latitude of the map location in degrees.
+     *
+     * @remarks
+     *
+     * If provided the lat and lon parameters will be treated as the routing location and the
+     * display_lat and display_lon will be used to determine the side of street. Both display_lat
+     * and display_lon must be provided and valid to achieve the desired effect.
+     *
+     */
     display_lat?: number
+    /**
+     * Longitude of the map location in degrees.
+     *
+     * @remarks
+     *
+     * If provided the lat and lon parameters will be treated as the routing location and the
+     * display_lat and display_lon will be used to determine the side of street. Both display_lat
+     * and display_lon must be provided and valid to achieve the desired effect.
+     *
+     */
     display_lon?: number
+    /**
+     * The cutoff at which we will assume the input is too far away from civilisation to be worth
+     * correlating to the nearest graph elements
+     */
     search_cutoff?: number
+    /**
+     * During edge correlation this is the tolerance used to determine whether or not to snap
+     * to the intersection rather than along the street, if the snap location is within this
+     * distance from the intersection the intersection is used instead.
+     *
+     * @defaultValue
+     * The default is 5 meters.
+     */
     node_snap_tolerance?: number
+    /**
+     * If your input coordinate is less than this tolerance away from the edge centerline then we set
+     * your side of street to none otherwise your side of street will be left or right depending on
+     * direction of travel.
+     */
     street_side_tolerance?: number
+    /**
+     * The max distance in meters that the input coordinates or display ll can be from the edge
+     * centerline for them to be used for determining the side of street. Beyond this distance
+     * the side of street is set to none.
+     */
     street_side_max_distance?: number
+    /** A set of optional filters to exclude candidate edges based on their attribution. */
     search_filter?: ValhallaSearchFilter
     min_road_class?: string
     max_road_class?: string
@@ -558,10 +684,67 @@ type ValhallaLocationType =
 type ValhallaPreferredSiteType = "same" | "opposite" | "either"
 
 interface ValhallaSearchFilter {
+    /**
+     * whether to exclude roads marked as tunnels
+     *
+     * @defaultValue
+     * Defaults to false.
+     */
     exclude_tunnel?: boolean
+    /**
+     * whether to exclude roads marked as bridges
+     *
+     * @defaultValue
+     * Defaults to false.
+     */
     exclude_bridge?: boolean
+    /**
+     * whether to exclude link roads marked as ramps, note that some turn channels are
+     * also marked as ramps
+     *
+     * @defaultValue
+     * Defaults to false.
+     */
     exclude_ramp?: boolean
+    /**
+     *  whether to exclude roads considered closed due to live traffic closure.
+     *
+     * @remarks
+     * This option cannot be set if costing_options.<costing>.ignore_closures is also specified. An
+     * error is returned if both options are specified.
+     *
+     * Ignoring closures at destination and source locations does NOT work for date_time type
+     * 0/1 & 2 respectively
+     *
+     * @defaultValue
+     * Defaults to true.
+     */
     exclude_closures?: boolean
+    /**
+     * lowest road class allowed
+     *
+     * @remarks
+     *
+     * Road classes from highest to lowest are: motorway, trunk, primary, secondary, tertiary,
+     * unclassified, residential, service_other.
+     *
+     * @defaultValue
+     * Defaults to `service_other`
+     */
+    min_road_class?: string
+    /**
+     * highest road class allowed
+     *
+     * @remarks
+     *
+     * Road classes from highest to lowest are: motorway, trunk, primary, secondary, tertiary,
+     * unclassified, residential, service_other.
+     *
+     *
+     * @defaultValue
+     * Defaults to `motorway`
+     */
+    max_road_class?: string
 }
 
 type ValhallaSideOfStreet = "left" | "right"
