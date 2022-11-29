@@ -108,12 +108,49 @@ interface ValhallaRequestParams {
 export type ValhallaRequestUnit = "mi" | "km" | "miles" | "kilometers"
 
 export interface ValhallaIsochroneParams extends ValhallaRequestParams {
-    locations: ValhallaLocation[]
+    /** Only single location can be specified. */
+    locations: [ValhallaLocation]
+    /**
+     * The local date and time at the location. These parameters apply only for multimodal
+     * requests and are not used with other costing methods.
+     */
     date_time?: ValhallaDateTime
+    /**
+     * A JSON array of contour objects with the time in minutes or distance in kilometers and
+     * color to use for each isochrone contour. You can specify up to four contours (by default).
+     */
     contours: ValhallaContours[]
+    /**
+     * A Boolean value to determine whether to return geojson polygons or linestrings as the contours.
+     * The default is false, which returns lines; when true, polygons are returned.
+     *
+     * @remarks
+     * When polygons is true, any contour that forms a ring is returned as a polygon.
+     */
     polygons?: boolean
+    /**
+     * A floating point value from 0 to 1 (default of 1) which can be used to remove smaller contours.
+     * A value of 1 will only return the largest contour for a given time value. A value of 0.5 drops
+     * any contours that are less than half the area of the largest contour in the set of contours for
+     * that same time value.
+     */
     denoise?: number
+    /**
+     * A floating point value in meters used as the tolerance for Douglas-Peucker generalization.
+     *
+     * @remarks
+     * Note: Generalization of contours can lead to self-intersections, as well as intersections of
+     * adjacent contours.
+     */
     generalize?: number
+    /**
+     * A boolean indicating whether the input locations should be returned as MultiPoint features:
+     * one feature for the exact input coordinates and one feature for the coordinates of the network
+     * node it snapped to.
+     *
+     * @defaultValue
+     * Default false.
+     */
     show_locations?: boolean
 }
 
@@ -123,8 +160,15 @@ export interface ValhallaMatrixParams extends ValhallaRequestParams {
 }
 
 export interface ValhallaContours {
+    /** A floating point value specifying the time in minutes for the contour. */
     time?: number
+    /** A floating point value specifying the distance in kilometers for the contour. */
     distance?: number
+    /**
+     * The color for the output of the contour. Specify it as a Hex value, but without the #,
+     * such as "color":"ff0000" for red. If no color is specified, the isochrone service will
+     * assign a default color to the output.
+     */
     color?: string
 }
 
@@ -180,7 +224,13 @@ export interface ValhallaTrip {
 }
 
 export interface ValhallaLeg {
+    /**
+     * A leg summary is comprised of the same information as a trip summary but applied to the single leg of the trip.
+     */
     summary: ValhallaRouteSummary
+    /**
+     * The shape is an encoded polyline of the route path (with 6 digits decimal precision).
+     */
     shape?: string
     maneuvers?: ValhallaManeuvers[]
 }
@@ -306,6 +356,10 @@ interface ValhallaManeuvers {
         | "ReturnBikeAtBikeShare"
 }
 
+/**
+ * In the service response, the isochrone contours are returned as GeoJSON, which can be integrated
+ * into mapping applications.
+ */
 export interface ValhallaIsochroneResponse extends FeatureCollection {
     id?: string
 }
@@ -558,23 +612,72 @@ export interface ValhallaLocation {
     street_side_max_distance?: number
     /** A set of optional filters to exclude candidate edges based on their attribution. */
     search_filter?: ValhallaSearchFilter
-    min_road_class?: string
-    max_road_class?: string
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     */
     name?: string
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     */
     city?: string
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     */
     state?: string
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     */
     postal_code?: string
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     */
     country?: string
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     */
     phone?: string
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     */
     url?: string
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     * Response only.
+     */
     side_of_street?: ValhallaSideOfStreet
+    /**
+     *
+     * @remarks
+     * This information is carried through the request and returned as a convenience.
+     * Response only.
+     */
     date_time?: string
 }
 
 interface ValhallaReturnLocation extends ValhallaLocation {
     original_index?: number
 }
-
+/**
+ * Valhalla's routing service uses dynamic, run-time costing to generate the route path. The route
+ * request must include the name of the costing model and can include optional parameters available
+ * for the chosen costing model.
+ */
 interface ValhallaCostingOptTypes {
     auto?: ValhallaCostingOptsAuto
     truck?: ValhallaCostingOptsTruck
@@ -584,9 +687,48 @@ interface ValhallaCostingOptTypes {
 }
 
 interface ValhallaCostingOptsBase {
+    /**
+     * This value indicates the willingness to take ferries. This is a range of values
+     * between 0 and 1. Values near 0 attempt to avoid ferries and values near 1 will favor ferries.
+     *
+     * @defaultValue
+     * The default value is 0.5.
+     *
+     * @remarks
+     * Note that sometimes ferries are required to complete a route so values of 0 are not guaranteed to avoid ferries entirely.
+     */
     use_ferry?: number
+    /**
+     * This value indicates the willingness to take living streets. This is a range of values
+     * between 0 and 1. Values near 0 attempt to avoid living streets and values near 1 will
+     * favor living streets.
+     *
+     * @defaultValue
+     * The default value is 0 for trucks, 0.1 for cars, buses, motor
+     * scooters and motorcycles.
+     *
+     * @remarks
+     * Note that sometimes living streets are required to complete
+     * a route so values of 0 are not guaranteed to avoid living streets entirely.
+     */
     use_living_streets?: number
+    /**
+     * A penalty applied for transition to generic service road. The default penalty is 0 for
+     * trucks and 15 for cars, buses, motor scooters and motorcycles.
+     */
     service_penalty?: number
+    /**
+     * Changes the metric to quasi-shortest, i.e. purely distance-based costing.
+     *
+     * @remarks
+     *
+     * Note, this will disable all other costings & penalties. Also note, shortest will not
+     * disable hierarchy pruning, leading to potentially sub-optimal routes for some costing
+     * models.
+     *
+     * @defaultValue
+     * The default is false.
+     */
     shortest?: boolean
 }
 
@@ -594,69 +736,442 @@ interface ValhallaCostingOptsWheels extends ValhallaCostingOptsBase {
     maneuver_penalty?: number
     gate_cost?: number
     gate_penalty?: number
+    /**
+     * A cost applied when encountering an international border. This cost is added to the
+     * estimated and elapsed times.
+     *
+     * @defaultValue
+     * The default cost is 600 seconds.
+     */
     country_crossing_cost?: number
+    /**
+     * A penalty applied for a country crossing. This penalty can be used to create paths that
+     * avoid spanning country boundaries.
+     *
+     * @defaultValue
+     * The default penalty is 0.
+     */
     country_crossing_penalty?: number
 }
 
 export interface ValhallaCostingOptsPedestrian extends ValhallaCostingOptsBase {
+    /**
+     * Walking speed in kilometers per hour. Must be between 0.5 and 25 km/hr.
+     *
+     * @defaultValue
+     * Defaults to 5.1 km/hr (3.1 miles/hour).
+     */
     walking_speed?: number
+    /**
+     * A factor that modifies the cost when encountering roads classified as footway (no motorized
+     * vehicles allowed), which may be designated footpaths or designated sidewalks along residential
+     * roads. Pedestrian routes generally attempt to favor using these walkways and sidewalks.
+     *
+     * @defaultValue
+     * The default walkway_factor is 1.0.
+     */
     walkway_factor?: number
+    /**
+     * A factor that modifies the cost when encountering roads with dedicated sidewalks. Pedestrian
+     * routes generally attempt to favor using sidewalks.
+     *
+     * @defaultValue
+     * The default sidewalk_factor is 1.0.
+     */
     sidewalk_factor?: number
+    /**
+     * A factor that modifies (multiplies) the cost when alleys are encountered. Pedestrian routes
+     * generally want to avoid alleys or narrow service roads between buildings.
+     *
+     * @defaultValue
+     * The default alley_factor is 2.0.
+     */
     alley_factor?: number
+    /**
+     * A factor that modifies (multiplies) the cost when encountering a driveway, which is often a
+     * private, service road. Pedestrian routes generally want to avoid driveways (private).
+     *
+     * @defaultValue
+     * The default driveway factor is 5.0.
+     */
     driveway_factor?: number
+    /**
+     * A penalty in seconds added to each transition onto a path with steps or stairs. Higher values
+     * apply larger cost penalties to avoid paths that contain flights of steps.
+     */
     step_penalty?: number
+    /**
+     * This value indicates the willingness to take track roads. This is a range of values between
+     * 0 and 1. Values near 0 attempt to avoid tracks and values near 1 will favor tracks a
+     * little bit.
+     *
+     * @defaultValue
+     * The default value is 0.5. Note that sometimes tracks are required to complete a route so values of 0 are not guaranteed to avoid tracks entirely.
+     */
     use_tracks?: number
+    /**
+     * This is a range of values from 0 to 1, where 0 attempts to avoid hills and steep grades even if
+     * it means a longer (time and distance) path, while 1 indicates the pedestrian does not fear
+     * hills and steeper grades. Based on the use_hills factor, penalties are applied to roads based
+     * on elevation change and grade. These penalties help the path avoid hilly roads in favor of flatter roads or less steep grades where available. Note that it is not always possible to find alternate paths to avoid hills (for example when route locations are in mountainous areas). The default value is 0.5.
+     */
     use_hills?: number
+    /**
+     * A penalty applied for transition to generic service road.
+     *
+     * @defaultValue
+     * The default penalty is 0.
+     */
+    service_penalty?: number
+    /**
+     * A factor that modifies (multiplies) the cost when generic service roads are encountered.
+     *
+     * @defaultValue
+     * The default service_factor is 1.
+     */
     service_factor?: number
+    /**
+     * This value indicates the maximum difficulty of hiking trails that is allowed. Values between 0
+     * and 6 are allowed.
+     *
+     * @see {@link https://wiki.openstreetmap.org/wiki/Key:sac_scale} the corresponding sac_scale values within OpenStreetMap.
+     *
+     * @defaultValue
+     * The default value is 1 which means that well cleared trails that are mostly flat or slightly sloped are allowed. Higher difficulty trails can be allowed by specifying a higher value for max_hiking_difficulty.
+     */
     max_hiking_difficulty?: number
+    /**
+     * This value is useful when bikeshare is chosen as travel mode. It is meant to give the time will
+     * be used to rent a bike from a bike share station. This value will be displayed in the final
+     * directions and used to calculate the whole duation.
+     *
+     * @defaultValue
+     * The default value is 120 seconds.
+     */
     bss_rent_cost?: number
+    /**
+     * This value is useful when bikeshare is chosen as travel mode. It is meant to describe
+     * the potential effort to rent a bike from a bike share station. This value won't be
+     * displayed and used only inside of the algorithm.
+     */
     bss_rent_penalty?: number
 }
 
 export interface ValhallaCostingOptsAuto extends ValhallaCostingOptsWheels {
+    /**
+     * A penalty applied when transitioning between roads that do not have consistent
+     * naming–in other words, no road names in common. This penalty can be used to create
+     * simpler routes that tend to have fewer maneuvers or narrative guidance instructions.
+     *
+     * @defaultValue
+     * The default maneuver penalty is five seconds.
+     */
     private_access_penalty?: number
+    /**
+     * A cost applied when a toll booth is encountered. This cost is added to the estimated and
+     * elapsed times.
+     *
+     * @defaultValue
+     * The default cost is 15 seconds.
+     */
     toll_booth_cost?: number
+    /**
+     * A penalty applied to the cost when a toll booth is encountered. This penalty can be used to
+     * create paths that avoid toll roads.
+     *
+     * @defaultValue
+     *  The default toll booth penalty is 0.
+     */
     toll_booth_penalty?: number
+    /**
+     * A cost applied when entering a ferry. This cost is added to the estimated and elapsed times.
+     *
+     * @defaultValue
+     * The default cost is 300 seconds (5 minutes).
+     */
     ferry_cost?: number
+    /**
+     * This value indicates the willingness to take highways. This is a range of values between 0
+     * and 1. Values near 0 attempt to avoid highways and values near 1 will favor highways.
+     *
+     * @defaultValue
+     * The default value is 1.0.
+     *
+     * @remarks
+     * Note that sometimes highways are required to complete a route so
+     * values of 0 are not guaranteed to avoid highways entirely.
+     */
     use_highways?: number
+    /**
+     * This value indicates the willingness to take roads with tolls. This is a range of values
+     * between 0 and 1. Values near 0 attempt to avoid tolls and values near 1 will not attempt
+     * to avoid them.
+     *
+     * @defaultValue
+     * The default value is 0.5.
+     *
+     * @remarks
+     * Note that sometimes roads with tolls are
+     * required to complete a route so values of 0 are not guaranteed to avoid them entirely.
+     */
     use_tolls?: number
+    /**
+     * This value indicates the willingness to take track roads. This is a range of values between
+     * 0 and 1. Values near 0 attempt to avoid tracks and values near 1 will favor tracks a
+     * little bit.
+     *
+     * @defaultValue
+     * The default value is 0 for autos, 0.5 for motor scooters and motorcycles.
+     *
+     * @remarks
+     *
+     * Note that sometimes tracks are required to complete a route so values of 0 are
+     * not guaranteed to avoid tracks entirely.
+     */
     use_tracks?: number
+    /**
+     * A factor that modifies (multiplies) the cost when generic service roads are encountered.
+     *
+     * @defaultValue
+     * The default service_factor is 1.
+     */
     service_factor?: number
+    /**
+     * Top speed the vehicle can go. Also used to avoid roads with higher speeds than this
+     * value. top_speed must be between 10 and 252 KPH.
+     *
+     * @defaultValue
+     * The default value is 140 KPH.
+     */
     top_speed?: number
+    /**
+     * Fixed speed the vehicle can go. Used to override the calculated speed. Can be useful if
+     * speed of vehicle is known. fixed_speed must be between 1 and 252 KPH.
+     *
+     * @defaultValue
+     * The default value is 0 KPH which disables fixed speed and falls back to the standard
+     * calculated speed based on the road attribution.
+     */
     fixed_speed?: number
+    /**
+     * If set to true, ignores all closures, marked due to live traffic closures,
+     * during routing.
+     *
+     * @remarks
+     *
+     * Note: This option cannot be set if location.search_filter.exclude_closures is also
+     * specified in the request and will return an error if it is.
+     */
     ignore_closures?: number
+    /**
+     * A factor that penalizes the cost when traversing a closed edge (eg: if
+     * search_filter.exclude_closures is false for origin and/or destination location and the
+     * route starts/ends on closed edges). Its value can range from 1.0 - don't penalize closed
+     * edges, to 10.0 - apply high cost penalty to closed edges.
+     *
+     * @defaultValue
+     * Default value is 9.0.
+     *
+     * @remarks
+     * Note: This factor is applicable only for motorized modes of transport, i.e auto, motorcycle,
+     * motor_scooter, bus, truck & taxi
+     */
     closure_factor?: number
+    /**
+     * The height of the vehicle (in meters).
+     *
+     * @defaultValue
+     * Default 1.9 for car, bus, taxi and 4.11 for truck.
+     */
     height?: number
+    /**
+     * The width of the vehicle (in meters).
+     *
+     * @defaultValue
+     * Default 1.6 for car, bus, taxi and 2.6 for truck.
+     */
     width?: number
+    /**
+     * This value indicates whether or not the path may include unpaved roads. If exclude_unpaved
+     * is set to 1 it is allowed to start and end with unpaved roads, but is not allowed to
+     * have them in the middle of the route path, otherwise they are allowed.
+     *
+     * @defaultValue
+     * Default false.
+     */
     exclude_unpaved?: boolean | 1
+    /**
+     * A boolean value which indicates the desire to avoid routes with cash-only tolls.
+     *
+     * @defaultValue
+     * Default false.
+     */
     exclude_cash_only_tolls?: boolean
+    /**
+     * A boolean value which indicates the desire to include HOV roads with a 2-occupant requirement
+     * in the route when advantageous.
+     *
+     * @defaultValue
+     * Default false.
+     */
     include_hov2?: boolean
+    /**
+     * A boolean value which indicates the desire to include HOV roads with a 3-occupant requirement
+     * in the route when advantageous.
+     *
+     * @defaultValue
+     * Default false.
+     */
     include_hov3?: boolean
+    /**
+     * A boolean value which indicates the desire to include tolled HOV roads which require the driver
+     * to pay a toll if the occupant requirement isn't met.
+     *
+     * @defaultValue
+     * Default false.
+     */
     include_hot?: boolean
 }
 
 export interface ValhallaCostingOptsTruck extends ValhallaCostingOptsAuto {
+    /**
+     * The length of the truck (in meters).
+     *
+     * @defaultValue
+     * Default 21.64.
+     */
     length?: number
+    /**
+     * The weight of the truck (in metric tons).
+     *
+     * @defaultValue
+     * Default 21.77.
+     */
     weight?: number
+    /**
+     * The axle load of the truck (in metric tons).
+     *
+     * @defaultValue
+     * Default 9.07.
+     */
     axle_load?: number
+    /**
+     * The axle count of the truck.
+     *
+     * @defaultValue
+     * Default 5.
+     */
+    axle_count?: number
+    /**
+     * A value indicating if the truck is carrying hazardous materials.
+     *
+     * @defaultValue
+     * Default false.
+     */
     hazmat?: boolean
 }
 
 export interface ValhallaCostingOptsBicycle extends ValhallaCostingOptsWheels {
+    /**
+     * The type of bicycle.
+     *
+     * @defaultValue
+     * The default type is Hybrid.
+     */
     bicycle_type?: ValhallaBicycleType
+    /**
+     * Cycling speed is the average travel speed along smooth, flat roads. This is meant to be the
+     * speed a rider can comfortably maintain over the desired distance of the route.
+     *
+     * @remarks
+     * It can be modified (in the costing method) by surface type in conjunction with bicycle type
+     * and (coming soon) by hilliness of the road section. When no speed is specifically provided,
+     * the default speed is determined by the bicycle type and are as follows:
+     * Road = 25 KPH (15.5 MPH), Cross = 20 KPH (13 MPH), Hybrid/City = 18 KPH (11.5 MPH), and
+     * Mountain = 16 KPH (10 MPH).
+     */
     cycling_speed?: number
+    /**
+     * A cyclist's propensity to use roads alongside other vehicles. This is a range of values
+     * from 0 to 1, where 0 attempts to avoid roads and stay on cycleways and paths, and 1 indicates
+     * the rider is more comfortable riding on roads.
+     *
+     * @remarks
+     * Based on the use_roads factor, roads with
+     * certain classifications and higher speeds are penalized in an attempt to avoid them when
+     * finding the best path.
+     *
+     * @defaultValue
+     * The default value is 0.5.
+     */
     use_roads?: number
+    /**
+     * A cyclist's desire to tackle hills in their routes. This is a range of values from 0 to 1,
+     * where 0 attempts to avoid hills and steep grades even if it means a longer (time and distance)
+     * path, while 1 indicates the rider does not fear hills and steeper grades. Based on the
+     * use_hills factor, penalties are applied to roads based on elevation change and grade. These
+     * penalties help the path avoid hilly roads in favor of flatter roads or less steep grades where
+     * available. Note that it is not always possible to find alternate paths to avoid
+     * hills (for example when route locations are in mountainous areas).
+     *
+     * @defaultValue
+     * The default value is 0.5.
+     */
     use_hills?: number
+    /**
+     * This value is meant to represent how much a cyclist wants to avoid roads with poor surfaces
+     * relative to the bicycle type being used. This is a range of values between 0 and 1. When the
+     * value is 0, there is no penalization of roads with different surface types; only bicycle speed
+     * on each surface is taken into account. As the value approaches 1, roads with poor surfaces for
+     * the bike are penalized heavier so that they are only taken if they significantly
+     * improve travel time. When the value is equal to 1, all bad surfaces are completely disallowed
+     * from routing, including start and end points.
+     *
+     * @defaultValue
+     * The default value is 0.25.
+     */
     avoid_bad_surfaces?: number
+    /**
+     * This value is useful when bikeshare is chosen as travel mode. It is meant to give the time
+     * will be used to return a rental bike. This value will be displayed in the final directions
+     * and used to calculate the whole duation.
+     *
+     * @defaultValue
+     * The default value is 120 seconds.
+     */
     bss_return_cost?: number
+    /**
+     * This value is useful when bikeshare is chosen as travel mode. It is meant to describe the
+     * potential effort to return a rental bike. This value won't be displayed and used only
+     * inside of the algorithm.
+     */
     bss_return_penalty?: number
 }
 
 export interface ValhallaCostingOptsMotorcycle extends ValhallaCostingOptsAuto {
+    /**
+     * A riders's desire for adventure in their routes. This is a range of values from 0 to 1,
+     * where 0 will avoid trails, tracks, unclassified or bad surfaces and values towards 1 will
+     * tend to avoid major roads and route on secondary roads.
+     *
+     * @defaultValue
+     * The default value is 0.0.
+     */
     use_trails?: boolean
 }
 
-type ValhallaBicycleType = "Road" | "Hybrid" | "City" | "Cross" | "Mountain"
+type ValhallaBicycleType =
+    /** a road-style bicycle with narrow tires that is generally lightweight and designed for speed on paved surfaces.  */
+    | "Road"
+    /** a bicycle made mostly for city riding or casual riding on roads and paths with good surfaces. */
+    | "Hybrid"
+    /** a bicycle made mostly for city riding or casual riding on roads and paths with good surfaces. */
+    | "City"
+    /** a cyclo-cross bicycle, which is similar to a road bicycle but with wider tires suitable to rougher surfaces. */
+    | "Cross"
+    /** a mountain bicycle suitable for most surfaces but generally heavier and slower on paved surfaces. */
+    | "Mountain"
+
 type ValhallaLocationType =
     /**
      * A break is a location at which we
@@ -747,6 +1262,10 @@ interface ValhallaSearchFilter {
     max_road_class?: string
 }
 
+/**
+ * The side of street of a break location that is determined based on the actual route when the
+ * location is offset from the street.
+ */
 type ValhallaSideOfStreet = "left" | "right"
 
 /**

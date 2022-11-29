@@ -206,7 +206,7 @@ class Valhalla implements BaseRouter {
         const auth: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = Valhalla.getDirectionParams(
+        const params = this.getDirectionParams(
             locations,
             profile,
             directionsOpts
@@ -231,7 +231,7 @@ class Valhalla implements BaseRouter {
             })
     }
 
-    protected static getDirectionParams(
+    protected getDirectionParams(
         locations: [number, number][],
         profile: ValhallaCostingType,
         directionsOpts: ValhallaDirectionOpts = {}
@@ -418,7 +418,7 @@ class Valhalla implements BaseRouter {
         const auth: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = Valhalla.getIsochroneParams(
+        const params = this.getIsochroneParams(
             location,
             profile,
             intervals,
@@ -451,7 +451,7 @@ class Valhalla implements BaseRouter {
             })
     }
 
-    public static getIsochroneParams(
+    public getIsochroneParams(
         location: [number, number],
         profile: ValhallaCostingType,
         intervals: number[],
@@ -482,7 +482,7 @@ class Valhalla implements BaseRouter {
         })
 
         const params: ValhallaIsochroneParams = {
-            locations: Valhalla._buildLocations(location),
+            locations: this._buildLocations(location),
             costing: profile,
             contours,
             polygons: isochroneOpts.polygons,
@@ -602,7 +602,7 @@ class Valhalla implements BaseRouter {
         const auth: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = Valhalla.getMatrixParams(locations, profile, matrixOpts)
+        const params = this.getMatrixParams(locations, profile, matrixOpts)
 
         return this.client
             .request({
@@ -626,12 +626,12 @@ class Valhalla implements BaseRouter {
             })
     }
 
-    public static getMatrixParams(
+    public getMatrixParams(
         locations: [number, number][],
         profile: ValhallaCostingType,
         matrixOpts: ValhallaMatrixOpts = {}
     ): ValhallaMatrixParams {
-        const matrixLocations = Valhalla._buildLocations(locations)
+        const matrixLocations = this._buildLocations(locations)
 
         let sourceCoords = matrixLocations
 
@@ -738,7 +738,11 @@ class Valhalla implements BaseRouter {
         return new Matrix(durations, distances, response)
     }
 
-    protected static _buildLocations(
+    protected _buildLocations(
+        coordinates: [number, number][]
+    ): ValhallaLocation[]
+    protected _buildLocations(coordinates: [number, number]): [ValhallaLocation]
+    protected _buildLocations(
         coordinates: [number, number][] | [number, number]
     ): ValhallaLocation[] {
         const locations = []
