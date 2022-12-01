@@ -55,7 +55,7 @@ export interface GraphHopperIsochroneOpts
  *
  * For the full documentation, see  {@link https://docs.graphhopper.com}.
  */
-class GraphHopper implements BaseRouter {
+export class GraphHopper implements BaseRouter {
     client: Client<
         | GraphHopperRouteResponse
         | GraphHopperIsochroneResponse
@@ -153,14 +153,9 @@ class GraphHopper implements BaseRouter {
                 postParams: params,
                 dryRun,
             })
-            .then((res) => {
+            .then((res: GraphHopperRouteResponse) => {
                 if (typeof res === "object") {
-                    return GraphHopper.parseDirectionsResponse(
-                        res as GraphHopperRouteResponse
-                    ) as Directions<
-                        GraphHopperRouteResponse,
-                        GraphHopperRoutePath
-                    >
+                    return GraphHopper.parseDirectionsResponse(res)
                 } else {
                     return res
                 }
@@ -393,5 +388,4 @@ class GraphHopper implements BaseRouter {
     }
 }
 
-export default GraphHopper
 export * from "./parameters"

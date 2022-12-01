@@ -451,6 +451,7 @@ type GraphHopperSnapPrevention =
 
 type GraphHopperAlgorithm = "round_trip" | "alternative_route"
 
+/** A route path object that includes the points along the route as well as additional route attributes. */
 export interface GraphHopperRoutePath {
     /**
      * The total distance, in meters.

@@ -1,4 +1,4 @@
-import GraphHopper from "./index"
+import { GraphHopper } from "./index"
 
 describe("GraphHopper returns responses", () => {
     it("gets a directions response", async () => {

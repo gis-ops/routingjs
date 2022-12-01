@@ -63,7 +63,7 @@ export interface ORSIsochroneOpts extends ORSBaseOpts {
     intersections?: boolean
 }
 
-class ORS implements BaseRouter {
+export class ORS implements BaseRouter {
     client: Client<
         ORSRouteResponse | ORSIsochroneResponse | ORSMatrixResponse,
         undefined, // we don't make any GET requests to ORS
@@ -340,5 +340,4 @@ class ORS implements BaseRouter {
     }
 }
 
-export default ORS
 export * from "./parameters"

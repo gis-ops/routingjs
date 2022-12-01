@@ -1,4 +1,4 @@
-import OSRM from "."
+import { OSRM } from "./index"
 
 describe("OSRM returns responses", () => {
     it("gets a direction response", async () => {

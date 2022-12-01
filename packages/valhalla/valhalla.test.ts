@@ -1,4 +1,4 @@
-import Valhalla from "./index"
+import { Valhalla } from "./index"
 
 describe("Valhalla returns responses", () => {
     it("gets a directions response", async () => {

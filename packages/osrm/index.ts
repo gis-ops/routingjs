@@ -39,7 +39,7 @@ export interface OSRMMatrixOpts extends OSRMDirectionsOpts {
     destinations?: number[]
 }
 
-class OSRM implements BaseRouter {
+export class OSRM implements BaseRouter {
     client: Client<
         OSRMRouteResponse | OSRMTableResponse,
         Partial<OSRMRouteParams> | Partial<OSRMTableParams>
@@ -284,5 +284,4 @@ class OSRM implements BaseRouter {
     }
 }
 
-export default OSRM
 export * from "./parameters"

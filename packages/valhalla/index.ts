@@ -147,7 +147,7 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
     units?: ValhallaRequestUnit
 }
 
-class Valhalla implements BaseRouter {
+export class Valhalla implements BaseRouter {
     client: Client<
         ValhallaRouteResponse | ValhallaMatrixResponse | FeatureCollection,
         MapboxAuthParams,
@@ -778,5 +778,4 @@ class Valhalla implements BaseRouter {
     }
 }
 
-export default Valhalla
 export * from "./parameters"

@@ -1,4 +1,4 @@
-import ORS from "."
+import { ORS } from "./index"
 
 describe("ORS returns responses", () => {
     it("gets a direction response", async () => {

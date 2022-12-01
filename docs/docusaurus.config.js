@@ -116,9 +116,13 @@ const config = {
             "docusaurus-plugin-typedoc",
 
             {
-                entryPoints: ["../src/index.ts"],
-                mode: "library",
-                tsconfig: "../tsconfig.json",
+                entryPoints: [
+                    "../packages/valhalla/index.ts",
+                    "../packages/osrm/index.ts",
+                    "../packages/ors/index.ts",
+                    "../packages/graphhopper/index.ts",
+                ],
+                tsconfig: "../tsconfig.doc.json",
             },
         ],
     ],
