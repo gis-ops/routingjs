@@ -38,7 +38,10 @@ export default packages.map((pkg, i) => {
         ],
         plugins: [
             typescript({
-                tsconfig: path.join(__dirname, "tsconfig.prod.json"),
+                tsconfig: path.join(__dirname, "tsconfig.json"),
+                compilerOptions: {
+                    baseUrl: base,
+                },
                 exclude: [
                     "node_modules",
                     "dist",
