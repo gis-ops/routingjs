@@ -9,6 +9,7 @@ custom_edit_url: null
 
 ## Modules
 
+- [core](modules/core.md)
 - [graphhopper](modules/graphhopper.md)
 - [ors](modules/ors.md)
 - [osrm](modules/osrm.md)

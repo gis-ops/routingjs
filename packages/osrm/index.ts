@@ -1,13 +1,15 @@
 import { decode } from "@googlemaps/polyline-codec"
-import Client from "@routing-js/core/Client"
 import {
     Direction,
     DirectionFeat,
     Directions,
-} from "@routing-js/core/Direction"
-import { RoutingJSAPIError, RoutingJSError } from "@routing-js/core/error"
-import Matrix from "@routing-js/core/Matrix"
-import { BaseRouter, ClientConstructorArgs } from "@routing-js/core/BaseRouter"
+    Client,
+    RoutingJSAPIError,
+    RoutingJSError,
+    Matrix,
+    BaseRouter,
+    ClientConstructorArgs,
+} from "@routing-js/core"
 
 import {
     OSRMGeometryObject,

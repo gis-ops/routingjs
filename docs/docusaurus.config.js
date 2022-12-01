@@ -117,6 +117,7 @@ const config = {
 
             {
                 entryPoints: [
+                    "../packages/core/index.ts",
                     "../packages/valhalla/index.ts",
                     "../packages/osrm/index.ts",
                     "../packages/ors/index.ts",

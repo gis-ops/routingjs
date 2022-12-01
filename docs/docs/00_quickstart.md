@@ -2,14 +2,10 @@
 
 ## Installation
 
-```sh
-npm i routingjs
-```
-
-Or single client classes:
+Install single client classes:
 
 ```sh
-npm i @routingjs/valhalla
+npm i @routingjs/valhalla @routingjs/osrm @routingjs/ors @routingjs/graphhopper
 ```
 
 ## Directions

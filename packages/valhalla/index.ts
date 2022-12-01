@@ -1,14 +1,16 @@
 import { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson"
-import Client from "@routing-js/core/Client"
 import {
+    Client,
     Direction,
     DirectionFeat,
     Directions,
-} from "@routing-js/core/Direction"
-import { Isochrone, Isochrones } from "@routing-js/core/Isochrone"
-import { RoutingJSError } from "@routing-js/core/error"
-import Matrix from "@routing-js/core/Matrix"
-import { BaseRouter, ClientConstructorArgs } from "@routing-js/core/BaseRouter"
+    Isochrone,
+    Isochrones,
+    RoutingJSError,
+    Matrix,
+    BaseRouter,
+    ClientConstructorArgs,
+} from "@routing-js/core"
 import {
     MapboxAuthParams,
     ValhallaContours,

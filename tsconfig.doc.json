@@ -1,6 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "include": [
+        "packages/core",
         "packages/valhalla",
         "packages/ors",
         "packages/osrm",

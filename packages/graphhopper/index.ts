@@ -1,8 +1,15 @@
 import { decode } from "@googlemaps/polyline-codec"
-import { BaseRouter, ClientConstructorArgs } from "@routing-js/core/BaseRouter"
-import Client from "@routing-js/core/Client"
-import { Direction, Directions } from "@routing-js/core/Direction"
-import { RoutingJSError } from "@routing-js/core/error"
+import {
+    BaseRouter,
+    ClientConstructorArgs,
+    Direction,
+    Directions,
+    Isochrone,
+    Isochrones,
+    Matrix,
+    RoutingJSError,
+    Client,
+} from "@routing-js/core"
 import { LineString } from "geojson"
 import {
     GraphHopperIsochroneGetParams,
@@ -16,8 +23,6 @@ import {
     GraphHopperRoutePath,
     GraphHopperRouteResponse,
 } from "./parameters"
-import { Isochrone, Isochrones } from "@routing-js/core/Isochrone"
-import Matrix from "@routing-js/core/Matrix"
 
 /**
  * `points` and `profile` properties are passed using the `directions()` method's top level args for

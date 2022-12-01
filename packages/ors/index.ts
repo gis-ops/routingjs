@@ -1,10 +1,15 @@
-import Client from "@routing-js/core/Client"
-import { Direction, Directions } from "@routing-js/core/Direction"
-import { RoutingJSError } from "@routing-js/core/error"
-import { DirectionFeat } from "@routing-js/core/Direction"
-import Matrix from "@routing-js/core/Matrix"
-import { Isochrone, Isochrones } from "@routing-js/core/Isochrone"
-import { BaseRouter, ClientConstructorArgs } from "@routing-js/core/BaseRouter"
+import {
+    BaseRouter,
+    ClientConstructorArgs,
+    Client,
+    Direction,
+    Directions,
+    RoutingJSError,
+    DirectionFeat,
+    Matrix,
+    Isochrone,
+    Isochrones,
+} from "@routing-js/core"
 
 import {
     ORSAlternateRouteParam,
