@@ -23,7 +23,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - .//:/data
+      - ./:/data
     command: '/bin/bash -c "osrm-extract -p /opt/car.lua /data/andorra-latest.osm.pbf && osrm-partition /data/andorra-latest.osrm && osrm-customize /data/andorra-latest.osrm && osrm-routed --algorithm=MLD /data/andorra-latest.osrm"'
   graphhopper:
     container_name: graphhopper-tests
