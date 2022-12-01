@@ -24,8 +24,8 @@ jobs:
           node-version: "16.x"
       - name: Docker run containers and tests
         run: |
-          docker-compose up -d
+          docker-compose -f test_data/docker-compose.yml up -d
           sleep 10
           npm install
           npm test
-          docker-compose down
+          docker-compose -f test_data/docker-compose.yml down
