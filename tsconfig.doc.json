@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        "packages/valhalla",
+        "packages/ors",
+        "packages/osrm",
+        "packages/graphhopper"
+    ]
+}
