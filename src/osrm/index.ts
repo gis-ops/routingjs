@@ -35,7 +35,10 @@ export interface OSRMMatrixOpts extends OSRMDirectionsOpts {
 }
 
 class OSRM implements BaseRouter {
-    client: Client
+    client: Client<
+        OSRMRouteResponse | OSRMTableResponse,
+        Partial<OSRMRouteParams> | Partial<OSRMTableParams>
+    >
     apiKey?: string
     constructor(clientArgs?: ClientConstructorArgs) {
         const {
@@ -228,10 +231,8 @@ class OSRM implements BaseRouter {
                 getParams: params,
                 dryRun,
             })
-            .then((res) => {
-                return OSRM.parseMatrixResponse(
-                    res as OSRMTableResponse
-                ) as Matrix<OSRMTableResponse>
+            .then((res: OSRMTableResponse) => {
+                return OSRM.parseMatrixResponse(res)
             })
             .catch((error) => {
                 throw new RoutingJSAPIError(error.message)

@@ -56,7 +56,16 @@ export interface GraphHopperIsochroneOpts
  * For the full documentation, see  {@link https://docs.graphhopper.com}.
  */
 class GraphHopper implements BaseRouter {
-    client: Client
+    client: Client<
+        | GraphHopperRouteResponse
+        | GraphHopperIsochroneResponse
+        | GraphHopperMatrixResponse,
+        | {
+              [k in keyof GraphHopperIsochroneGetParams]: GraphHopperIsochroneGetParams[k]
+          }
+        | { key?: string }, // for auth
+        GraphHopperRouteParams | GraphHopperMatrixParams
+    >
     apiKey?: string
 
     constructor(clientArgs?: ClientConstructorArgs) {

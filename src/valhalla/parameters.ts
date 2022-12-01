@@ -1306,5 +1306,5 @@ export type ValhallaCostingType =
     | "pedestrian"
 
 export interface MapboxAuthParams {
-    access_token: string // TODO: needs to be abstracted to work with mb/OSRM
+    access_token?: string // TODO: needs to be abstracted to work with mb/OSRM
 }

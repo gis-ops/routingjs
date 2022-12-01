@@ -63,7 +63,11 @@ export interface ORSIsochroneOpts extends ORSBaseOpts {
 }
 
 class ORS implements BaseRouter {
-    client: Client
+    client: Client<
+        ORSRouteResponse | ORSIsochroneResponse | ORSMatrixResponse,
+        undefined,
+        ORSRouteParams | ORSMatrixParams | ORSIsochroneParams
+    >
     apiKey?: string
     constructor(clientArgs?: ClientConstructorArgs) {
         const {

@@ -23,6 +23,10 @@ export default [".", "valhalla", "osrm", "ors", "graphhopper"].map((pkg) => {
                 format: "es",
             },
         ],
-        plugins: [typescript()],
+        plugins: [
+            typescript({
+                tsconfig: path.join(__dirname, "tsconfig.prod.json"),
+            }),
+        ],
     }
 })

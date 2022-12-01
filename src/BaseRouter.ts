@@ -49,7 +49,11 @@ export interface ClientConstructorArgs {
 }
 
 export interface BaseRouter {
-    client: Client
+    client: Client<
+        Record<string | number, any>,
+        Record<string | number, any> | undefined,
+        Record<string | number, any> | undefined
+    >
 
     directions: (
         locations: number[][],

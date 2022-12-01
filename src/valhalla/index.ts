@@ -1,4 +1,4 @@
-import { Feature, LineString, Point, Polygon } from "geojson"
+import { Feature, FeatureCollection, LineString, Point, Polygon } from "geojson"
 import Client from "../Client"
 import { Direction, DirectionFeat, Directions } from "../Direction"
 import Matrix from "../Matrix"
@@ -144,7 +144,11 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
 }
 
 class Valhalla implements BaseRouter {
-    client: Client
+    client: Client<
+        ValhallaRouteResponse | ValhallaMatrixResponse | FeatureCollection,
+        MapboxAuthParams,
+        ValhallaIsochroneParams | ValhallaRouteParams | ValhallaMatrixParams
+    >
     apiKey?: string
     constructor(clientArgs?: ClientConstructorArgs) {
         const {
@@ -203,7 +207,7 @@ class Valhalla implements BaseRouter {
         Directions<ValhallaRouteResponse, ValhallaRouteResponse> | string
     > {
         dryRun = dryRun || false
-        const auth: MapboxAuthParams | undefined = this.apiKey
+        const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
         const params = this.getDirectionParams(
@@ -213,7 +217,12 @@ class Valhalla implements BaseRouter {
         )
 
         return this.client
-            .request({ endpoint: "/route", postParams: params, auth, dryRun })
+            .request({
+                endpoint: "/route",
+                postParams: params,
+                getParams,
+                dryRun,
+            })
             .then((res) => {
                 if (typeof res === "object") {
                     console.log(JSON.stringify(res))
@@ -415,7 +424,7 @@ class Valhalla implements BaseRouter {
         isochronesOpts: ValhallaIsochroneOpts = {},
         dryRun?: boolean
     ): Promise<Isochrones<ValhallaIsochroneResponse, Feature> | string> {
-        const auth: MapboxAuthParams | undefined = this.apiKey
+        const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
         const params = this.getIsochroneParams(
@@ -429,7 +438,7 @@ class Valhalla implements BaseRouter {
             .request({
                 endpoint: "/isochrone",
                 postParams: params,
-                auth,
+                getParams,
                 dryRun,
             })
             .then((res) => {
@@ -599,7 +608,7 @@ class Valhalla implements BaseRouter {
         matrixOpts: ValhallaMatrixOpts = {},
         dryRun?: boolean
     ): Promise<Matrix<ValhallaMatrixResponse> | string> {
-        const auth: MapboxAuthParams | undefined = this.apiKey
+        const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
         const params = this.getMatrixParams(locations, profile, matrixOpts)
@@ -608,7 +617,7 @@ class Valhalla implements BaseRouter {
             .request({
                 endpoint: "/sources_to_targets",
                 postParams: params,
-                auth,
+                getParams,
                 dryRun,
             })
             .then((res) => {

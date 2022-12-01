@@ -11,33 +11,8 @@ import axiosRetry, {
     isNetworkOrIdempotentRequestError,
 } from "axios-retry"
 import { RoutingJSAPIError, RoutingJSClientError } from "error"
-import { FeatureCollection } from "geojson"
-import {
-    ORSIsochroneParams,
-    ORSMatrixParams,
-    ORSRouteParams,
-} from "./ors/parameters"
+
 import options from "./options"
-import {
-    OSRMRouteParams,
-    OSRMRouteResponse,
-    OSRMTableParams,
-    OSRMTableResponse,
-} from "./osrm/parameters"
-import {
-    MapboxAuthParams,
-    ValhallaIsochroneParams,
-    ValhallaMatrixParams,
-    ValhallaMatrixResponse,
-    ValhallaRouteParams,
-    ValhallaRouteResponse,
-} from "./valhalla/parameters"
-import {
-    GraphHopperIsochroneGetParams,
-    GraphHopperMatrixParams,
-    GraphHopperRouteParams,
-} from "graphhopper/parameters"
-import { ORSRouteResponse } from "graphhopper/dist"
 
 interface ClientInterface {
     readonly baseURL: string
@@ -51,7 +26,10 @@ interface ClientInterface {
 /**
  * Arguments passed to the client's request method.
  */
-interface requestArgs {
+interface requestArgs<
+    GetParams extends Record<string | number, any> | undefined = undefined,
+    PostParams extends Record<string | number, any> | undefined = undefined
+> {
     /**
      * @param endpoint - the endpoint the request is directed to. Is concatenated to the base URL
      */
@@ -59,30 +37,10 @@ interface requestArgs {
     /**
      * @param getParams - parameters passed with a GET request
      */
-    getParams?:
-        | Partial<OSRMRouteParams>
-        | Partial<OSRMTableParams>
-        | (
-              | {
-                    [k in keyof GraphHopperIsochroneGetParams]: GraphHopperIsochroneGetParams[k]
-                }
-              | { key: string }
-          )
+    getParams?: GetParams
     /**
      * @param postParams - parameters passed with a POST request */
-    postParams?:
-        | ValhallaIsochroneParams
-        | ValhallaRouteParams
-        | ValhallaMatrixParams
-        | ORSRouteParams
-        | ORSMatrixParams
-        | ORSIsochroneParams
-        | GraphHopperRouteParams
-        | GraphHopperMatrixParams
-    /**
-     *  @param auth - optional authentication parameter, currently only used for MapBox Valhalla
-     */
-    auth?: MapboxAuthParams
+    postParams?: PostParams
     /**
      * @param dryRun - if true, the actual request is not made, and instead returns a string
      * containing information about the request to be made (including URL andparameters)
@@ -96,7 +54,12 @@ interface requestArgs {
  * @public
  *
  */
-class Client implements ClientInterface {
+class Client<
+    ResponseType,
+    GetParams extends Record<string | number, any> | undefined = undefined,
+    PostParams extends Record<string | number, any> | undefined = undefined
+> implements ClientInterface
+{
     protected axiosInstance: Axios
     protected axiosOptions: AxiosRequestConfig
     public readonly proxy?: false | AxiosProxyConfig
@@ -160,21 +123,13 @@ class Client implements ClientInterface {
      * @param requestArgs - the parameters passed as an object
      */
     async request(
-        requestArgs: requestArgs
-    ): Promise<
-        | ValhallaRouteResponse
-        | ValhallaMatrixResponse
-        | FeatureCollection
-        | OSRMRouteResponse
-        | OSRMTableResponse
-        | ORSRouteResponse
-        | string
-    > {
-        const { endpoint, getParams, postParams, auth, dryRun } = requestArgs
+        requestArgs: requestArgs<GetParams, PostParams>
+    ): Promise<ResponseType | string> {
+        const { endpoint, getParams, postParams, dryRun } = requestArgs
         const urlObj = new URL(`${this.baseURL}${endpoint}`)
         if (postParams !== undefined) {
-            if (auth !== undefined) {
-                for (const [k, v] of Object.entries(auth)) {
+            if (getParams !== undefined) {
+                for (const [k, v] of Object.entries(getParams)) {
                     urlObj.searchParams.append(k, v)
                 }
             }

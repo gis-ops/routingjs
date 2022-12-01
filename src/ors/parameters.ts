@@ -1,5 +1,6 @@
 import { Feature, Geometry, LineString } from "geojson"
 
+/** Specifies the mode of transport. */
 export type ORSProfile =
     | "driving-car"
     | "driving-hgv"
@@ -11,13 +12,26 @@ export type ORSProfile =
     | "cycling-electric"
 
 interface ORSBaseParams {
+    /** Arbitrary identification string of the request reflected in the meta information. */
     id?: string
+    /**
+     * Specifies the distance units only if range_type is set to distance.
+     *
+     * @defaultValue
+     * Default: m.
+     */
     units?: ORSUnit
 }
 
 export interface ORSRouteParams extends ORSBaseParams {
+    /** The locations to use for the route as an array of longitude/latitude pairs */
     coordinates: [number, number][]
+    /**
+     * Specifies whether alternative routes are computed, and parameters for the algorithm determining
+     * suitable alternatives.
+     */
     alternative_routes?: ORSAlternateRouteParam
+    /** List of route attributes */
     attrributes?: ORSAttribute[]
     continue_straight?: boolean
     options?: object
