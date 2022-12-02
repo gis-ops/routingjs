@@ -8,7 +8,7 @@ on:
             - "/test_data/"
 
 jobs:
-    tests:
+    deploy:
         runs-on: ubuntu-latest
         strategy:
             matrix:
