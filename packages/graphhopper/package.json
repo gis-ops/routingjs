@@ -1,6 +1,6 @@
 {
     "name": "@routing-js/graphhopper",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "RoutingJS GraphHopper Module",
     "main": "dist/js/index.js",
     "module": "dist/es/index.js",
@@ -44,14 +44,14 @@
         "eslint": "^8.25.0",
         "husky": "^8.0.1",
         "jest": "^29.2.0",
+        "npm-run-all": "*",
         "prettier": "^2.7.1",
         "rollup": "^3.2.5",
         "ts-jest": "^29.0.3",
-        "typescript": "^4.8.4",
-        "npm-run-all": "*"
+        "typescript": "^4.8.4"
     },
     "dependencies": {
         "@googlemaps/polyline-codec": "^1.0.28",
-        "@routing-js/core": "*"
+        "@routing-js/core": "^0.0.1"
     }
 }
