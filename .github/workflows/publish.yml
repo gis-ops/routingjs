@@ -24,4 +24,4 @@ jobs:
               run: |
                   npm install
                   npm run build
-                  npx lerna publish from-git --no-push --yes
+                  npx lerna publish from-git --no-push --force-publish=* --yes
