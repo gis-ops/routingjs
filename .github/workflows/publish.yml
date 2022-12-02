@@ -1,0 +1,25 @@
+name: Publish
+on:
+    push:
+        branches-ignore:
+            - "*"
+        tags:
+            - "*"
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+          with:
+              fetch-depth: 0
+
+        - name: Set up Node
+        - uses: actions/setup-node@v3
+          with:
+              node-version: "16.x"
+
+        - name: Install package and publish via lerna
+          run: npm install
+          run: npm run build
+          run: npx lerna publish from-git

@@ -1,0 +1,33 @@
+name: Deploy docs to GH Pages
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "/test_data/"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        docker_tags: [latest]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+      - name: Build Docusaurus website
+          run: |
+            cd docs
+            npm install
+            npm run build
+      - name: Deploy to GitHub Pages
+        if: success()
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: docs/build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
