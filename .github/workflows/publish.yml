@@ -9,17 +9,17 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@v2
-          with:
-              fetch-depth: 0
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
 
-        - name: Set up Node
-        - uses: actions/setup-node@v3
-          with:
-              node-version: "16.x"
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: "16.x"
 
-        - name: Install package and publish via lerna
-          run: npm install
-          run: npm run build
-          run: npx lerna publish from-git
+            - name: Install package and publish via lerna
+              run: |
+                  npm install
+                  npm run build
+                  npx lerna publish from-git
