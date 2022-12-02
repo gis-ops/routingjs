@@ -23,21 +23,45 @@ import {
 } from "./parameters"
 
 interface OSRMBaseOpts {
+    /** Limits the search to given radius in meters. */
     radiuses?: (number | null)[]
+    /**
+     * Limits the search to segments with given bearing in degrees towards true north in
+     * clockwise direction.
+     */
     bearings?: ([number, number | null] | null)[]
 }
 
 export interface OSRMDirectionsOpts extends OSRMBaseOpts {
+    /**
+     * Search for alternative routes and return as well.
+     *
+     * @remarks
+     * Please note that even if an alternative route is requested, a result cannot be guaranteed.
+     */
     alternatives?: false | number
+    /** Return route steps for each route leg */
     steps?: boolean
+    /**
+     * Forces the route to keep going straight at waypoints constraining uturns there even if
+     * it would be faster. Default value depends on the profile.
+     */
     continueStraight?: boolean | "default"
+    /** Returns additional metadata for each coordinate along the route geometry. */
     annotations?: boolean
+    /** Returned route geometry format (influences overview and per step) */
     geometries?: OSRMGeometryType
+    /**
+     * Add overview geometry either full, simplified according to highest zoom level it
+     * could be display on, or not at all.
+     */
     overview?: OSRMOverviewType
 }
 
 export interface OSRMMatrixOpts extends OSRMDirectionsOpts {
+    /** Use location with given index as source. */
     sources?: number[]
+    /** Use location with given index as destination. */
     destinations?: number[]
 }
 
@@ -171,7 +195,8 @@ export class OSRM implements BaseRouter {
         const directions = response.routes.map((route) => {
             const feature: DirectionFeat = {
                 type: "Feature",
-                geometry: OSRM.parseGeometry(route.geometry, geometryFormat),
+                geometry:
+                    OSRM.parseGeometry(route.geometry, geometryFormat) || null,
                 properties: {
                     duration: route.duration
                         ? Math.round(route.duration)
@@ -188,23 +213,28 @@ export class OSRM implements BaseRouter {
     }
 
     protected static parseGeometry(
-        routeGeometry: string | OSRMGeometryObject,
+        routeGeometry?: string | OSRMGeometryObject,
         geometryFormat?: OSRMGeometryType
-    ): OSRMGeometryObject {
-        if (geometryFormat !== "geojson") {
-            const path = decode(
-                routeGeometry as string,
-                geometryFormat === undefined || geometryFormat === "polyline"
-                    ? 5
-                    : 6
-            ) as [number, number][]
+    ): OSRMGeometryObject | undefined {
+        if (routeGeometry !== undefined) {
+            if (geometryFormat !== "geojson") {
+                const path = decode(
+                    routeGeometry as string,
+                    geometryFormat === undefined ||
+                        geometryFormat === "polyline"
+                        ? 5
+                        : 6
+                ) as [number, number][]
 
-            return {
-                coordinates: path,
-                type: "LineString",
+                return {
+                    coordinates: path,
+                    type: "LineString",
+                }
+            } else {
+                return routeGeometry as OSRMGeometryObject
             }
         } else {
-            return routeGeometry as OSRMGeometryObject
+            return undefined
         }
     }
 
