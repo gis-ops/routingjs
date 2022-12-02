@@ -25,6 +25,6 @@ jobs:
               run: |
                   npm ci
                   npm run build
-                  npx lerna publish from-git --no-push --force-publish=* --yes --access public
+                  npx lerna publish from-git --no-push --force-publish=* --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
