@@ -1,31 +1,31 @@
 name: Test lib
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - "*.md"
-  workflow_dispatch:
-  pull_request_review:
-    types: [submitted]
+    push:
+        branches:
+            - master
+        paths-ignore:
+            - "*.md"
+    workflow_dispatch:
+    pull_request_review:
+        types: [submitted]
 
 jobs:
-  tests:
-    if: github.event.review.state == 'approved' ||  github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        docker_tags: [latest]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16.x"
-      - name: Docker run containers and tests
-        run: |
-          docker-compose -f test_data/docker-compose.yml up -d
-          sleep 10
-          npm install
-          npm test
-          docker-compose -f test_data/docker-compose.yml down
+    tests:
+        if: github.event.review.state == 'approved' ||  github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                docker_tags: [latest]
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: "16.x"
+            - name: Docker run containers and tests
+              run: |
+                  docker-compose -f docker-compose.yml up -d
+                  sleep 10
+                  npm install
+                  npm test
+                  docker-compose -f docker-compose.yml down
