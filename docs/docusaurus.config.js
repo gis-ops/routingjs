@@ -8,7 +8,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula")
 const config = {
     title: "Routing-JS Documentation",
     tagline: "Unified access to Open Source Routing Engines",
-    url: "https://gis-ops.github.io/routing-js/",
+    url: "https://gis-ops.github.io/",
     trailingSlash: false,
     baseUrl: "/",
     onBrokenLinks: "throw",
