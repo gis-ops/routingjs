@@ -19,9 +19,12 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: "16.x"
+                  registry-url: "https://registry.npmjs.org"
 
             - name: Install package and publish via lerna
               run: |
-                  npm install
+                  npm ci
                   npm run build
                   npx lerna publish from-git --no-push --force-publish=* --yes
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
