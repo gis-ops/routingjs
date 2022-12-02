@@ -2,12 +2,11 @@
     "compilerOptions": {
         "allowJs": false,
         "allowSyntheticDefaultImports": true,
-        "baseUrl": "./src",
+        "baseUrl": "./packages",
         "declaration": true,
         "declarationMap": true,
         "composite": false,
         "esModuleInterop": true,
-        "lib": ["es2020"],
         "module": "ESNext",
         "moduleResolution": "node",
         "noImplicitAny": true,
@@ -15,12 +14,6 @@
         "outDir": "dist",
         "sourceMap": true,
         "strictNullChecks": true,
-        "target": "ESNext"
-    },
-    "include": ["src"],
-    "exclude": [
-        "node_modules",
-        "dist"
-        //  "**/*.test.ts"
-    ]
+        "target": "ES2017"
+    }
 }

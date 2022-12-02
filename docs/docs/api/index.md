@@ -1,3 +1,11 @@
+---
+id: "index"
+title: "routing-js"
+sidebar_label: "Readme"
+sidebar_position: 0
+custom_edit_url: null
+---
+
 # Routing-js
 
 _One lib to route them all_ in JavaScript/TypeScript! _Routing-js_ is a promise-based web client for accessing different
