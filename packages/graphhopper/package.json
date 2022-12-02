@@ -2,6 +2,9 @@
     "name": "@routing-js/graphhopper",
     "version": "0.0.1",
     "description": "RoutingJS GraphHopper Module",
+    "publishConfig": {
+        "access": "public"
+    },
     "main": "dist/js/index.js",
     "module": "dist/es/index.js",
     "files": [

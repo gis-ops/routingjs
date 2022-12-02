@@ -4,6 +4,9 @@
     "description": "RoutingJS OpenRouteService Module",
     "main": "dist/js/index.js",
     "module": "dist/es/index.js",
+    "publishConfig": {
+        "access": "public"
+    },
     "files": [
         "dist"
     ],

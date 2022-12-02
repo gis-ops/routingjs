@@ -1,6 +1,9 @@
 {
     "name": "@routing-js/core",
     "version": "0.0.1",
+    "publishConfig": {
+        "access": "public"
+      },
     "description": "RoutingJS Core",
     "main": "dist/js/index.js",
     "module": "dist/es/index.js",
