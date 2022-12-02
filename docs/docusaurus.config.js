@@ -8,14 +8,15 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula")
 const config = {
     title: "Routing-JS Documentation",
     tagline: "Unified access to Open Source Routing Engines",
-    url: "https://your-docusaurus-test-site.com",
+    url: "https://gis-ops.github.io/routing-js/",
+    trailingSlash: false,
     baseUrl: "/",
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
-    organizationName: "GIS-OPS", // Usually your GitHub org/user name.
+    organizationName: "gis-ops", // Usually your GitHub org/user name.
     projectName: "routing-js", // Usually your repo name.
 
     // Even if you don't use internalization, you can use this field to set useful

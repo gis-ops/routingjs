@@ -2,8 +2,8 @@
     "name": "@routing-js/valhalla",
     "version": "1.0.0",
     "description": "RoutingJS Valhalla Module",
-    "main": "dist/index.cjs",
-    "module": "dist/index.js",
+    "main": "dist/js/index.js",
+    "module": "dist/es/index.js",
     "files": [
         "dist"
     ],

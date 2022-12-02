@@ -1,6 +1,6 @@
 {
     "name": "routing-js",
-    "version": "1.0.0",
+    "private": "true",
     "description": "Library for consistent access to various vehicle routing APIs",
     "module": "dist/index.js",
     "main": "dist/index.cjs",

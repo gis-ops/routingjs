@@ -2,7 +2,8 @@
     "name": "@routing-js/graphhopper",
     "version": "1.0.0",
     "description": "RoutingJS GraphHopper Module",
-    "main": "dist/index.js",
+    "main": "dist/js/index.js",
+    "module": "dist/es/index.js",
     "files": [
         "dist"
     ],

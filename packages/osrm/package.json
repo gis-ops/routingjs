@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "RoutingJS OSRM Module",
     "main": "dist/js/index.js",
+    "module": "dist/es/index.js",
     "files": [
         "dist"
     ],
