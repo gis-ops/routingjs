@@ -3,7 +3,7 @@ name: Deploy docs to GH Pages
 on:
     push:
         branches:
-            - main
+            - foo
         paths-ignore:
             - "/test_data/"
 
