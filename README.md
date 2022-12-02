@@ -1,7 +1,7 @@
 # Routing-js
 
-_One lib to route them all_, but in JavaScript/TypeScript! _Routing-js_ is a promise-based web client for accessing different
-routing web services, analogous to our Python client [routingpy](https://github.com/gis-ops/routing-py). Get unified access to several routing services with the power of modern asynchronous JavaScript and full autocomplete and type support through the power of TypeScript!
+_One lib to route them all_ in JavaScript/TypeScript! _Routing-js_ is a promise-based web client for accessing different
+routing web services, analogous to our Python client [routingpy](https://github.com/gis-ops/routing-py). Get unified access to several routing services with the power of modern asynchronous JavaScript fully typed thanks to the power of TypeScript!
 
 We currently support the following routers:
 
@@ -36,4 +36,4 @@ v.directions(
 
 ## Bundle
 
-We use `rollup.js` to build the file bundles, both for the whole package as well as for each router (see [`rollup.config.js`](https://github.com/gis-ops/routing-js/blob/main/rollup.config.js)). You can run that bundling process with `npm run bundle`.
+We use `lerna` to handle bundling the packages.

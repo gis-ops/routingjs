@@ -12,17 +12,11 @@ import {
 } from "@routing-js/core"
 
 import {
-    ORSAlternateRouteParam,
-    ORSAttribute,
-    ORSExtraInfo,
     ORSFormat,
-    ORSInstructionFormat,
-    ORSIsoAttribute,
     ORSIsochroneParams,
     ORSIsochroneResponse,
     ORSMatrixParams,
     ORSMatrixResponse,
-    ORSPreference,
     ORSProfile,
     ORSRoute,
     ORSRouteParams,
@@ -31,42 +25,18 @@ import {
 } from "./parameters"
 import { decode } from "@googlemaps/polyline-codec"
 
-interface ORSBaseOpts {
-    units?: ORSUnit
-}
+// we pass the coordinates as the `locations` top level parameter
+export type ORSDirectionsOpts = Omit<ORSRouteParams, "coordinates">
 
-export interface ORSDirectionsOpts extends ORSBaseOpts {
-    preference?: ORSPreference
-    alternative_routes?: ORSAlternateRouteParam
-    language?: string
-    geometry?: boolean
-    geometry_simplify?: boolean
-    instructions?: boolean
-    instructions_format?: ORSInstructionFormat
-    roundabout_exits?: boolean
-    attributes?: ORSAttribute[]
-    maneuvers?: boolean
-    radiuses?: number[]
-    bearings?: [number, number][]
-    continue_straight?: boolean
-    elevation?: boolean
-    extra_info?: ORSExtraInfo[]
-    suppress_warnings?: boolean
-    options?: object
-}
+export type ORSMatrixOpts = Pick<
+    ORSMatrixParams,
+    "metrics" | "resolve_locations"
+>
 
-export interface ORSMatrixOpts extends ORSBaseOpts {
-    metrics?: ("distance" | "duration")[]
-    resolve_locations?: boolean
-}
-
-export interface ORSIsochroneOpts extends ORSBaseOpts {
-    interval_type?: "time" | "distance"
-    location_type?: "start" | "destination"
-    smoothing?: number
-    attributes?: ORSIsoAttribute[]
-    intersections?: boolean
-}
+export type ORSIsochroneOpts = Omit<
+    ORSIsochroneParams,
+    "locations" | "range" | "interval"
+>
 
 export class ORS implements BaseRouter {
     client: Client<
@@ -169,8 +139,7 @@ export class ORS implements BaseRouter {
     public static parseDirectionsResponse(
         response: ORSRouteResponse,
         format: ORSFormat,
-        units?: ORSUnit,
-        alternative_routes?: ORSAlternateRouteParam
+        units?: ORSUnit
     ): Directions<ORSRouteResponse, ORSRoute> {
         let factor = 1
 
@@ -249,15 +218,15 @@ export class ORS implements BaseRouter {
         isochronesOpts: ORSIsochroneOpts = {},
         dryRun?: boolean
     ): Promise<Isochrones<ORSIsochroneResponse, any> | string> {
-        const { interval_type, ...rest } = isochronesOpts
+        const { range_type, ...rest } = isochronesOpts
         const params: ORSIsochroneParams = {
             locations: [location],
             range: intervals,
             ...rest,
         }
 
-        if (interval_type) {
-            params.range_type = interval_type
+        if (range_type) {
+            params.range_type = range_type
         }
 
         return this.client
@@ -266,12 +235,9 @@ export class ORS implements BaseRouter {
                 postParams: params,
                 dryRun,
             })
-            .then((res) => {
+            .then((res: ORSIsochroneResponse) => {
                 if (typeof res === "object") {
-                    return ORS.parseIsochroneResponse(
-                        res as ORSIsochroneResponse,
-                        interval_type
-                    ) as Isochrones<ORSIsochroneResponse, any>
+                    return ORS.parseIsochroneResponse(res, range_type)
                 } else {
                     return res
                 }
@@ -345,4 +311,5 @@ export class ORS implements BaseRouter {
     }
 }
 
+// make all exported types and interfaces available to the public API
 export * from "./parameters"

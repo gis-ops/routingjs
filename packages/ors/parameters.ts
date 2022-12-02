@@ -227,26 +227,43 @@ export interface ORSRouteResponse extends ORSBaseResponse {
     bbox: ORSBbox
     /** A list of routes returned from the request  */
     routes?: ORSRoute[]
+    /** If the `/geojson` endpoint was requested */
     type?: "FeatureCollection"
+    /** If the `/geojson` endpoint was requested */
     features?: Feature<LineString, any>[]
 }
 
 export interface ORSIsochroneResponse extends ORSBaseResponse {
+    /** Bounding box that covers all returned isochrones */
     bbox: ORSBbox
+    /** The features containing the isochrone/isodistance geometries */
     features: Feature<Geometry, any>[]
+    /** FeatureCollection */
     type: string
 }
 
 export interface ORSMatrixResponse extends ORSBaseResponse {
+    /** The individual sourcesof the matrix calculations.  */
     sources: ORSMatrixResult[]
+    /** The individual destinations of the matrix calculations.  */
     destinations: ORSMatrixResult[]
+    /** The distances of the matrix calculations. */
     distances: number[][]
+    /** The durations of the matrix calculations. */
     durations: number[][]
 }
 
 interface ORSMatrixResult {
+    /**
+     * `{longitude},{latitude}` coordinates of the closest accessible point on the routing graph
+     */
     location: [number, number]
+    /**
+     * Name of the street the closest accessible point is situated on. Only for `resolve_locations=true`
+     * and only if name is available.
+     */
     name?: string
+    /** Distance between the source/destination Location and the used point on the routing graph. */
     snapped_distance?: number
 }
 
@@ -297,7 +314,7 @@ export interface ORSRoute {
     warnings?: ORSWarning[]
     /** List containing the indices of way points corresponding to the geometry. */
     way_points?: number[]
-
+    /** The route geometry as a decoded polyline */
     geometry?: string
 }
 
