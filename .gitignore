@@ -104,10 +104,9 @@ dist
 .tern-port
 
 .vscode/
-*.osrm*
-*.tar
-*.txt
-**/valhalla.json
-**/*-tiles*
-**/*.osm-gh/
+
+.idea/
+test_data
+!test_data/andorra-latest.osm.pbf
+!test_data/docker-compose.yml
 docs/docs/

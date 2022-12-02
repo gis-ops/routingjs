@@ -3,7 +3,7 @@ import { ORS } from "./index"
 describe("ORS returns responses", () => {
     it("gets a direction response", async () => {
         const ors = new ORS({
-            apiKey: "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294",
+            baseUrl: "http://localhost:8080/ors",
         })
 
         await ors
@@ -24,7 +24,7 @@ describe("ORS returns responses", () => {
 
     it("gets an isochrone response", async () => {
         const ors = new ORS({
-            apiKey: "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294",
+            baseUrl: "http://localhost:8080/ors",
         })
 
         await ors
@@ -36,7 +36,7 @@ describe("ORS returns responses", () => {
 
     it("gets a matrix response", async () => {
         const ors = new ORS({
-            apiKey: "5b3ce3597851110001cf6248d07a51fd10134409b8e747119cb1c294",
+            baseUrl: "http://localhost:8080/ors",
         })
 
         await ors

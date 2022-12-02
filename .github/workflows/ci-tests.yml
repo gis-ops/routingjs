@@ -1,39 +1,31 @@
 name: Test lib
 
 on:
-    push:
-        branches:
-            - master
-        paths-ignore:
-            - "*.md"
-    workflow_dispatch:
-    pull_request_review:
-        types: [submitted]
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "*.md"
+  workflow_dispatch:
+  pull_request_review:
+    types: [submitted]
 
 jobs:
-    tests:
-        if: github.event.review.state == 'approved' ||  github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                docker_tags: [latest]
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: "16.x"
-            - name: build graphs
-              run: |
-                  docker run --rm -t --name valhalla-tests -v $PWD/test_data:/custom_files -e tileset_name=andorra-tiles -e serve_tiles=False ghcr.io/gis-ops/docker-valhalla/valhalla:latest
-                  docker run --rm -t -v $PWD/test_data:/data --name osrm-tests osrm/osrm-backend:latest /bin/bash -c "osrm-extract -p /opt/car.lua /data/andorra-latest.osm.pbf && osrm-partition /data/andorra-latest.osrm && osrm-customize /data/andorra-latest.osrm"
-            - name: Docker run containers and tests
-              run: |
-                  docker run -d --name valhalla-tests -p 8002:8002 -v $PWD/test_data:/custom_files -e tileset_name=andorra-tiles -e use_tiles_ignore_pbf=True ghcr.io/gis-ops/docker-valhalla/valhalla:latest
-                  docker run -d --name osrm-tests -p 5000:5000 -v $PWD/test_data:/data osrm/osrm-backend:latest osrm-routed --algorithm=MLD /data/andorra-latest.osrm
-                  docker run -d --name graphhopper-tests -p 8989:8989 -v $PWD/test_data:/graphhopper/data israelhikingmap/graphhopper:latest -i data/andorra-latest.osm.pbf --host 0.0.0.0
-                  sleep 4
-                  npm install
-                  npm test
-                  docker stop valhalla-tests && docker rm valhalla-tests
-                  docker stop osrm-tests && docker rm osrm-tests
-                  docker stop graphhopper-tests && docker rm graphhopper-tests
+  tests:
+    if: github.event.review.state == 'approved' ||  github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        docker_tags: [latest]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+      - name: Docker run containers and tests
+        run: |
+          docker-compose -f test_data/docker-compose.yml up -d
+          sleep 10
+          npm install
+          npm test
+          docker-compose -f test_data/docker-compose.yml down
