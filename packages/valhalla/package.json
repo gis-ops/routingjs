@@ -55,6 +55,6 @@
     },
     "dependencies": {
         "@googlemaps/polyline-codec": "^1.0.28",
-        "@routingjs/core": "*"
+        "@routingjs/core": "^0.0.1"
     }
 }
