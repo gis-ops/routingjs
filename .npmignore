@@ -104,3 +104,4 @@ typings/
 
 .vscode/
 /test_data/
+.secrets

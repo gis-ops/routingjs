@@ -110,3 +110,4 @@ test_data
 !test_data/andorra-latest.osm.pbf
 !test_data/docker-compose.yml
 docs/docs/
+.secrets
