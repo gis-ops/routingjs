@@ -50,12 +50,12 @@ const config = {
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
             navbar: {
-                title: "Routing-JS",
+                title: "RoutingJS",
 
                 items: [
                     { to: "/docs/api", label: "docs" },
                     {
-                        href: "https://github.com/gisops/routingjs",
+                        href: "https://github.com/gis-ops/routingjs",
                         label: "GitHub",
                         position: "right",
                     },
@@ -99,7 +99,7 @@ const config = {
                             },
                             {
                                 label: "GitHub",
-                                href: "https://github.com/gisops/routingjs",
+                                href: "https://github.com/gis-ops/routingjs",
                             },
                         ],
                     },

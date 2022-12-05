@@ -37,6 +37,7 @@ describe("Valhalla returns responses", () => {
             .then((i) => {
                 expect(i).toHaveProperty("isochrones")
                 expect(i.isochrones).toHaveLength(2)
+                console.log(JSON.stringify(i.isochrones))
             })
     })
 
