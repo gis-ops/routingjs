@@ -1,5 +1,5 @@
 {
-    "name": "routing-js",
+    "name": "routingjs",
     "private": "true",
     "description": "Library for consistent access to various vehicle routing APIs",
     "module": "dist/index.js",

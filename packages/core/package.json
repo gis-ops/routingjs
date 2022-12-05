@@ -1,5 +1,5 @@
 {
-    "name": "@routing-js/core",
+    "name": "@routingjs/core",
     "version": "0.0.1",
     "publishConfig": {
         "access": "public"

@@ -1,5 +1,5 @@
 {
-    "name": "@routing-js/ors",
+    "name": "@routingjs/ors",
     "version": "0.0.1",
     "description": "RoutingJS OpenRouteService Module",
     "main": "dist/js/index.js",
@@ -54,6 +54,7 @@
         "typescript": "^4.8.4"
     },
     "dependencies": {
-        "@googlemaps/polyline-codec": "^1.0.28"
+        "@googlemaps/polyline-codec": "^1.0.28",
+        "@routingjs/core": "*"
     }
 }

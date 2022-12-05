@@ -9,7 +9,7 @@ import {
     Matrix,
     Isochrone,
     Isochrones,
-} from "@routing-js/core"
+} from "@routingjs/core"
 
 import {
     ORSFormat,

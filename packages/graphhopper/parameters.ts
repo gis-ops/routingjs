@@ -1,5 +1,5 @@
 import { Feature, LineString, Polygon } from "geojson"
-import { JSONObject, JSONValue } from "@routing-js/core"
+import { JSONObject, JSONValue } from "@routingjs/core"
 
 /**
  * Request parameters common across `/route`, `/isochrone` and `/matrix` endpoints.

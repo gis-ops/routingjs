@@ -10,7 +10,7 @@ import {
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
-} from "@routing-js/core"
+} from "@routingjs/core"
 import {
     MapboxAuthParams,
     ValhallaContours,

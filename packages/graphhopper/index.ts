@@ -9,7 +9,7 @@ import {
     Matrix,
     RoutingJSError,
     Client,
-} from "@routing-js/core"
+} from "@routingjs/core"
 import { LineString } from "geojson"
 import {
     GraphHopperIsochroneGetParams,
