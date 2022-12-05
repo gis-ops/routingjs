@@ -20,7 +20,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/gis-ops/routing-js.git"
+        "url": "git+https://github.com/gis-ops/routingjs.git"
     },
     "keywords": [
         "routing",
@@ -33,9 +33,9 @@
     "author": "Christian Beiwinkel <christian@gis-ops.com>",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/gis-ops/routing-js/issues"
+        "url": "https://github.com/gis-ops/routingjs/issues"
     },
-    "homepage": "https://github.com/gis-ops/routing-js#readme",
+    "homepage": "https://github.com/gis-ops/routingjs#readme",
     "devDependencies": {
         "@commitlint/cli": "^17.1.2",
         "@commitlint/config-conventional": "^17.1.0",

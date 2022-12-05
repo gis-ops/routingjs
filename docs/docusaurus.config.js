@@ -6,8 +6,8 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula")
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: "Routing-JS Documentation",
-    tagline: "Unified access to Open Source Routing Engines",
+    title: "RoutingJS Documentation",
+    tagline: "Consistent access to Open Source Routing Engines",
     url: "https://gis-ops.github.io/",
     trailingSlash: false,
     baseUrl: "/",
@@ -17,7 +17,7 @@ const config = {
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
     organizationName: "gis-ops", // Usually your GitHub org/user name.
-    projectName: "routing-js", // Usually your repo name.
+    projectName: "routingjs", // Usually your repo name.
 
     // Even if you don't use internalization, you can use this field to set useful
     // metadata like html lang. For example, if your site is Chinese, you may want
@@ -36,8 +36,7 @@ const config = {
                     sidebarPath: require.resolve("./sidebars.js"),
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
-                    editUrl:
-                        "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+                    editUrl: "https://github.com/gis-ops/routingjs/",
                 },
                 blog: false,
                 theme: {
@@ -56,7 +55,7 @@ const config = {
                 items: [
                     { to: "/docs/api", label: "docs" },
                     {
-                        href: "https://github.com/gisops/routing-js",
+                        href: "https://github.com/gisops/routingjs",
                         label: "GitHub",
                         position: "right",
                     },
@@ -100,7 +99,7 @@ const config = {
                             },
                             {
                                 label: "GitHub",
-                                href: "https://github.com/gisops/routing-js",
+                                href: "https://github.com/gisops/routingjs",
                             },
                         ],
                     },

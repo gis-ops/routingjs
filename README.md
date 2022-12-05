@@ -1,6 +1,6 @@
-# Routing-js
+# RoutingJS
 
-**One lib to route them all** : _Routing-js_ is a promise-based web client for accessing different
+**One lib to route them all** : _RoutingJS_ is a promise-based web client for accessing different
 routing web services, analogous to our Python client [routingpy](https://github.com/gis-ops/routing-py). Get unified access to several routing services with the power of modern asynchronous JavaScript fully typed thanks to the power of TypeScript!
 
 We currently support the following routers:
@@ -17,13 +17,13 @@ Future support for other service (like the ones _routingpy_ is supporting) might
 Router clients are installable individually:
 
 ```
-npm install @routing-js/valhalla
+npm install @routingjs/valhalla
 ```
 
 ## Examples
 
 ```js
-import { Valhalla } from "@routing-js/valhalla"
+import { Valhalla } from "@routingjs/valhalla"
 
 const v = new Valhalla() // URL defaults to http://valhalla1.openstreetmap.de
 v.directions(
@@ -39,3 +39,8 @@ v.directions(
     })
 })
 ```
+
+## Contributing
+
+Contributions are welcome! We are open to improvements of existing clients, as well as additions of
+new ones :-)

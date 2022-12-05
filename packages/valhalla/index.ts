@@ -231,7 +231,6 @@ export class Valhalla implements BaseRouter {
             })
             .then((res) => {
                 if (typeof res === "object") {
-                    console.log(JSON.stringify(res))
                     return this.parseDirectionsResponse(
                         res as ValhallaRouteResponse,
                         "main"
