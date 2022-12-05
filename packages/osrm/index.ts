@@ -99,6 +99,14 @@ export class OSRM implements BaseRouter {
             ) || {}
     }
 
+    /**
+     * Makes a request to OSRM's `/route` endpoint.
+     *
+     * @param locations - The coordinates tuple the route should be calculated from in order of visit. Format: [lat, lon]
+     * @param profile - Specifies the mode of transport (superfluous for OSRM)
+     * @param directionsOpts - Additional parameters
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
+     */
     public async directions(
         locations: [number, number][],
         profile: string,
@@ -118,7 +126,7 @@ export class OSRM implements BaseRouter {
         dryRun = false
     ): Promise<Directions<OSRMRouteResponse, OSRMRoute> | string> {
         const coords = locations
-            .map((tuple) => `${tuple[0]},${tuple[1]}`)
+            .map((tuple) => `${tuple[1]},${tuple[0]}`)
             .join(";")
 
         const params = OSRM.getDirectionParams(directionsOpts)
@@ -257,7 +265,7 @@ export class OSRM implements BaseRouter {
         dryRun?: boolean
     ): Promise<Matrix<OSRMTableResponse> | string> {
         const coords = locations
-            .map((tuple) => `${tuple[0]},${tuple[1]}`)
+            .map((tuple) => `${tuple[1]},${tuple[0]}`)
             .join(";")
 
         const params = OSRM.getMatrixParams(matrixOpts)

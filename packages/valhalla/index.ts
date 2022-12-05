@@ -186,7 +186,7 @@ export class Valhalla implements BaseRouter {
     /**
      * Makes a request to Valhalla's `/route` endpoint.
      *
-     * @param locations - The coordinates tuple the route should be calculated from in order of visit.
+     * @param locations - The coordinates tuple the route should be calculated from in order of visit. Format: [lat, lon]
      * @param profile - Specifies the mode of transport
      * @param directionsOpts - Additional parameters, such as costing options.
      * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
@@ -366,7 +366,10 @@ export class Valhalla implements BaseRouter {
             // TODO: convert to loop
             if (leg.shape) {
                 geometry.push(
-                    ...(decode(leg.shape, 6) as unknown as [number, number][])
+                    ...(decode(leg.shape, 6).map(([lat, lon]) => [
+                        lon,
+                        lat,
+                    ]) as [number, number][])
                 )
             }
 
@@ -407,7 +410,15 @@ export class Valhalla implements BaseRouter {
             return new Direction(feat, response)
         }
     }
-
+    /**
+     * Makes a request to Valhalla's `/isochrone` endpoint.
+     *
+     * @param location - The coordinates tuple that represents the starting location. Format: [lat, lon]
+     * @param profile - Specifies the mode of transport
+     * @param isochronesOpts - Additional parameters, such as costing options.
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
+     * @see {@link ValhallaCostingType} for available profiles
+     */
     public async reachability(
         location: [number, number],
         profile: ValhallaCostingType,
@@ -595,6 +606,16 @@ export class Valhalla implements BaseRouter {
 
         return new Isochrones(isochrones, response)
     }
+
+    /**
+     * Makes a request to Valhalla's `/matrix` endpoint.
+     *
+     * @param locations - Format: [lat, lon]
+     * @param profile - Specifies the mode of transport
+     * @param matrixOpts - Additional parameters, such as costing options.
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
+     * @see {@link ValhallaCostingType} for available profiles
+     */
     public async matrix(
         locations: [number, number][],
         profile: ValhallaCostingType,
@@ -759,23 +780,23 @@ export class Valhalla implements BaseRouter {
     protected _buildLocations(
         coordinates: [number, number][] | [number, number]
     ): ValhallaLocation[] {
-        const locations = []
-
         if (Array.isArray(coordinates[0])) {
+            const locations: ValhallaLocation[] = []
             ;(coordinates as number[][]).forEach((coordPair) => {
                 // TODO: convert to loop
-                const locObj = { lon: coordPair[0], lat: coordPair[1] }
+                const locObj = { lon: coordPair[1], lat: coordPair[0] }
                 locations.push(locObj)
             })
+            return locations
         } else {
-            const locObj = {
-                lat: (coordinates as number[])[1],
-                lon: coordinates[0],
-            }
-            locations.push(locObj)
+            const location: [ValhallaLocation] = [
+                {
+                    lat: (coordinates as number[])[0],
+                    lon: (coordinates as number[])[1],
+                },
+            ]
+            return location
         }
-
-        return locations
     }
 }
 

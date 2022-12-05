@@ -6,8 +6,8 @@ describe("Valhalla returns responses", () => {
         await v
             .directions(
                 [
-                    [1.51886, 42.5063],
-                    [1.53789, 42.51007],
+                    [42.5063, 1.51886],
+                    [42.51007, 1.53789],
                 ],
                 "pedestrian"
             )
@@ -33,17 +33,17 @@ describe("Valhalla returns responses", () => {
     it("gets an isochrone response", async () => {
         const v = new Valhalla({ baseUrl: "http://localhost:8002" })
         await v
-            .reachability([1.52601, 42.50823], "pedestrian", [30, 90])
+            .reachability([42.50823, 1.52601], "pedestrian", [30, 90])
             .then((i) => {
                 expect(i).toHaveProperty("isochrones")
                 expect(i.isochrones).toHaveLength(2)
             })
     })
 
-    it("gets an isochrone response", async () => {
+    it("gets an isochrone response with polygons", async () => {
         const v = new Valhalla({ baseUrl: "http://localhost:8002" })
         await v
-            .reachability([1.52601, 42.50823], "pedestrian", [30, 90], {
+            .reachability([42.50823, 1.52601], "pedestrian", [30, 90], {
                 polygons: true,
                 id: "test-id",
             })
@@ -62,8 +62,8 @@ describe("Valhalla returns responses", () => {
         await v
             .matrix(
                 [
-                    [1.51886, 42.5063],
-                    [1.53789, 42.51007],
+                    [42.5063, 1.51886],
+                    [42.51007, 1.53789],
                 ],
                 "auto"
             )

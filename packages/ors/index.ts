@@ -113,7 +113,7 @@ export class ORS implements BaseRouter {
         }
 
         const params: ORSRouteParams = {
-            coordinates: locations,
+            coordinates: locations.map(([lat, lon]) => [lon, lat]),
             ...directionsOpts,
         }
 
@@ -171,7 +171,10 @@ export class ORS implements BaseRouter {
             response.routes?.forEach((route) => {
                 let geom = null
                 if (route.geometry) {
-                    geom = decode(route.geometry, 5)
+                    geom = decode(route.geometry, 5).map(([lat, lon]) => [
+                        lon,
+                        lat,
+                    ])
                 }
 
                 const feat: DirectionFeat = {
@@ -220,7 +223,7 @@ export class ORS implements BaseRouter {
     ): Promise<Isochrones<ORSIsochroneResponse, any> | string> {
         const { range_type, ...rest } = isochronesOpts
         const params: ORSIsochroneParams = {
-            locations: [location],
+            locations: [[location[1], location[0]]], // format must be lon/lat
             range: intervals,
             ...rest,
         }
@@ -283,7 +286,7 @@ export class ORS implements BaseRouter {
         dryRun?: boolean
     ): Promise<Matrix<ORSMatrixResponse> | string> {
         const params: ORSMatrixParams = {
-            locations,
+            locations: locations.map(([lat, lon]) => [lon, lat]),
             ...matrixOpts,
         }
 

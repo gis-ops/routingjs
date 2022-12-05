@@ -134,7 +134,7 @@ export class GraphHopper implements BaseRouter {
     > {
         const params: GraphHopperRouteParams = {
             profile,
-            points: locations,
+            points: locations.map(([lat, lon]) => [lon, lat]),
             ...directionsOpts,
         }
 
@@ -182,10 +182,9 @@ export class GraphHopper implements BaseRouter {
                 if (path.points_encoded) {
                     geometry = {
                         type: "LineString",
-                        coordinates: decode(path.points as string, 5) as [
-                            number,
-                            number
-                        ][],
+                        coordinates: decode(path.points as string, 5).map(
+                            ([lat, lon]) => [lon, lat]
+                        ) as [number, number][],
                     }
                 }
 
@@ -208,7 +207,7 @@ export class GraphHopper implements BaseRouter {
     /**
      * Gets isochrones or equidistants for a range of time/distance values around a given set of coordinates.
      *
-     * @param location - One coordinate pair denoting the location.
+     * @param location - One coordinate pair denoting the location. Format: [lat, lon]
      * @param profile - Specifies the mode of transport.
      * @param intervals - Maximum range to calculate distances/durations for. You can also specify the `buckets` variable to break the single value into more isochrones. For compatibility reasons, this parameter is expressed as list. In meters or seconds depending on `interval_type`.
      * @param isochronesOpts - additional options specific to the isochrone endpoint.
@@ -243,7 +242,7 @@ export class GraphHopper implements BaseRouter {
         | Isochrones<GraphHopperIsochroneResponse, GraphHopperIsochroneProps>
     > {
         const params: GraphHopperIsochroneGetParams = {
-            point: [location[1], location[0]].join(","),
+            point: location.join(","),
             profile,
         }
 
@@ -313,7 +312,10 @@ export class GraphHopper implements BaseRouter {
      *
      * Currently not available on the open source version.
      *
-     * @param locations - Specify multiple points for which the weight-, route-, time- or distance-matrix should be calculated. In this case the starts are identical to the destinations. If there are N points, then NxN entries will be calculated.
+     * @param locations - Specify multiple points for which the weight-, route-, time- or
+     *                    distance-matrix should be calculated. In this case the starts are identical
+     *                    to the destinations.
+     *                    If there are N points, then NxN entries will be calculated. Format: [lat, lon]
      * @param profile - Specifies the mode of transport.
      * @param matrixOpts - additional options specific to the matrix endpoint
      * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
