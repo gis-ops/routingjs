@@ -3,7 +3,7 @@ name: Deploy docs to GH Pages
 on:
     push:
         branches:
-            - foo
+            - main
         paths-ignore:
             - "/test_data/"
 
@@ -20,6 +20,7 @@ jobs:
                   node-version: "16.x"
             - name: Build Docusaurus website
               run: |
+                  npm install
                   cd docs
                   npm install
                   npm run build
