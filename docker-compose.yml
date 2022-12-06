@@ -27,7 +27,7 @@ services:
         command: '/bin/bash -c "osrm-extract -p /opt/car.lua /data/andorra-latest.osm.pbf && osrm-partition /data/andorra-latest.osrm && osrm-customize /data/andorra-latest.osrm && osrm-routed --algorithm=MLD /data/andorra-latest.osrm"'
     graphhopper:
         container_name: graphhopper-tests
-        image: israelhikingmap/graphhopper:latest
+        image: israelhikingmap/graphhopper:6.2
         ports:
             - "8989:8989"
         volumes:

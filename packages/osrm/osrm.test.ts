@@ -6,8 +6,8 @@ describe("OSRM returns responses", () => {
         await o
             .directions(
                 [
-                    [1.51886, 42.5063],
-                    [1.53789, 42.51007],
+                    [42.5063, 1.51886],
+                    [42.51007, 1.53789],
                 ],
                 "driving",
                 { radiuses: [1000, 1000] }
@@ -23,8 +23,8 @@ describe("OSRM returns responses", () => {
         await o
             .matrix(
                 [
-                    [1.51886, 42.5063],
-                    [1.53789, 42.51007],
+                    [42.5063, 1.51886],
+                    [42.51007, 1.53789],
                 ],
                 "driving",
                 { radiuses: [1000, 1000] },
