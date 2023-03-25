@@ -10,7 +10,7 @@ const config = {
     tagline: "Consistent access to Open Source Routing Engines",
     url: "https://gis-ops.github.io/",
     trailingSlash: false,
-    baseUrl: "/",
+    baseUrl: "/routingjs",
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
 
