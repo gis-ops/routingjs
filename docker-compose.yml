@@ -12,7 +12,7 @@ services:
             - "CATALINA_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9001 -Dcom.sun.management.jmxremote.rmi.port=9001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost"
     valhalla:
         container_name: valhalla-tests
-        image: gisops/valhalla:latest
+        image: ghcr.io/gis-ops/docker-valhalla/valhalla:latest
         ports:
             - "8002:8002"
         volumes:
