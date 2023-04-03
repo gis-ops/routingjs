@@ -1,8 +1,8 @@
 import { OSRM } from "./index"
 
 describe("OSRM returns responses", () => {
+    const o = new OSRM({ baseUrl: "http://localhost:5000" })
     it("gets a direction response", async () => {
-        const o = new OSRM({ baseUrl: "http://localhost:5000" })
         await o
             .directions(
                 [
@@ -19,7 +19,6 @@ describe("OSRM returns responses", () => {
     })
 
     it("gets a matrix response", async () => {
-        const o = new OSRM({ baseUrl: "http://localhost:5000" })
         await o
             .matrix(
                 [

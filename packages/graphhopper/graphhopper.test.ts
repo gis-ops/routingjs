@@ -1,8 +1,8 @@
 import { GraphHopper } from "./index"
 
 describe("GraphHopper returns responses", () => {
+    const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
     it("gets a directions response", async () => {
-        const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
         await g
             .directions(
                 [
@@ -31,7 +31,6 @@ describe("GraphHopper returns responses", () => {
     })
 
     it("gets an isochrones response", async () => {
-        const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
         await g.reachability([42.51007, 1.53789], "car", [600]).then((i) => {
             expect(i.raw).toBeDefined()
             expect(i.isochrones).toHaveLength(1)

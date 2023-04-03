@@ -1,11 +1,10 @@
 import { ORS } from "./index"
 
 describe("ORS returns responses", () => {
+    const ors = new ORS({
+        baseUrl: "http://localhost:8080/ors",
+    })
     it("gets a direction response", async () => {
-        const ors = new ORS({
-            baseUrl: "http://localhost:8080/ors",
-        })
-
         await ors
             .directions(
                 [
@@ -23,10 +22,6 @@ describe("ORS returns responses", () => {
     })
 
     it("gets a direction response from geojson endpoint", async () => {
-        const ors = new ORS({
-            baseUrl: "http://localhost:8080/ors",
-        })
-
         await ors
             .directions(
                 [
@@ -47,10 +42,6 @@ describe("ORS returns responses", () => {
     })
 
     it("gets an isochrone response", async () => {
-        const ors = new ORS({
-            baseUrl: "http://localhost:8080/ors",
-        })
-
         await ors
             .reachability([42.5063, 1.51886], "driving-car", [150, 300])
             .then((i) => {
@@ -59,10 +50,6 @@ describe("ORS returns responses", () => {
     })
 
     it("gets a matrix response", async () => {
-        const ors = new ORS({
-            baseUrl: "http://localhost:8080/ors",
-        })
-
         await ors
             .matrix(
                 [
