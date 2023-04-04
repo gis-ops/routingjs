@@ -24,6 +24,8 @@ jobs:
               with:
                   node-version: ${{ matrix.node_version }}
             - name: Docker run containers and tests
+              env:
+                MY_SECRET: ${{ secrets.GRAPHHOPPER_API_KEY }}
               run: |
                   docker-compose -f docker-compose.yml up -d
                   sleep 10
