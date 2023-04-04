@@ -15,8 +15,8 @@
         "build": "lerna run build",
         "postinstall": "npx husky install",
         "clear": "rimraf \"packages/**/dist/\"",
-        "up": "docker-compose up",
-        "down": "docker-compose down"
+        "up": "docker compose up -d",
+        "down": "docker compose down"
     },
     "repository": {
         "type": "git",
