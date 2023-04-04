@@ -1,4 +1,6 @@
 import { GraphHopper } from "./index"
+import dotenv from 'dotenv'
+dotenv.config()
 
 describe("GraphHopper returns responses", () => {
     const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
@@ -36,4 +38,26 @@ describe("GraphHopper returns responses", () => {
             expect(i.isochrones).toHaveLength(1)
         })
     })
+
+    //optional
+    if(process.env.GRAPHHOPPER_API_KEY){
+        it("gets a matrix response", async () => {
+        const g = new GraphHopper({
+            apiKey: process.env.GRAPHHOPPER_API_KEY,
+        })
+        await g
+            .matrix(
+                [
+                    [42.5063, 1.51886],
+                    [42.51007, 1.53789],
+                ],
+                "car"
+            )
+            .then((m) => {
+                expect(m).toHaveProperty("durations")
+                expect(m).toHaveProperty("distances")
+                expect(m.raw).toBeDefined()
+            })
+        })
+    }
 })

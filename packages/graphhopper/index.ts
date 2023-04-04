@@ -56,7 +56,7 @@ export interface GraphHopperIsochroneOpts
 
 /**
  * Performs requests to the  GraphHopper API. Default public URL is
- * https://api.openrouteservice.org.
+ * https://graphhopper.com/api/1.
  *
  * For the full documentation, see  {@link https://docs.graphhopper.com}.
  */
@@ -85,7 +85,7 @@ export class GraphHopper implements BaseRouter {
             axiosOpts,
         } = clientArgs || {}
         this.apiKey = apiKey
-        const defaultURL = "https://api.openrouteservice.org"
+        const defaultURL = "https://graphhopper.com/api/1"
 
         if (baseUrl === undefined && !apiKey) {
             throw new RoutingJSError(
