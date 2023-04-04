@@ -1,6 +1,8 @@
 import { GraphHopper } from "./index"
 import dotenv from 'dotenv'
-dotenv.config()
+if(process.env.NODE_ENV !== "production"){
+    dotenv.config()
+}
 
 describe("GraphHopper returns responses", () => {
     const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
