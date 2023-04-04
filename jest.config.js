@@ -5,5 +5,5 @@ export default {
         "^.+\\.ts?$": "ts-jest",
     },
     transformIgnorePatterns: ["<rootDir>/node_modules/"],
-    modulePaths: ["<rootDir>/packages/"],
+    modulePaths: ["<rootDir>/packages/"]
 }
