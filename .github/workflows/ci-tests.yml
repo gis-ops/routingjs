@@ -25,10 +25,10 @@ jobs:
                   node-version: ${{ matrix.node_version }}
             - name: Docker run containers and tests
               env:
-                GRAPHHOPPER_API_KEY: ${{ secrets.GRAPHHOPPER_API_KEY }}
+                  GRAPHHOPPER_API_KEY: ${{ secrets.GRAPHHOPPER_API_KEY }}
               run: |
                   docker compose up -d
                   sleep 10
-                  npm install
+                  npm ci
                   npm test
                   docker compose down
