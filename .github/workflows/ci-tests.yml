@@ -27,8 +27,8 @@ jobs:
               env:
                 GRAPHHOPPER_API_KEY: ${{ secrets.GRAPHHOPPER_API_KEY }}
               run: |
-                  docker-compose -f docker-compose.yml up -d
+                  docker compose up -d
                   sleep 10
                   npm install
                   npm test
-                  docker-compose -f docker-compose.yml down
+                  docker compose down
