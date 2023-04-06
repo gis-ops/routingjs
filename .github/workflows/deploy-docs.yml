@@ -20,9 +20,9 @@ jobs:
                   node-version: "16.x"
             - name: Build Docusaurus website
               run: |
-                  npm install
+                  npm ci
                   cd docs
-                  npm install
+                  npm ci
                   npm run build
             - name: Deploy to GitHub Pages
               if: success()
