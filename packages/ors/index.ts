@@ -4,7 +4,6 @@ import {
     Client,
     Direction,
     Directions,
-    RoutingJSError,
     DirectionFeat,
     Matrix,
     Isochrone,
@@ -106,7 +105,7 @@ export class ORS implements BaseRouter {
                     "vehicle_type"
                 )
             ) {
-                throw new RoutingJSError(
+                throw new Error(
                     "ORS: options.vehicle_type must be specified for driving-hgv if restrictions are set."
                 )
             }
@@ -133,6 +132,9 @@ export class ORS implements BaseRouter {
                 } else {
                     return res
                 }
+            })
+            .catch((error) => {
+                throw error.properties
             })
     }
 
@@ -245,6 +247,9 @@ export class ORS implements BaseRouter {
                     return res
                 }
             })
+            .catch((error) => {
+                throw error.properties
+            })
     }
 
     public static parseIsochroneResponse(
@@ -304,6 +309,9 @@ export class ORS implements BaseRouter {
                 } else {
                     return res
                 }
+            })
+            .catch((error) => {
+                throw error.properties
             })
     }
 

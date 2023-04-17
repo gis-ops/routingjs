@@ -4,8 +4,6 @@ import {
     DirectionFeat,
     Directions,
     Client,
-    RoutingJSAPIError,
-    RoutingJSError,
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
@@ -141,7 +139,7 @@ export class OSRM implements BaseRouter {
                 return OSRM.parseDirectionsResponse(res)
             })
             .catch((error) => {
-                throw new RoutingJSError(error.message)
+                throw error.properties
             })
     }
 
@@ -280,7 +278,7 @@ export class OSRM implements BaseRouter {
                 return OSRM.parseMatrixResponse(res)
             })
             .catch((error) => {
-                throw new RoutingJSAPIError(error.message)
+                throw error.properties
             })
     }
 

@@ -7,7 +7,6 @@ import {
     Isochrone,
     Isochrones,
     Matrix,
-    RoutingJSError,
     Client,
 } from "@routingjs/core"
 import { LineString } from "geojson"
@@ -88,7 +87,7 @@ export class GraphHopper implements BaseRouter {
         const defaultURL = "https://graphhopper.com/api/1"
 
         if (baseUrl === undefined && !apiKey) {
-            throw new RoutingJSError(
+            throw new Error(
                 "Please provide an API key for GraphHopper"
             )
         }
@@ -164,6 +163,9 @@ export class GraphHopper implements BaseRouter {
                 } else {
                     return res
                 }
+            })
+            .catch((error)=>{
+                throw error.properties
             })
     }
     /**
@@ -278,6 +280,9 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
+            .catch((error)=>{
+                throw error.properties
+            })
     }
 
     /**
@@ -375,6 +380,9 @@ export class GraphHopper implements BaseRouter {
                 } else {
                     return res
                 }
+            })
+            .catch((error)=>{
+                throw error.properties
             })
     }
 

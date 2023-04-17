@@ -6,7 +6,6 @@ import {
     Directions,
     Isochrone,
     Isochrones,
-    RoutingJSError,
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
@@ -240,8 +239,7 @@ export class Valhalla implements BaseRouter {
                 }
             })
             .catch((error) => {
-                console.log(JSON.stringify(error))
-                throw new RoutingJSError(error.message)
+                throw error.properties
             })
     }
 
@@ -472,7 +470,7 @@ export class Valhalla implements BaseRouter {
                 }
             })
             .catch((error) => {
-                throw new RoutingJSError(error.message)
+                throw error.properties
             })
     }
 
@@ -657,7 +655,7 @@ export class Valhalla implements BaseRouter {
                 }
             })
             .catch((error) => {
-                throw new RoutingJSError(error.message)
+                throw error.properties
             })
     }
 

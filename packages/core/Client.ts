@@ -10,9 +10,52 @@ import axiosRetry, {
     IAxiosRetryConfig,
     isNetworkOrIdempotentRequestError,
 } from "axios-retry"
-import { RoutingJSAPIError, RoutingJSClientError } from "./error"
-
+import { RoutingJSAPIError } from "./error"
 import options from "./options"
+
+const checkRouter = (err: any)=>{
+    let properties = {
+        status_code: err.response?.status,
+        status: err.response?.statusText,
+        error_code: undefined,
+        error: 'error'
+    }
+    switch((err.config.url).split('/')[2].split(':')[1]){
+        case '8989': //graphhopper
+            {   
+                const {message, details} = err.response.data.hints[0]
+                properties.error_code = details
+                properties.error = message
+                break
+            }
+        case '8002': //valhalla
+            {
+                const {error_code, error} = err.response.data
+                properties.error_code = error_code
+                properties.error = error
+                break
+            }
+        case '5000': //osrm
+            {
+                const { code, message } = err.response.data
+                properties.error_code = code
+                properties.error = message
+                break
+            }
+        default: //ors
+            {
+                const { code, message } = err.response.data.error
+                properties.error_code = code
+                properties.error = message
+                break
+            }
+    }
+    throw new RoutingJSAPIError(
+        `Request failed with status ${
+            (err as AxiosError).response?.status
+        }: ${JSON.stringify(err as AxiosError)}`, properties
+    )
+}
 
 interface ClientInterface {
     readonly baseURL: string
@@ -146,12 +189,8 @@ class Client<
             return this.axiosInstance
                 .post(urlObj.toString(), postParams)
                 .then((res) => res.data)
-                .catch((error) => {
-                    throw new RoutingJSAPIError(
-                        `Request failed with status ${
-                            (error as AxiosError).response?.status
-                        }: ${JSON.stringify(error as AxiosError)}`
-                    )
+                .catch((err) => {
+                    checkRouter(err)
                 })
         } else {
             if (dryRun === true) {
@@ -167,24 +206,8 @@ class Client<
                 .get(urlObj.toString(), {
                     params: getParams,
                 })
-                .catch((error: AxiosError) => {
-                    if (error.response) {
-                        throw new RoutingJSAPIError(
-                            `Request failed with status ${error.response.status}: ${error.message}`
-                        )
-                    } else if (error.request) {
-                        throw new RoutingJSAPIError(
-                            `Request failed with request ${JSON.stringify(
-                                error.request
-                            )}`
-                        )
-                    } else {
-                        // something must have gone wrong in the request setup
-                        throw new RoutingJSClientError(
-                            `Request failed with error ${error.name}.
-                             Message: ${error.message} `
-                        )
-                    }
+                .catch((err: AxiosError) => {
+                    checkRouter(err)
                 })
                 .then((res: AxiosResponse) => res.data)
         }
