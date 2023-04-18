@@ -139,7 +139,7 @@ export class OSRM implements BaseRouter {
                 return OSRM.parseDirectionsResponse(res)
             })
             .catch((error) => {
-                throw error.properties
+                throw error.properties ? error.properties : error.message
             })
     }
 
@@ -278,7 +278,7 @@ export class OSRM implements BaseRouter {
                 return OSRM.parseMatrixResponse(res)
             })
             .catch((error) => {
-                throw error.properties
+                throw error.properties ? error.properties : error.message
             })
     }
 

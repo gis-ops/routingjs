@@ -165,7 +165,7 @@ export class GraphHopper implements BaseRouter {
                 }
             })
             .catch((error)=>{
-                throw error.properties
+                throw error.properties? error.properties : error.message
             })
     }
     /**
@@ -281,7 +281,7 @@ export class GraphHopper implements BaseRouter {
                 }
             })
             .catch((error)=>{
-                throw error.properties
+                throw error.properties ? error.properties : error.message
             })
     }
 
@@ -382,7 +382,7 @@ export class GraphHopper implements BaseRouter {
                 }
             })
             .catch((error)=>{
-                throw error.properties
+                throw error.properties ? error.properties : error.message
             })
     }
 

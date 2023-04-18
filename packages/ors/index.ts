@@ -134,7 +134,7 @@ export class ORS implements BaseRouter {
                 }
             })
             .catch((error) => {
-                throw error.properties
+                throw error.properties ? error.properties : error.message
             })
     }
 
@@ -248,7 +248,7 @@ export class ORS implements BaseRouter {
                 }
             })
             .catch((error) => {
-                throw error.properties
+                throw error.properties ? error.properties : error.message
             })
     }
 
@@ -311,7 +311,7 @@ export class ORS implements BaseRouter {
                 }
             })
             .catch((error) => {
-                throw error.properties
+                throw error.properties ? error.properties : error.message
             })
     }
 
