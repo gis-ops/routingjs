@@ -5,7 +5,6 @@ import {
     Directions,
     Client,
     RoutingJSAPIError,
-    RoutingJSError,
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
@@ -21,6 +20,14 @@ import {
     OSRMTableParams,
     OSRMTableResponse,
 } from "./parameters"
+
+//OSRM API returns an error code along with a message in the response body when an error occurs.
+interface OSRMErrorProps {
+    status_code: number
+    status: string
+    error_code: number
+    message: string
+}
 
 interface OSRMBaseOpts {
     /** Limits the search to given radius in meters. */
@@ -141,7 +148,13 @@ export class OSRM implements BaseRouter {
                 return OSRM.parseDirectionsResponse(res)
             })
             .catch((error) => {
-                throw new RoutingJSError(error.message)
+                const props: OSRMErrorProps = {
+                    status_code: error.response?.status,
+                    status: error.response?.statusText,
+                    error_code: error.response?.data.code,
+                    message: error.response?.data.message,
+                }
+                throw new RoutingJSAPIError<OSRMErrorProps>(error.message, props)
             })
     }
 
@@ -280,7 +293,13 @@ export class OSRM implements BaseRouter {
                 return OSRM.parseMatrixResponse(res)
             })
             .catch((error) => {
-                throw new RoutingJSAPIError(error.message)
+                const props: OSRMErrorProps = {
+                    status_code: error.response?.status,
+                    status: error.response?.statusText,
+                    error_code: error.response?.data.code,
+                    message: error.response?.data.message,
+                }
+                throw new RoutingJSAPIError<OSRMErrorProps>(error.message, props)
             })
     }
 

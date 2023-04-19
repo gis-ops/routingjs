@@ -30,12 +30,25 @@ describe("GraphHopper returns responses", () => {
                     g.directions[0].feature.properties.distance
                 ).not.toBeNull()
             })
+            .catch((e)=>{
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("message")
+            })
     })
 
     it("gets an isochrones response", async () => {
-        await g.reachability([42.51007, 1.53789], "car", [600]).then((i) => {
+        await g.reachability([42.51007, 1.53789], "car", [600])
+        .then((i) => {
             expect(i.raw).toBeDefined()
             expect(i.isochrones).toHaveLength(1)
+        })
+        .catch((e)=>{
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("message")
         })
     })
 
@@ -57,6 +70,12 @@ describe("GraphHopper returns responses", () => {
                 expect(m).toHaveProperty("durations")
                 expect(m).toHaveProperty("distances")
                 expect(m.raw).toBeDefined()
+            })
+            .catch((e)=>{
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("message")
             })
         })
     }

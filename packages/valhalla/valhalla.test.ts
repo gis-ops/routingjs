@@ -28,6 +28,13 @@ describe("Valhalla returns responses", () => {
                     d.directions[0].feature.properties.distance
                 ).not.toBeNull()
             })
+            .catch((e) => {
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("error")
+            })
     })
 
     it("gets an isochrone response", async () => {
@@ -36,6 +43,13 @@ describe("Valhalla returns responses", () => {
             .then((i) => {
                 expect(i).toHaveProperty("isochrones")
                 expect(i.isochrones).toHaveLength(2)
+            })
+            .catch((e) => {
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("error")
             })
     })
 
@@ -53,6 +67,13 @@ describe("Valhalla returns responses", () => {
                 )
                 expect(i.raw.id === "test-id")
             })
+            .catch((e) => {
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("error")
+            })
     })
 
     it("gets an matrix response", async () => {
@@ -68,6 +89,13 @@ describe("Valhalla returns responses", () => {
                 expect(m).toHaveProperty("durations")
                 expect(m).toHaveProperty("distances")
                 expect(m.durations).toHaveLength(2)
+            })
+            .catch((e) => {
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("error")
             })
     })
 })

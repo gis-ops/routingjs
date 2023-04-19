@@ -3,14 +3,12 @@ import axios, {
     AxiosProxyConfig,
     AxiosRequestConfig,
     AxiosInstance,
-    AxiosError,
     AxiosResponse,
 } from "axios"
 import axiosRetry, {
     IAxiosRetryConfig,
     isNetworkOrIdempotentRequestError,
 } from "axios-retry"
-import { RoutingJSAPIError, RoutingJSClientError } from "./error"
 
 import options from "./options"
 
@@ -146,13 +144,7 @@ class Client<
             return this.axiosInstance
                 .post(urlObj.toString(), postParams)
                 .then((res) => res.data)
-                .catch((error) => {
-                    throw new RoutingJSAPIError(
-                        `Request failed with status ${
-                            (error as AxiosError).response?.status
-                        }: ${JSON.stringify(error as AxiosError)}`
-                    )
-                })
+
         } else {
             if (dryRun === true) {
                 const requestInfo = `
@@ -166,25 +158,6 @@ class Client<
             return this.axiosInstance
                 .get(urlObj.toString(), {
                     params: getParams,
-                })
-                .catch((error: AxiosError) => {
-                    if (error.response) {
-                        throw new RoutingJSAPIError(
-                            `Request failed with status ${error.response.status}: ${error.message}`
-                        )
-                    } else if (error.request) {
-                        throw new RoutingJSAPIError(
-                            `Request failed with request ${JSON.stringify(
-                                error.request
-                            )}`
-                        )
-                    } else {
-                        // something must have gone wrong in the request setup
-                        throw new RoutingJSClientError(
-                            `Request failed with error ${error.name}.
-                             Message: ${error.message} `
-                        )
-                    }
                 })
                 .then((res: AxiosResponse) => res.data)
         }

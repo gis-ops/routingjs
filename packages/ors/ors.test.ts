@@ -19,6 +19,13 @@ describe("ORS returns responses", () => {
                     "coordinates"
                 )
             })
+            .catch((e) => {
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("message")
+            })
     })
 
     it("gets a direction response from geojson endpoint", async () => {
@@ -39,6 +46,13 @@ describe("ORS returns responses", () => {
                     "coordinates"
                 )
             })
+            .catch((e) => {
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("message")
+            })
     })
 
     it("gets an isochrone response", async () => {
@@ -46,6 +60,13 @@ describe("ORS returns responses", () => {
             .reachability([42.5063, 1.51886], "driving-car", [150, 300])
             .then((i) => {
                 expect(i.isochrones).toHaveLength(2)
+            })
+            .catch((e) => {
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("message")
             })
     })
 
@@ -64,6 +85,13 @@ describe("ORS returns responses", () => {
                 expect(m.distances).toHaveLength(2)
                 expect(m.durations).toBeDefined()
                 expect(m.durations).toHaveLength(2)
+            })
+            .catch((e) => {
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("message")
             })
     })
 })

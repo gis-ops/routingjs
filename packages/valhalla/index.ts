@@ -5,8 +5,8 @@ import {
     DirectionFeat,
     Directions,
     Isochrone,
+    RoutingJSAPIError,
     Isochrones,
-    RoutingJSError,
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
@@ -32,6 +32,14 @@ import {
     ValhallaRouteResponse,
 } from "./parameters"
 import { decode } from "@googlemaps/polyline-codec"
+
+//Valhalla API returns an error code along with an error message in the response body when an error occurs.
+interface ValhallaErrorProps{
+    status_code: number
+    status: string
+    error_code: number
+    error: string
+}
 
 interface ValhallaBaseOpts {
     /** A request ID that will be returned in the response */
@@ -240,8 +248,13 @@ export class Valhalla implements BaseRouter {
                 }
             })
             .catch((error) => {
-                console.log(JSON.stringify(error))
-                throw new RoutingJSError(error.message)
+                const props: ValhallaErrorProps = {
+                    status_code: error.response?.status,
+                    status: error.response?.statusText,
+                    error_code: error.response?.data.error_code,
+                    error: error.response?.data.error,
+                }
+                throw new RoutingJSAPIError<ValhallaErrorProps>(error.message, props)
             })
     }
 
@@ -472,7 +485,16 @@ export class Valhalla implements BaseRouter {
                 }
             })
             .catch((error) => {
-                throw new RoutingJSError(error.message)
+                const props: ValhallaErrorProps = {
+                    status_code: error.response?.status,
+                    status: error.response?.statusText,
+                    error_code: error.response?.data.error_code,
+                    error: error.response?.data.error,
+                }
+                throw new RoutingJSAPIError<ValhallaErrorProps>(
+                    error.message,
+                    props
+                )
             })
     }
 
@@ -657,7 +679,16 @@ export class Valhalla implements BaseRouter {
                 }
             })
             .catch((error) => {
-                throw new RoutingJSError(error.message)
+                const props: ValhallaErrorProps = {
+                    status_code: error.response?.status,
+                    status: error.response?.statusText,
+                    error_code: error.response?.data.error_code,
+                    error: error.response?.data.error,
+                }
+                throw new RoutingJSAPIError<ValhallaErrorProps>(
+                    error.message,
+                    props
+                )
             })
     }
 

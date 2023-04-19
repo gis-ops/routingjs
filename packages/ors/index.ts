@@ -4,7 +4,7 @@ import {
     Client,
     Direction,
     Directions,
-    RoutingJSError,
+    RoutingJSAPIError,
     DirectionFeat,
     Matrix,
     Isochrone,
@@ -24,6 +24,14 @@ import {
     ORSUnit,
 } from "./parameters"
 import { decode } from "@googlemaps/polyline-codec"
+
+//ORS API returns an error code along with a message in the response body when an error occurs.
+interface ORSErrorProps{
+    status_code: number
+    status: string
+    error_code: number
+    message: string
+}
 
 // we pass the coordinates as the `locations` top level parameter
 export type ORSDirectionsOpts = Omit<ORSRouteParams, "coordinates">
@@ -106,7 +114,7 @@ export class ORS implements BaseRouter {
                     "vehicle_type"
                 )
             ) {
-                throw new RoutingJSError(
+                throw new Error(
                     "ORS: options.vehicle_type must be specified for driving-hgv if restrictions are set."
                 )
             }
@@ -133,6 +141,15 @@ export class ORS implements BaseRouter {
                 } else {
                     return res
                 }
+            })
+            .catch((error) => {
+                const props: ORSErrorProps = {
+                    status_code: error.response?.status,
+                    status: error.response?.statusText,
+                    error_code: error.response?.data.error.code,
+                    message: error.response?.data.error.message,
+                }
+                throw new RoutingJSAPIError<ORSErrorProps>(error.message, props)
             })
     }
 
@@ -245,6 +262,15 @@ export class ORS implements BaseRouter {
                     return res
                 }
             })
+            .catch((error) => {
+                const props: ORSErrorProps = {
+                    status_code: error.response?.status,
+                    status: error.response?.statusText,
+                    error_code: error.response?.data.error.code,
+                    message: error.response?.data.error.message,
+                }
+                throw new RoutingJSAPIError<ORSErrorProps>(error.message, props)
+            })
     }
 
     public static parseIsochroneResponse(
@@ -304,6 +330,15 @@ export class ORS implements BaseRouter {
                 } else {
                     return res
                 }
+            })
+            .catch((error) => {
+                const props: ORSErrorProps = {
+                    status_code: error.response?.status,
+                    status: error.response?.statusText,
+                    error_code: error.response?.data.error.code,
+                    message: error.response?.data.error.message,
+                }
+                throw new RoutingJSAPIError<ORSErrorProps>(error.message, props)
             })
     }
 

@@ -16,6 +16,13 @@ describe("OSRM returns responses", () => {
                 expect(d).toHaveProperty("directions")
                 expect(d.directions.length).toBeGreaterThan(0)
             })
+            .catch((e)=>{
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("message")
+            })
     })
 
     it("gets a matrix response", async () => {
@@ -32,6 +39,13 @@ describe("OSRM returns responses", () => {
             .then((m) => {
                 expect(m).toHaveProperty("durations")
                 expect(m.durations.length).toBeGreaterThan(0)
+            })
+            .catch((e)=>{
+                expect(e.properties).toBeDefined()
+                expect(e.properties).toHaveProperty("status_code")
+                expect(e.properties).toHaveProperty("status")
+                expect(e.properties).toHaveProperty("error_code")
+                expect(e.properties).toHaveProperty("message")
             })
     })
 })

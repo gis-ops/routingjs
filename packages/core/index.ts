@@ -4,9 +4,7 @@ export { Direction, Directions, DirectionFeat } from "./Direction"
 export { default as Matrix } from "./Matrix"
 export { Isochrone, Isochrones } from "./Isochrone"
 export {
-    RoutingJSError,
     RoutingJSAPIError,
-    RoutingJSClientError,
 } from "./error"
 export { JSONValue, JSONArray, JSONObject } from "./json"
 export { default as options } from "./options"
