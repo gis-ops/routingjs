@@ -38,6 +38,12 @@ type ORSErrorResponseProps = {
     }
 }
 
+/**
+ * `ORSErrorProps` returns additional information about the error thrown by the 
+ *  ORS routing engine. It sends a JSON response with two props: error and info where the error
+ *  prop contains the error code and message. The info prop contains the engine version and 
+ *  build date.
+ */
 export interface ORSErrorProps extends ErrorProps {
     errorCode?: number
 }

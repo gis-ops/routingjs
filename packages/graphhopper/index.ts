@@ -37,6 +37,11 @@ type GraphHopperErrorResponseProps = {
     hints: GraphHopperHint[]
 }
 
+/**
+ * `GraphHopperErrorProps` returns additional information about the error thrown by the 
+ *  GraphHopper routing engine. It sends a JSON response including an error message along with 
+ *  a hints array.
+ */
 export interface GraphHopperErrorProps extends ErrorProps {
     hints: GraphHopperHint[]
 }

@@ -28,6 +28,11 @@ type OSRMErrorResponseProps ={
     message: string
 }
 
+/**
+ * `OSRMErrorProps` returns additional information about the error thrown by the 
+ *  OSRM routing engine. It sends a JSON response with the following fields: code and message, 
+ *  where the specific code defines the kind of error that occurred.
+ */
 export interface OSRMErrorProps extends ErrorProps {
     errorCode?: number
 }
