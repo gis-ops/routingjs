@@ -5,6 +5,7 @@ import {
     Directions,
     Client,
     RoutingJSAPIError,
+    CommonErrorProps,
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
@@ -20,13 +21,21 @@ import {
     OSRMTableParams,
     OSRMTableResponse,
 } from "./parameters"
+import { AxiosError } from "axios"
 
-//OSRM API returns an error code along with a message in the response body when an error occurs.
-interface OSRMErrorProps {
-    status_code: number
-    status: string
-    error_code: number
+type OSRMErrorResponseProps ={
+    code: number
     message: string
+}
+
+const handleOSRMError = (error: AxiosError<OSRMErrorResponseProps>) => {
+    const props: CommonErrorProps = {
+        status_code: error.response?.status,
+        status: error.response?.statusText,
+        error_code: error.response?.data.code,
+        error: error.response?.data.message,
+    }
+    throw new RoutingJSAPIError<CommonErrorProps>(error.message, props)
 }
 
 interface OSRMBaseOpts {
@@ -147,15 +156,7 @@ export class OSRM implements BaseRouter {
             .then((res: OSRMRouteResponse) => {
                 return OSRM.parseDirectionsResponse(res)
             })
-            .catch((error) => {
-                const props: OSRMErrorProps = {
-                    status_code: error.response?.status,
-                    status: error.response?.statusText,
-                    error_code: error.response?.data.code,
-                    message: error.response?.data.message,
-                }
-                throw new RoutingJSAPIError<OSRMErrorProps>(error.message, props)
-            })
+            .catch((error) => handleOSRMError(error))
     }
 
     protected static getDirectionParams(
@@ -292,15 +293,7 @@ export class OSRM implements BaseRouter {
             .then((res: OSRMTableResponse) => {
                 return OSRM.parseMatrixResponse(res)
             })
-            .catch((error) => {
-                const props: OSRMErrorProps = {
-                    status_code: error.response?.status,
-                    status: error.response?.statusText,
-                    error_code: error.response?.data.code,
-                    message: error.response?.data.message,
-                }
-                throw new RoutingJSAPIError<OSRMErrorProps>(error.message, props)
-            })
+            .catch((error) => handleOSRMError(error))
     }
 
     protected static getMatrixParams(

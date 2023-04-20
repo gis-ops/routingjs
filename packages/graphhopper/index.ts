@@ -6,6 +6,7 @@ import {
     Directions,
     Isochrone,
     RoutingJSAPIError,
+    ErrorProps,
     Isochrones,
     Matrix,
     Client,
@@ -23,13 +24,32 @@ import {
     GraphHopperRoutePath,
     GraphHopperRouteResponse,
 } from "./parameters"
+import { AxiosError } from "axios"
 
-
-// GraphHopper API returns a `message` property in the response body when an error occurs. 
-interface GraphHopperErrorProps{
-    status_code: number
-    status: string
+type GraphHopperHint = {
     message: string
+    details?: string
+    point_index?: number
+}
+
+type GraphHopperErrorResponseProps = {
+    message: string
+    hints: GraphHopperHint[]
+}
+
+export interface GraphHopperErrorProps extends ErrorProps {
+    message: string | undefined
+    hints: GraphHopperHint[]
+}
+
+const handleGHError = (error: AxiosError<GraphHopperErrorResponseProps>) => {
+    const props: GraphHopperErrorProps = {
+        status_code: error.response?.status,
+        status: error.response?.statusText,
+        message: error.response?.data.message,
+        hints: error.response?.data.hints || [],
+    }
+    throw new RoutingJSAPIError<GraphHopperErrorProps>(error.message, props)
 }
 
 /**
@@ -173,14 +193,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
-            .catch((error) => {
-                const props: GraphHopperErrorProps = {
-                    status_code: error.response?.status,
-                    status: error.response?.statusText,
-                    message: error.response?.data.message
-                }
-                throw new RoutingJSAPIError<GraphHopperErrorProps>(error.message, props)
-            })
+            .catch((error) => handleGHError(error))
     }
     /**
      * Parse a response object returned from the `/route` endpoint and returns an {@link Isochrone } object.
@@ -294,14 +307,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
-            .catch((error)=>{
-                const props: GraphHopperErrorProps = {
-                    status_code: error.response?.status,
-                    status: error.response?.statusText,
-                    message: error.response?.data.message
-                }
-                throw new RoutingJSAPIError<GraphHopperErrorProps>(error.message, props)
-            })
+            .catch((error) => handleGHError(error))
     }
 
     /**
@@ -400,14 +406,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
-            .catch((error)=>{
-                const props: GraphHopperErrorProps = {
-                    status_code: error.response?.status,
-                    status: error.response?.statusText,
-                    message: error.response?.data.message
-                }
-                throw new RoutingJSAPIError<GraphHopperErrorProps>(error.message, props)
-            })
+            .catch((error) => handleGHError(error))
     }
 
     /**

@@ -1,4 +1,5 @@
 import { Valhalla } from "./index"
+import { RoutingJSAPIError, assertError, CommonErrorProps } from "@routingjs/core"
 
 describe("Valhalla returns responses", () => {
     const v = new Valhalla({ baseUrl: "http://localhost:8002" })
@@ -28,13 +29,7 @@ describe("Valhalla returns responses", () => {
                     d.directions[0].feature.properties.distance
                 ).not.toBeNull()
             })
-            .catch((e) => {
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("error_code")
-                expect(e.properties).toHaveProperty("error")
-            })
+            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
     })
 
     it("gets an isochrone response", async () => {
@@ -44,13 +39,7 @@ describe("Valhalla returns responses", () => {
                 expect(i).toHaveProperty("isochrones")
                 expect(i.isochrones).toHaveLength(2)
             })
-            .catch((e) => {
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("error_code")
-                expect(e.properties).toHaveProperty("error")
-            })
+            .catch((e) => assertError(e))
     })
 
     it("gets an isochrone response with polygons", async () => {
@@ -67,13 +56,7 @@ describe("Valhalla returns responses", () => {
                 )
                 expect(i.raw.id === "test-id")
             })
-            .catch((e) => {
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("error_code")
-                expect(e.properties).toHaveProperty("error")
-            })
+            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
     })
 
     it("gets an matrix response", async () => {
@@ -90,12 +73,6 @@ describe("Valhalla returns responses", () => {
                 expect(m).toHaveProperty("distances")
                 expect(m.durations).toHaveLength(2)
             })
-            .catch((e) => {
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("error_code")
-                expect(e.properties).toHaveProperty("error")
-            })
+            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
     })
 })

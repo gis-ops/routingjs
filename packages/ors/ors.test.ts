@@ -1,4 +1,5 @@
 import { ORS } from "./index"
+import { RoutingJSAPIError, assertError, CommonErrorProps } from "@routingjs/core"
 
 describe("ORS returns responses", () => {
     const ors = new ORS({
@@ -19,13 +20,7 @@ describe("ORS returns responses", () => {
                     "coordinates"
                 )
             })
-            .catch((e) => {
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("error_code")
-                expect(e.properties).toHaveProperty("message")
-            })
+            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
     })
 
     it("gets a direction response from geojson endpoint", async () => {
@@ -46,13 +41,8 @@ describe("ORS returns responses", () => {
                     "coordinates"
                 )
             })
-            .catch((e) => {
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("error_code")
-                expect(e.properties).toHaveProperty("message")
-            })
+            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
+
     })
 
     it("gets an isochrone response", async () => {
@@ -61,13 +51,8 @@ describe("ORS returns responses", () => {
             .then((i) => {
                 expect(i.isochrones).toHaveLength(2)
             })
-            .catch((e) => {
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("error_code")
-                expect(e.properties).toHaveProperty("message")
-            })
+            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
+
     })
 
     it("gets a matrix response", async () => {
@@ -86,12 +71,6 @@ describe("ORS returns responses", () => {
                 expect(m.durations).toBeDefined()
                 expect(m.durations).toHaveLength(2)
             })
-            .catch((e) => {
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("error_code")
-                expect(e.properties).toHaveProperty("message")
-            })
+            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
     })
 })

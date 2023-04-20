@@ -10,6 +10,7 @@ import {
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
+    CommonErrorProps,
 } from "@routingjs/core"
 import {
     MapboxAuthParams,
@@ -32,13 +33,23 @@ import {
     ValhallaRouteResponse,
 } from "./parameters"
 import { decode } from "@googlemaps/polyline-codec"
+import { AxiosError } from "axios"
 
-//Valhalla API returns an error code along with an error message in the response body when an error occurs.
-interface ValhallaErrorProps{
+type ValhallaErrorResponseProps ={
     status_code: number
     status: string
     error_code: number
     error: string
+}
+
+const handleValhallaError = (error: AxiosError<ValhallaErrorResponseProps>) => {
+    const props: CommonErrorProps = {
+        status_code: error.response?.status,
+        status: error.response?.statusText,
+        error_code: error.response?.data.error_code,
+        error: error.response?.data.error,
+    }
+    throw new RoutingJSAPIError<CommonErrorProps>(error.message, props)
 }
 
 interface ValhallaBaseOpts {
@@ -247,15 +258,7 @@ export class Valhalla implements BaseRouter {
                     return res // return the request info string
                 }
             })
-            .catch((error) => {
-                const props: ValhallaErrorProps = {
-                    status_code: error.response?.status,
-                    status: error.response?.statusText,
-                    error_code: error.response?.data.error_code,
-                    error: error.response?.data.error,
-                }
-                throw new RoutingJSAPIError<ValhallaErrorProps>(error.message, props)
-            })
+            .catch((error) => handleValhallaError(error))
     }
 
     protected getDirectionParams(
@@ -484,18 +487,7 @@ export class Valhalla implements BaseRouter {
                     return res // return the request info string
                 }
             })
-            .catch((error) => {
-                const props: ValhallaErrorProps = {
-                    status_code: error.response?.status,
-                    status: error.response?.statusText,
-                    error_code: error.response?.data.error_code,
-                    error: error.response?.data.error,
-                }
-                throw new RoutingJSAPIError<ValhallaErrorProps>(
-                    error.message,
-                    props
-                )
-            })
+            .catch((error) => handleValhallaError(error))
     }
 
     public getIsochroneParams(
@@ -678,18 +670,7 @@ export class Valhalla implements BaseRouter {
                     return res // return the request info string
                 }
             })
-            .catch((error) => {
-                const props: ValhallaErrorProps = {
-                    status_code: error.response?.status,
-                    status: error.response?.statusText,
-                    error_code: error.response?.data.error_code,
-                    error: error.response?.data.error,
-                }
-                throw new RoutingJSAPIError<ValhallaErrorProps>(
-                    error.message,
-                    props
-                )
-            })
+            .catch((error) => handleValhallaError(error))
     }
 
     public getMatrixParams(

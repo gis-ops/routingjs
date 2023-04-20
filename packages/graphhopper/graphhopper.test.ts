@@ -1,6 +1,17 @@
 import { GraphHopper } from "./index"
+import { RoutingJSAPIError } from "@routingjs/core"
+import {GraphHopperErrorProps} from "./index"
 import dotenv from 'dotenv'
 dotenv.config()
+
+const assertError = (e: RoutingJSAPIError<GraphHopperErrorProps>)=>{
+    expect(e.properties).toBeDefined()
+    expect(e.properties).toHaveProperty("status_code")
+    expect(e.properties).toHaveProperty("status")
+    expect(e.properties).toHaveProperty("message")
+    expect(e.properties).toHaveProperty("hints")
+    expect(e.properties.hints).toHaveLength(1)
+}
 
 describe("GraphHopper returns responses", () => {
     const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
@@ -8,7 +19,7 @@ describe("GraphHopper returns responses", () => {
         await g
             .directions(
                 [
-                    [42.5063, 1.51886],
+                    [42.5063, 1],
                     [42.51007, 1.53789],
                 ],
                 "car"
@@ -30,12 +41,7 @@ describe("GraphHopper returns responses", () => {
                     g.directions[0].feature.properties.distance
                 ).not.toBeNull()
             })
-            .catch((e)=>{
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("message")
-            })
+            .catch((e)=>assertError(e))
     })
 
     it("gets an isochrones response", async () => {
@@ -44,12 +50,7 @@ describe("GraphHopper returns responses", () => {
             expect(i.raw).toBeDefined()
             expect(i.isochrones).toHaveLength(1)
         })
-        .catch((e)=>{
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("message")
-        })
+        .catch((e)=>assertError(e))
     })
 
     //optional
@@ -71,12 +72,7 @@ describe("GraphHopper returns responses", () => {
                 expect(m).toHaveProperty("distances")
                 expect(m.raw).toBeDefined()
             })
-            .catch((e)=>{
-                expect(e.properties).toBeDefined()
-                expect(e.properties).toHaveProperty("status_code")
-                expect(e.properties).toHaveProperty("status")
-                expect(e.properties).toHaveProperty("message")
-            })
+            .catch((e)=>assertError(e))
         })
     }
 })
