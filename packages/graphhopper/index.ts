@@ -5,9 +5,10 @@ import {
     Direction,
     Directions,
     Isochrone,
+    RoutingJSAPIError,
+    ErrorProps,
     Isochrones,
     Matrix,
-    RoutingJSError,
     Client,
 } from "@routingjs/core"
 import { LineString } from "geojson"
@@ -23,6 +24,39 @@ import {
     GraphHopperRoutePath,
     GraphHopperRouteResponse,
 } from "./parameters"
+import { AxiosError } from "axios"
+
+type GraphHopperHint = {
+    message: string
+    details?: string
+    point_index?: number
+}
+
+type GraphHopperErrorResponseProps = {
+    message: string
+    hints: GraphHopperHint[]
+}
+
+/**
+ * `GraphHopperErrorProps` returns additional information about the error thrown by the 
+ *  GraphHopper routing engine. It sends a JSON response including an error message along with 
+ *  a hints array.
+ */
+export interface GraphHopperErrorProps extends ErrorProps {
+    hints: GraphHopperHint[]
+}
+
+export type GraphHopperAPIError = RoutingJSAPIError<GraphHopperErrorProps>
+
+const handleGraphHopperError = (error: AxiosError<GraphHopperErrorResponseProps>) => {
+    const props: GraphHopperErrorProps = {
+        statusCode: error.response?.status,
+        status: error.response?.statusText,
+        errorMessage: error.response?.data.message,
+        hints: error.response?.data.hints || [],
+    }
+    throw new RoutingJSAPIError<GraphHopperErrorProps>(error.message, props)
+}
 
 /**
  * `points` and `profile` properties are passed using the `directions()` method's top level args for
@@ -88,7 +122,7 @@ export class GraphHopper implements BaseRouter {
         const defaultURL = "https://graphhopper.com/api/1"
 
         if (baseUrl === undefined && !apiKey) {
-            throw new RoutingJSError(
+            throw new Error(
                 "Please provide an API key for GraphHopper"
             )
         }
@@ -165,6 +199,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
+            .catch(handleGraphHopperError)
     }
     /**
      * Parse a response object returned from the `/route` endpoint and returns an {@link Isochrone } object.
@@ -278,6 +313,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
+            .catch(handleGraphHopperError)
     }
 
     /**
@@ -376,6 +412,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
+            .catch(handleGraphHopperError)
     }
 
     /**

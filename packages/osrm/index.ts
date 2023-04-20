@@ -5,7 +5,7 @@ import {
     Directions,
     Client,
     RoutingJSAPIError,
-    RoutingJSError,
+    ErrorProps,
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
@@ -21,6 +21,33 @@ import {
     OSRMTableParams,
     OSRMTableResponse,
 } from "./parameters"
+import { AxiosError } from "axios"
+
+type OSRMErrorResponseProps ={
+    code: number
+    message: string
+}
+
+/**
+ * `OSRMErrorProps` returns additional information about the error thrown by the 
+ *  OSRM routing engine. It sends a JSON response with the following fields: code and message, 
+ *  where the specific code defines the kind of error that occurred.
+ */
+export interface OSRMErrorProps extends ErrorProps {
+    errorCode?: number
+}
+
+export type OSRMAPIError = RoutingJSAPIError<OSRMErrorProps>
+
+const handleOSRMError = (error: AxiosError<OSRMErrorResponseProps>) => {
+    const props: OSRMErrorProps = {
+        statusCode: error.response?.status,
+        status: error.response?.statusText,
+        errorCode: error.response?.data.code,
+        errorMessage: error.response?.data.message,
+    }
+    throw new RoutingJSAPIError<OSRMErrorProps>(error.message, props)
+}
 
 interface OSRMBaseOpts {
     /** Limits the search to given radius in meters. */
@@ -140,9 +167,7 @@ export class OSRM implements BaseRouter {
             .then((res: OSRMRouteResponse) => {
                 return OSRM.parseDirectionsResponse(res)
             })
-            .catch((error) => {
-                throw new RoutingJSError(error.message)
-            })
+            .catch(handleOSRMError)
     }
 
     protected static getDirectionParams(
@@ -279,9 +304,7 @@ export class OSRM implements BaseRouter {
             .then((res: OSRMTableResponse) => {
                 return OSRM.parseMatrixResponse(res)
             })
-            .catch((error) => {
-                throw new RoutingJSAPIError(error.message)
-            })
+            .catch(handleOSRMError)
     }
 
     protected static getMatrixParams(

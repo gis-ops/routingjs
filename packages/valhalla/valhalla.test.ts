@@ -1,7 +1,9 @@
 import { Valhalla } from "./index"
+import { assertError } from "../../util/error"
+
+const v = new Valhalla({ baseUrl: "http://localhost:8002" })
 
 describe("Valhalla returns responses", () => {
-    const v = new Valhalla({ baseUrl: "http://localhost:8002" })
     it("gets a directions response", async () => {
         await v
             .directions(
@@ -69,5 +71,46 @@ describe("Valhalla returns responses", () => {
                 expect(m).toHaveProperty("distances")
                 expect(m.durations).toHaveLength(2)
             })
+    })
+})
+
+describe("Throws RoutingJSAPIError", () => {
+    it("fails to get a directions response", async () => {
+        await v
+            .directions(
+                [
+                    [0.00001, 1],
+                    [42.51007, 1.53789],
+                ],
+                "pedestrian"
+            )
+            .catch(assertError)
+    })
+
+    it("fails to get an isochrone response", async () => {
+        await v
+            .reachability([0.00001, 1], "pedestrian", [30, 90])
+            .catch(assertError)
+    })
+
+    it("fails to get an isochrone response with polygons", async () => {
+        await v
+            .reachability([0.00001, 1], "pedestrian", [30, 90], {
+                polygons: true,
+                id: "test-id",
+            })
+            .catch(assertError)
+    })
+
+    it("fails to get a matrix response", async () => {
+        await v
+            .matrix(
+                [
+                    [0.00001, 1],
+                    [42.51007, 1.53789],
+                ],
+                "auto"
+            )
+            .catch(assertError)
     })
 })

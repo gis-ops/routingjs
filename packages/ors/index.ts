@@ -4,7 +4,8 @@ import {
     Client,
     Direction,
     Directions,
-    RoutingJSError,
+    RoutingJSAPIError,
+    ErrorProps,
     DirectionFeat,
     Matrix,
     Isochrone,
@@ -24,6 +25,40 @@ import {
     ORSUnit,
 } from "./parameters"
 import { decode } from "@googlemaps/polyline-codec"
+import { AxiosError } from "axios"
+
+type ORSErrorResponseProps = {
+    error: {
+        code: number
+        message: string
+    }
+    info?:{
+        engine: {version: string, build_date: string}
+        timestamp: number
+    }
+}
+
+/**
+ * `ORSErrorProps` returns additional information about the error thrown by the 
+ *  ORS routing engine. It sends a JSON response with two props: error and info where the error
+ *  prop contains the error code and message. The info prop contains the engine version and 
+ *  build date.
+ */
+export interface ORSErrorProps extends ErrorProps {
+    errorCode?: number
+}
+
+export type ORSAPIError = RoutingJSAPIError<ORSErrorProps>
+
+const handleORSError = (error: AxiosError<ORSErrorResponseProps>) => {
+    const props: ORSErrorProps = {
+        statusCode: error.response?.status,
+        status: error.response?.statusText,
+        errorCode: error.response?.data.error.code,
+        errorMessage: error.response?.data.error.message
+    }
+    throw new RoutingJSAPIError<ORSErrorProps>(error.message, props)
+}
 
 // we pass the coordinates as the `locations` top level parameter
 export type ORSDirectionsOpts = Omit<ORSRouteParams, "coordinates">
@@ -106,7 +141,7 @@ export class ORS implements BaseRouter {
                     "vehicle_type"
                 )
             ) {
-                throw new RoutingJSError(
+                throw new Error(
                     "ORS: options.vehicle_type must be specified for driving-hgv if restrictions are set."
                 )
             }
@@ -134,6 +169,7 @@ export class ORS implements BaseRouter {
                     return res
                 }
             })
+            .catch(handleORSError)
     }
 
     public static parseDirectionsResponse(
@@ -245,6 +281,7 @@ export class ORS implements BaseRouter {
                     return res
                 }
             })
+            .catch(handleORSError)
     }
 
     public static parseIsochroneResponse(
@@ -305,6 +342,7 @@ export class ORS implements BaseRouter {
                     return res
                 }
             })
+            .catch(handleORSError)
     }
 
     public static parseMatrixResponse(

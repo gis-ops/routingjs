@@ -1,9 +1,11 @@
 import { ORS } from "./index"
+import { assertError } from "../../util/error"
+
+const ors = new ORS({
+    baseUrl: "http://localhost:8080/ors",
+})
 
 describe("ORS returns responses", () => {
-    const ors = new ORS({
-        baseUrl: "http://localhost:8080/ors",
-    })
     it("gets a direction response", async () => {
         await ors
             .directions(
@@ -65,5 +67,53 @@ describe("ORS returns responses", () => {
                 expect(m.durations).toBeDefined()
                 expect(m.durations).toHaveLength(2)
             })
+    })
+})
+
+describe("Throws RoutingJSAPIError", () => {
+    it("fails to get a direction response", async () => {
+        await ors
+            .directions(
+                [
+                    [0.00001, 1],
+                    [42.51007, 1.53789],
+                ],
+                "driving-car"
+            )
+            .catch(assertError)
+    })
+
+    it("fails to get a direction response from geojson endpoint", async () => {
+        await ors
+            .directions(
+                [
+                    [0.00001, 1],
+                    [42.51007, 1.53789],
+                ],
+                "driving-car",
+                {},
+                false,
+                "geojson"
+            )
+            .catch(assertError)
+    })
+
+    it("fails to get an isochrone response", async () => {
+        await ors
+            .reachability([0.00001, 1], "driving-car", [150, 300])
+            .catch(assertError)
+    })
+
+    it("fails to get a matrix response", async () => {
+        await ors
+            .matrix(
+                [
+                    [0.00001, 1],
+                    [42.51007, 1.53789],
+                ],
+                "driving-car",
+                { metrics: ["distance", "duration"] }
+            )
+            .catch(assertError)
     })
 })
