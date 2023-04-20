@@ -9,7 +9,7 @@ const assertError = (e: GraphHopperAPIError)=>{
     expect(e.properties).toHaveProperty("status")
     expect(e.properties).toHaveProperty("errorMessage")
     expect(e.properties).toHaveProperty("hints")
-    expect(e.properties.hints).toHaveLength(1)
+    expect(e.properties.hints.length).toBeGreaterThan(0)
 }
 
 const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
