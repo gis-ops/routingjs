@@ -84,13 +84,13 @@ describe("Throws RoutingJSAPIError", () => {
                 ],
                 "pedestrian"
             )
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     it("fails to get an isochrone response", async () => {
         await v
             .reachability([0.00001, 1], "pedestrian", [30, 90])
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     it("fails to get an isochrone response with polygons", async () => {
@@ -99,7 +99,7 @@ describe("Throws RoutingJSAPIError", () => {
                 polygons: true,
                 id: "test-id",
             })
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     it("fails to get a matrix response", async () => {
@@ -111,6 +111,6 @@ describe("Throws RoutingJSAPIError", () => {
                 ],
                 "auto"
             )
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 })

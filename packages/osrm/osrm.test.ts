@@ -49,7 +49,7 @@ describe("Throws RoutingJSAPIError", () => {
                 "driving",
                 { radiuses: [1000, 1000] }
             )
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     it("fails to get a matrix response", async () => {
@@ -63,6 +63,6 @@ describe("Throws RoutingJSAPIError", () => {
                 { radiuses: [1000, 1000] },
                 false
             )
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 })

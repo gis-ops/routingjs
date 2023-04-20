@@ -42,14 +42,20 @@ type ValhallaErrorResponseProps ={
     error: string
 }
 
+export interface ValhallaErrorProps extends ErrorProps {
+    errorCode?: number
+}
+
+export type ValhallaAPIError = RoutingJSAPIError<ValhallaErrorProps>
+
 const handleValhallaError = (error: AxiosError<ValhallaErrorResponseProps>) => {
-    const props: ErrorProps = {
+    const props: ValhallaErrorProps = {
         statusCode: error.response?.status,
         status: error.response?.statusText,
         errorCode: error.response?.data.error_code,
         errorMessage: error.response?.data.error,
     }
-    throw new RoutingJSAPIError<ErrorProps>(error.message, props)
+    throw new RoutingJSAPIError<ValhallaErrorProps>(error.message, props)
 }
 
 interface ValhallaBaseOpts {
@@ -258,7 +264,7 @@ export class Valhalla implements BaseRouter {
                     return res // return the request info string
                 }
             })
-            .catch((error) => handleValhallaError(error))
+            .catch(handleValhallaError)
     }
 
     protected getDirectionParams(
@@ -487,7 +493,7 @@ export class Valhalla implements BaseRouter {
                     return res // return the request info string
                 }
             })
-            .catch((error) => handleValhallaError(error))
+            .catch(handleValhallaError)
     }
 
     public getIsochroneParams(
@@ -670,7 +676,7 @@ export class Valhalla implements BaseRouter {
                     return res // return the request info string
                 }
             })
-            .catch((error) => handleValhallaError(error))
+            .catch(handleValhallaError)
     }
 
     public getMatrixParams(

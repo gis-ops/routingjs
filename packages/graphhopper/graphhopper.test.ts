@@ -1,10 +1,9 @@
 import { GraphHopper } from "./index"
-import { RoutingJSAPIError } from "@routingjs/core"
-import {GraphHopperErrorProps} from "./index"
+import {GraphHopperAPIError} from "./index"
 import dotenv from 'dotenv'
 dotenv.config()
 
-const assertError = (e: RoutingJSAPIError<GraphHopperErrorProps>)=>{
+const assertError = (e: GraphHopperAPIError)=>{
     expect(e.properties).toBeDefined()
     expect(e.properties).toHaveProperty("statusCode")
     expect(e.properties).toHaveProperty("status")
@@ -85,13 +84,13 @@ describe("Throws RoutingJSAPIError", () => {
                 ],
                 "car"
             )
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     it("fails to get an isochrones response", async () => {
         await g
             .reachability([0.00001, 1], "car", [600])
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     //optional
@@ -108,7 +107,7 @@ describe("Throws RoutingJSAPIError", () => {
                     ],
                     "car"
                 )
-                .catch((e) => assertError(e))
+                .catch(assertError)
         })
     }
 })

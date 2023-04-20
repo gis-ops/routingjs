@@ -28,14 +28,20 @@ type OSRMErrorResponseProps ={
     message: string
 }
 
+export interface OSRMErrorProps extends ErrorProps {
+    errorCode?: number
+}
+
+export type OSRMAPIError = RoutingJSAPIError<OSRMErrorProps>
+
 const handleOSRMError = (error: AxiosError<OSRMErrorResponseProps>) => {
-    const props: ErrorProps = {
+    const props: OSRMErrorProps = {
         statusCode: error.response?.status,
         status: error.response?.statusText,
         errorCode: error.response?.data.code,
         errorMessage: error.response?.data.message,
     }
-    throw new RoutingJSAPIError<ErrorProps>(error.message, props)
+    throw new RoutingJSAPIError<OSRMErrorProps>(error.message, props)
 }
 
 interface OSRMBaseOpts {
@@ -156,7 +162,7 @@ export class OSRM implements BaseRouter {
             .then((res: OSRMRouteResponse) => {
                 return OSRM.parseDirectionsResponse(res)
             })
-            .catch((error) => handleOSRMError(error))
+            .catch(handleOSRMError)
     }
 
     protected static getDirectionParams(
@@ -293,7 +299,7 @@ export class OSRM implements BaseRouter {
             .then((res: OSRMTableResponse) => {
                 return OSRM.parseMatrixResponse(res)
             })
-            .catch((error) => handleOSRMError(error))
+            .catch(handleOSRMError)
     }
 
     protected static getMatrixParams(

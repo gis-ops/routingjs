@@ -1,6 +1,8 @@
-import { RoutingJSAPIError, ErrorProps } from "@routingjs/core"
+import { ValhallaAPIError } from "valhalla"
+import { OSRMAPIError } from "osrm"
+import { ORSAPIError } from "ors"
 
-export const assertError = <T extends ErrorProps>(e: RoutingJSAPIError<T>) => {
+export const assertError = (e: ValhallaAPIError | OSRMAPIError | ORSAPIError) => {
     expect(e.properties).toBeDefined()
     expect(e.properties).toHaveProperty("statusCode")
     expect(e.properties).toHaveProperty("status")

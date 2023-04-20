@@ -80,7 +80,7 @@ describe("Throws RoutingJSAPIError", () => {
                 ],
                 "driving-car"
             )
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     it("fails to get a direction response from geojson endpoint", async () => {
@@ -95,13 +95,13 @@ describe("Throws RoutingJSAPIError", () => {
                 false,
                 "geojson"
             )
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     it("fails to get an isochrone response", async () => {
         await ors
             .reachability([0.00001, 1], "driving-car", [150, 300])
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 
     it("fails to get a matrix response", async () => {
@@ -114,6 +114,6 @@ describe("Throws RoutingJSAPIError", () => {
                 "driving-car",
                 { metrics: ["distance", "duration"] }
             )
-            .catch((e) => assertError(e))
+            .catch(assertError)
     })
 })

@@ -41,7 +41,9 @@ export interface GraphHopperErrorProps extends ErrorProps {
     hints: GraphHopperHint[]
 }
 
-const handleGHError = (error: AxiosError<GraphHopperErrorResponseProps>) => {
+export type GraphHopperAPIError = RoutingJSAPIError<GraphHopperErrorProps>
+
+const handleGraphHopperError = (error: AxiosError<GraphHopperErrorResponseProps>) => {
     const props: GraphHopperErrorProps = {
         statusCode: error.response?.status,
         status: error.response?.statusText,
@@ -192,7 +194,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
-            .catch((error) => handleGHError(error))
+            .catch(handleGraphHopperError)
     }
     /**
      * Parse a response object returned from the `/route` endpoint and returns an {@link Isochrone } object.
@@ -306,7 +308,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
-            .catch((error) => handleGHError(error))
+            .catch(handleGraphHopperError)
     }
 
     /**
@@ -405,7 +407,7 @@ export class GraphHopper implements BaseRouter {
                     return res
                 }
             })
-            .catch((error) => handleGHError(error))
+            .catch(handleGraphHopperError)
     }
 
     /**

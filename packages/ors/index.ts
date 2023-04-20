@@ -38,14 +38,20 @@ type ORSErrorResponseProps = {
     }
 }
 
+export interface ORSErrorProps extends ErrorProps {
+    errorCode?: number
+}
+
+export type ORSAPIError = RoutingJSAPIError<ORSErrorProps>
+
 const handleORSError = (error: AxiosError<ORSErrorResponseProps>) => {
-    const props: ErrorProps = {
+    const props: ORSErrorProps = {
         statusCode: error.response?.status,
         status: error.response?.statusText,
         errorCode: error.response?.data.error.code,
         errorMessage: error.response?.data.error.message
     }
-    throw new RoutingJSAPIError<ErrorProps>(error.message, props)
+    throw new RoutingJSAPIError<ORSErrorProps>(error.message, props)
 }
 
 // we pass the coordinates as the `locations` top level parameter
@@ -157,7 +163,7 @@ export class ORS implements BaseRouter {
                     return res
                 }
             })
-            .catch((error) => handleORSError(error))
+            .catch(handleORSError)
     }
 
     public static parseDirectionsResponse(
@@ -269,7 +275,7 @@ export class ORS implements BaseRouter {
                     return res
                 }
             })
-            .catch((error) => handleORSError(error))
+            .catch(handleORSError)
     }
 
     public static parseIsochroneResponse(
@@ -330,7 +336,7 @@ export class ORS implements BaseRouter {
                     return res
                 }
             })
-            .catch((error) => handleORSError(error))
+            .catch(handleORSError)
     }
 
     public static parseMatrixResponse(
