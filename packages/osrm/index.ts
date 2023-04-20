@@ -5,7 +5,7 @@ import {
     Directions,
     Client,
     RoutingJSAPIError,
-    CommonErrorProps,
+    ErrorProps,
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
@@ -29,13 +29,13 @@ type OSRMErrorResponseProps ={
 }
 
 const handleOSRMError = (error: AxiosError<OSRMErrorResponseProps>) => {
-    const props: CommonErrorProps = {
-        status_code: error.response?.status,
+    const props: ErrorProps = {
+        statusCode: error.response?.status,
         status: error.response?.statusText,
-        error_code: error.response?.data.code,
-        error: error.response?.data.message,
+        errorCode: error.response?.data.code,
+        errorMessage: error.response?.data.message,
     }
-    throw new RoutingJSAPIError<CommonErrorProps>(error.message, props)
+    throw new RoutingJSAPIError<ErrorProps>(error.message, props)
 }
 
 interface OSRMBaseOpts {

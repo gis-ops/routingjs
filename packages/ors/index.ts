@@ -5,7 +5,7 @@ import {
     Direction,
     Directions,
     RoutingJSAPIError,
-    CommonErrorProps,
+    ErrorProps,
     DirectionFeat,
     Matrix,
     Isochrone,
@@ -39,13 +39,13 @@ type ORSErrorResponseProps = {
 }
 
 const handleORSError = (error: AxiosError<ORSErrorResponseProps>) => {
-    const props: CommonErrorProps = {
-        status_code: error.response?.status,
+    const props: ErrorProps = {
+        statusCode: error.response?.status,
         status: error.response?.statusText,
-        error_code: error.response?.data.error.code,
-        error: error.response?.data.error.message
+        errorCode: error.response?.data.error.code,
+        errorMessage: error.response?.data.error.message
     }
-    throw new RoutingJSAPIError<CommonErrorProps>(error.message, props)
+    throw new RoutingJSAPIError<ErrorProps>(error.message, props)
 }
 
 // we pass the coordinates as the `locations` top level parameter

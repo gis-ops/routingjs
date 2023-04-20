@@ -10,7 +10,7 @@ import {
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
-    CommonErrorProps,
+    ErrorProps,
 } from "@routingjs/core"
 import {
     MapboxAuthParams,
@@ -43,13 +43,13 @@ type ValhallaErrorResponseProps ={
 }
 
 const handleValhallaError = (error: AxiosError<ValhallaErrorResponseProps>) => {
-    const props: CommonErrorProps = {
-        status_code: error.response?.status,
+    const props: ErrorProps = {
+        statusCode: error.response?.status,
         status: error.response?.statusText,
-        error_code: error.response?.data.error_code,
-        error: error.response?.data.error,
+        errorCode: error.response?.data.error_code,
+        errorMessage: error.response?.data.error,
     }
-    throw new RoutingJSAPIError<CommonErrorProps>(error.message, props)
+    throw new RoutingJSAPIError<ErrorProps>(error.message, props)
 }
 
 interface ValhallaBaseOpts {

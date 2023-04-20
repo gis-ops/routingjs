@@ -1,11 +1,8 @@
 export interface ErrorProps {
-    status_code: number | undefined
-    status: string | undefined
-}
-
-export interface CommonErrorProps extends ErrorProps {
-    error_code: number | undefined
-    error: string | undefined
+    statusCode?: number
+    status?: string
+    errorCode?: number
+    errorMessage?: string
 }
 
 export class RoutingJSAPIError<T extends ErrorProps> extends Error {
@@ -22,12 +19,4 @@ export class RoutingJSAPIError<T extends ErrorProps> extends Error {
             properties: this.properties,
         }
     }
-}
-
-export const assertError = <T extends ErrorProps>(e: RoutingJSAPIError<T>) => {
-    expect(e.properties).toBeDefined()
-    expect(e.properties).toHaveProperty("status_code")
-    expect(e.properties).toHaveProperty("status")
-    expect(e.properties).toHaveProperty("error_code")
-    expect(e.properties).toHaveProperty("error")
 }

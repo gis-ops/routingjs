@@ -6,20 +6,21 @@ dotenv.config()
 
 const assertError = (e: RoutingJSAPIError<GraphHopperErrorProps>)=>{
     expect(e.properties).toBeDefined()
-    expect(e.properties).toHaveProperty("status_code")
+    expect(e.properties).toHaveProperty("statusCode")
     expect(e.properties).toHaveProperty("status")
-    expect(e.properties).toHaveProperty("message")
+    expect(e.properties).toHaveProperty("errorMessage")
     expect(e.properties).toHaveProperty("hints")
     expect(e.properties.hints).toHaveLength(1)
 }
 
+const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
+
 describe("GraphHopper returns responses", () => {
-    const g = new GraphHopper({ baseUrl: "http://localhost:8989" })
     it("gets a directions response", async () => {
         await g
             .directions(
                 [
-                    [42.5063, 1],
+                    [42.5063, 1.51886],
                     [42.51007, 1.53789],
                 ],
                 "car"
@@ -41,7 +42,6 @@ describe("GraphHopper returns responses", () => {
                     g.directions[0].feature.properties.distance
                 ).not.toBeNull()
             })
-            .catch((e)=>assertError(e))
     })
 
     it("gets an isochrones response", async () => {
@@ -50,7 +50,6 @@ describe("GraphHopper returns responses", () => {
             expect(i.raw).toBeDefined()
             expect(i.isochrones).toHaveLength(1)
         })
-        .catch((e)=>assertError(e))
     })
 
     //optional
@@ -72,7 +71,44 @@ describe("GraphHopper returns responses", () => {
                 expect(m).toHaveProperty("distances")
                 expect(m.raw).toBeDefined()
             })
-            .catch((e)=>assertError(e))
+        })
+    }
+})
+
+describe("Throws RoutingJSAPIError", () => {
+    it("fails to get a directions response", async () => {
+        await g
+            .directions(
+                [
+                    [0.00001, 1],
+                    [42.51007, 1.53789],
+                ],
+                "car"
+            )
+            .catch((e) => assertError(e))
+    })
+
+    it("fails to get an isochrones response", async () => {
+        await g
+            .reachability([0.00001, 1], "car", [600])
+            .catch((e) => assertError(e))
+    })
+
+    //optional
+    if (process.env.GRAPHHOPPER_API_KEY) {
+        it("fails to get a matrix response", async () => {
+            const g = new GraphHopper({
+                apiKey: process.env.GRAPHHOPPER_API_KEY,
+            })
+            await g
+                .matrix(
+                    [
+                        [0.00001, 1],
+                        [42.51007, 1.53789],
+                    ],
+                    "car"
+                )
+                .catch((e) => assertError(e))
         })
     }
 })

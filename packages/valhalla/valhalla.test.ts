@@ -1,8 +1,9 @@
 import { Valhalla } from "./index"
-import { RoutingJSAPIError, assertError, CommonErrorProps } from "@routingjs/core"
+import { assertError } from "../../util/error"
+
+const v = new Valhalla({ baseUrl: "http://localhost:8002" })
 
 describe("Valhalla returns responses", () => {
-    const v = new Valhalla({ baseUrl: "http://localhost:8002" })
     it("gets a directions response", async () => {
         await v
             .directions(
@@ -29,7 +30,6 @@ describe("Valhalla returns responses", () => {
                     d.directions[0].feature.properties.distance
                 ).not.toBeNull()
             })
-            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
     })
 
     it("gets an isochrone response", async () => {
@@ -39,7 +39,6 @@ describe("Valhalla returns responses", () => {
                 expect(i).toHaveProperty("isochrones")
                 expect(i.isochrones).toHaveLength(2)
             })
-            .catch((e) => assertError(e))
     })
 
     it("gets an isochrone response with polygons", async () => {
@@ -56,7 +55,6 @@ describe("Valhalla returns responses", () => {
                 )
                 expect(i.raw.id === "test-id")
             })
-            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
     })
 
     it("gets an matrix response", async () => {
@@ -73,6 +71,46 @@ describe("Valhalla returns responses", () => {
                 expect(m).toHaveProperty("distances")
                 expect(m.durations).toHaveLength(2)
             })
-            .catch((e: RoutingJSAPIError<CommonErrorProps>) => assertError(e))
+    })
+})
+
+describe("Throws RoutingJSAPIError", () => {
+    it("fails to get a directions response", async () => {
+        await v
+            .directions(
+                [
+                    [0.00001, 1],
+                    [42.51007, 1.53789],
+                ],
+                "pedestrian"
+            )
+            .catch((e) => assertError(e))
+    })
+
+    it("fails to get an isochrone response", async () => {
+        await v
+            .reachability([0.00001, 1], "pedestrian", [30, 90])
+            .catch((e) => assertError(e))
+    })
+
+    it("fails to get an isochrone response with polygons", async () => {
+        await v
+            .reachability([0.00001, 1], "pedestrian", [30, 90], {
+                polygons: true,
+                id: "test-id",
+            })
+            .catch((e) => assertError(e))
+    })
+
+    it("fails to get a matrix response", async () => {
+        await v
+            .matrix(
+                [
+                    [0.00001, 1],
+                    [42.51007, 1.53789],
+                ],
+                "auto"
+            )
+            .catch((e) => assertError(e))
     })
 })

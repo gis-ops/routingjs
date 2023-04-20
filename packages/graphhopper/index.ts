@@ -38,15 +38,14 @@ type GraphHopperErrorResponseProps = {
 }
 
 export interface GraphHopperErrorProps extends ErrorProps {
-    message: string | undefined
     hints: GraphHopperHint[]
 }
 
 const handleGHError = (error: AxiosError<GraphHopperErrorResponseProps>) => {
     const props: GraphHopperErrorProps = {
-        status_code: error.response?.status,
+        statusCode: error.response?.status,
         status: error.response?.statusText,
-        message: error.response?.data.message,
+        errorMessage: error.response?.data.message,
         hints: error.response?.data.hints || [],
     }
     throw new RoutingJSAPIError<GraphHopperErrorProps>(error.message, props)
