@@ -1,6 +1,6 @@
 {
     "name": "@routingjs/graphhopper",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "description": "RoutingJS GraphHopper Module",
     "publishConfig": {
         "access": "public"
@@ -55,6 +55,6 @@
     },
     "dependencies": {
         "@googlemaps/polyline-codec": "^1.0.28",
-        "@routingjs/core": "^0.0.3"
+        "@routingjs/core": "^0.1.0"
     }
 }
