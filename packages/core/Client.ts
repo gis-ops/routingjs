@@ -144,7 +144,6 @@ class Client<
             return this.axiosInstance
                 .post(urlObj.toString(), postParams)
                 .then((res) => res.data)
-
         } else {
             if (dryRun === true) {
                 const requestInfo = `

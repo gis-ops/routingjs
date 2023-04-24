@@ -32,16 +32,16 @@ type ORSErrorResponseProps = {
         code: number
         message: string
     }
-    info?:{
-        engine: {version: string, build_date: string}
+    info?: {
+        engine: { version: string; build_date: string }
         timestamp: number
     }
 }
 
 /**
- * `ORSErrorProps` returns additional information about the error thrown by the 
+ * `ORSErrorProps` returns additional information about the error thrown by the
  *  ORS routing engine. It sends a JSON response with two props: error and info where the error
- *  prop contains the error code and message. The info prop contains the engine version and 
+ *  prop contains the error code and message. The info prop contains the engine version and
  *  build date.
  */
 export interface ORSErrorProps extends ErrorProps {
@@ -55,7 +55,7 @@ const handleORSError = (error: AxiosError<ORSErrorResponseProps>) => {
         statusCode: error.response?.status,
         status: error.response?.statusText,
         errorCode: error.response?.data.error.code,
-        errorMessage: error.response?.data.error.message
+        errorMessage: error.response?.data.error.message,
     }
     throw new RoutingJSAPIError<ORSErrorProps>(error.message, props)
 }

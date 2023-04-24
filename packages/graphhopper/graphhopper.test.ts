@@ -1,9 +1,9 @@
 import { GraphHopper } from "./index"
-import {GraphHopperAPIError} from "./index"
-import dotenv from 'dotenv'
+import { GraphHopperAPIError } from "./index"
+import dotenv from "dotenv"
 dotenv.config()
 
-const assertError = (e: GraphHopperAPIError)=>{
+const assertError = (e: GraphHopperAPIError) => {
     expect(e.properties).toBeDefined()
     expect(e.properties).toHaveProperty("statusCode")
     expect(e.properties).toHaveProperty("status")
@@ -44,32 +44,31 @@ describe("GraphHopper returns responses", () => {
     })
 
     it("gets an isochrones response", async () => {
-        await g.reachability([42.51007, 1.53789], "car", [600])
-        .then((i) => {
+        await g.reachability([42.51007, 1.53789], "car", [600]).then((i) => {
             expect(i.raw).toBeDefined()
             expect(i.isochrones).toHaveLength(1)
         })
     })
 
     //optional
-    if(process.env.GRAPHHOPPER_API_KEY){
+    if (process.env.GRAPHHOPPER_API_KEY) {
         it("gets a matrix response", async () => {
-        const g = new GraphHopper({
-            apiKey: process.env.GRAPHHOPPER_API_KEY,
-        })
-        await g
-            .matrix(
-                [
-                    [42.5063, 1.51886],
-                    [42.51007, 1.53789],
-                ],
-                "car"
-            )
-            .then((m) => {
-                expect(m).toHaveProperty("durations")
-                expect(m).toHaveProperty("distances")
-                expect(m.raw).toBeDefined()
+            const g = new GraphHopper({
+                apiKey: process.env.GRAPHHOPPER_API_KEY,
             })
+            await g
+                .matrix(
+                    [
+                        [42.5063, 1.51886],
+                        [42.51007, 1.53789],
+                    ],
+                    "car"
+                )
+                .then((m) => {
+                    expect(m).toHaveProperty("durations")
+                    expect(m).toHaveProperty("distances")
+                    expect(m.raw).toBeDefined()
+                })
         })
     }
 })
@@ -88,9 +87,7 @@ describe("Throws RoutingJSAPIError", () => {
     })
 
     it("fails to get an isochrones response", async () => {
-        await g
-            .reachability([0.00001, 1], "car", [600])
-            .catch(assertError)
+        await g.reachability([0.00001, 1], "car", [600]).catch(assertError)
     })
 
     //optional

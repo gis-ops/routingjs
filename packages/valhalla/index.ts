@@ -35,7 +35,7 @@ import {
 import { decode } from "@googlemaps/polyline-codec"
 import { AxiosError } from "axios"
 
-type ValhallaErrorResponseProps ={
+type ValhallaErrorResponseProps = {
     status_code: number
     status: string
     error_code: number
@@ -43,8 +43,8 @@ type ValhallaErrorResponseProps ={
 }
 
 /**
- * `ValhallaErrorProps` returns additional information about the error thrown by the 
- *  Valhalla routing engine. It sends back the status_code, status, error_code and error 
+ * `ValhallaErrorProps` returns additional information about the error thrown by the
+ *  Valhalla routing engine. It sends back the status_code, status, error_code and error
  *  message where the error_code is specific to Valhalla.
  */
 export interface ValhallaErrorProps extends ErrorProps {
