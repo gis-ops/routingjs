@@ -90,6 +90,29 @@ export interface GraphHopperIsochroneOpts
     interval_type?: "time" | "distance"
 }
 
+export type GraphHopperDirections = Directions<
+    GraphHopperRouteResponse,
+    GraphHopperRoutePath
+>
+
+export type GraphHopperIsochrones = Isochrones<
+    GraphHopperIsochroneResponse,
+    GraphHopperIsochroneProps
+>
+
+export type GraphHopperMatrix = Matrix<GraphHopperMatrixResponse>
+
+export type GraphHopperClient = Client<
+    | GraphHopperRouteResponse
+    | GraphHopperIsochroneResponse
+    | GraphHopperMatrixResponse,
+    | {
+          [k in keyof GraphHopperIsochroneGetParams]: GraphHopperIsochroneGetParams[k]
+      }
+    | { key?: string }, // for auth
+    GraphHopperRouteParams | GraphHopperMatrixParams
+>
+
 /**
  * Performs requests to the  GraphHopper API. Default public URL is
  * https://graphhopper.com/api/1.
@@ -97,16 +120,7 @@ export interface GraphHopperIsochroneOpts
  * For the full documentation, see  {@link https://docs.graphhopper.com}.
  */
 export class GraphHopper implements BaseRouter {
-    client: Client<
-        | GraphHopperRouteResponse
-        | GraphHopperIsochroneResponse
-        | GraphHopperMatrixResponse,
-        | {
-              [k in keyof GraphHopperIsochroneGetParams]: GraphHopperIsochroneGetParams[k]
-          }
-        | { key?: string }, // for auth
-        GraphHopperRouteParams | GraphHopperMatrixParams
-    >
+    client: GraphHopperClient
     apiKey?: string
 
     constructor(clientArgs?: ClientConstructorArgs) {
@@ -151,7 +165,7 @@ export class GraphHopper implements BaseRouter {
         profile: GraphHopperProfile,
         directionsOpts?: GraphHopperDirectionsOpts,
         dryRun?: false
-    ): Promise<Directions<GraphHopperRouteResponse, GraphHopperRoutePath>>
+    ): Promise<GraphHopperDirections>
     directions(
         locations: [number, number][],
         profile: GraphHopperProfile,
@@ -163,9 +177,7 @@ export class GraphHopper implements BaseRouter {
         profile: GraphHopperProfile,
         directionsOpts?: GraphHopperDirectionsOpts,
         dryRun?: boolean | undefined
-    ): Promise<
-        string | Directions<GraphHopperRouteResponse, GraphHopperRoutePath>
-    > {
+    ): Promise<string | GraphHopperDirections> {
         const params: GraphHopperRouteParams = {
             profile,
             points: locations.map(([lat, lon]) => [lon, lat]),
@@ -209,7 +221,7 @@ export class GraphHopper implements BaseRouter {
      */
     public static parseDirectionsResponse(
         response: GraphHopperRouteResponse
-    ): Directions<GraphHopperRouteResponse, GraphHopperRoutePath> {
+    ): GraphHopperDirections {
         return new Directions(
             response.paths.map((path) => {
                 let geometry = path.points
@@ -256,9 +268,7 @@ export class GraphHopper implements BaseRouter {
         intervals: [number],
         isochronesOpts?: GraphHopperIsochroneOpts,
         dryRun?: false
-    ): Promise<
-        Isochrones<GraphHopperIsochroneResponse, GraphHopperIsochroneProps>
-    >
+    ): Promise<GraphHopperIsochrones>
     reachability(
         location: [number, number],
         profile: GraphHopperProfile,
@@ -272,10 +282,7 @@ export class GraphHopper implements BaseRouter {
         intervals: [number],
         isochronesOpts?: GraphHopperIsochroneOpts,
         dryRun?: boolean | undefined
-    ): Promise<
-        | string
-        | Isochrones<GraphHopperIsochroneResponse, GraphHopperIsochroneProps>
-    > {
+    ): Promise<string | GraphHopperIsochrones> {
         const params: GraphHopperIsochroneGetParams = {
             point: location.join(","),
             profile,
@@ -328,7 +335,7 @@ export class GraphHopper implements BaseRouter {
         response: GraphHopperIsochroneResponse,
         center: [number, number],
         intervalType: "time" | "distance"
-    ): Isochrones<GraphHopperIsochroneResponse, GraphHopperIsochroneProps> {
+    ): GraphHopperIsochrones {
         const isochrones: Isochrone<GraphHopperIsochroneProps>[] =
             response.polygons.map((poly) => {
                 return new Isochrone(
@@ -364,7 +371,7 @@ export class GraphHopper implements BaseRouter {
         profile: GraphHopperProfile,
         matrixOpts?: GraphHopperMatrixOpts,
         dryRun?: false
-    ): Promise<Matrix<GraphHopperMatrixResponse>>
+    ): Promise<GraphHopperMatrix>
     matrix(
         locations: [number, number][],
         profile: GraphHopperProfile,
@@ -376,7 +383,7 @@ export class GraphHopper implements BaseRouter {
         profile: GraphHopperProfile,
         matrixOpts?: GraphHopperMatrixOpts,
         dryRun?: boolean | undefined
-    ): Promise<Matrix<GraphHopperMatrixResponse> | string> {
+    ): Promise<GraphHopperMatrix | string> {
         const params: GraphHopperMatrixParams = {
             profile,
             from_points: locations
@@ -407,7 +414,7 @@ export class GraphHopper implements BaseRouter {
                 if (typeof res === "object") {
                     return GraphHopper.parseMatrixResponse(
                         res as GraphHopperMatrixResponse
-                    ) as Matrix<GraphHopperMatrixResponse>
+                    ) as GraphHopperMatrix
                 } else {
                     return res
                 }
@@ -423,7 +430,7 @@ export class GraphHopper implements BaseRouter {
      */
     public static parseMatrixResponse(
         response: GraphHopperMatrixResponse
-    ): Matrix<GraphHopperMatrixResponse> {
+    ): GraphHopperMatrix {
         return new Matrix(
             response.times || [[]],
             response.distances || [[]],

@@ -92,11 +92,17 @@ export interface OSRMMatrixOpts extends OSRMDirectionsOpts {
     destinations?: number[]
 }
 
+export type OSRMDirections = Directions<OSRMRouteResponse, OSRMRoute>
+
+export type OSRMMatrix = Matrix<OSRMTableResponse>
+
+export type OSRMClient = Client<
+    OSRMRouteResponse | OSRMTableResponse,
+    Partial<OSRMRouteParams> | Partial<OSRMTableParams>
+>
+
 export class OSRM implements BaseRouter {
-    client: Client<
-        OSRMRouteResponse | OSRMTableResponse,
-        Partial<OSRMRouteParams> | Partial<OSRMTableParams>
-    >
+    client: OSRMClient
     apiKey?: string
     constructor(clientArgs?: ClientConstructorArgs) {
         const {
@@ -139,7 +145,7 @@ export class OSRM implements BaseRouter {
         profile: string,
         directionsOpts?: OSRMDirectionsOpts,
         dryRun?: false
-    ): Promise<Directions<OSRMRouteResponse, OSRMRoute>>
+    ): Promise<OSRMDirections>
     public async directions(
         locations: [number, number][],
         profile: string,
@@ -151,7 +157,7 @@ export class OSRM implements BaseRouter {
         profile = "driving",
         directionsOpts: OSRMDirectionsOpts = {},
         dryRun = false
-    ): Promise<Directions<OSRMRouteResponse, OSRMRoute> | string> {
+    ): Promise<OSRMDirections | string> {
         const coords = locations
             .map((tuple) => `${tuple[1]},${tuple[0]}`)
             .join(";")
@@ -224,7 +230,7 @@ export class OSRM implements BaseRouter {
     public static parseDirectionsResponse(
         response: OSRMRouteResponse,
         geometryFormat?: OSRMGeometryType
-    ): Directions<OSRMRouteResponse, OSRMRoute> {
+    ): OSRMDirections {
         const directions = response.routes.map((route) => {
             const feature: DirectionFeat = {
                 type: "Feature",
@@ -276,7 +282,7 @@ export class OSRM implements BaseRouter {
         profile: string,
         matrixOpts?: OSRMMatrixOpts,
         dryRun?: false
-    ): Promise<Matrix<OSRMTableResponse>>
+    ): Promise<OSRMMatrix>
     public async matrix(
         locations: [number, number][],
         profile: string,
@@ -288,7 +294,7 @@ export class OSRM implements BaseRouter {
         profile: string,
         matrixOpts: OSRMMatrixOpts = {},
         dryRun?: boolean
-    ): Promise<Matrix<OSRMTableResponse> | string> {
+    ): Promise<OSRMMatrix | string> {
         const coords = locations
             .map((tuple) => `${tuple[1]},${tuple[0]}`)
             .join(";")
@@ -340,9 +346,7 @@ export class OSRM implements BaseRouter {
         return params
     }
 
-    public static parseMatrixResponse(
-        response: OSRMTableResponse
-    ): Matrix<OSRMTableResponse> {
+    public static parseMatrixResponse(response: OSRMTableResponse): OSRMMatrix {
         return new Matrix(response.durations, response.distances, response)
     }
 }

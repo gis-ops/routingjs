@@ -73,12 +73,20 @@ export type ORSIsochroneOpts = Omit<
     "locations" | "range" | "interval"
 >
 
+export type ORSDirections = Directions<ORSRouteResponse, ORSRoute>
+
+export type ORSIsochrones = Isochrones<ORSIsochroneResponse, any>
+
+export type ORSMatrix = Matrix<ORSMatrixResponse>
+
+export type ORSClient = Client<
+    ORSRouteResponse | ORSIsochroneResponse | ORSMatrixResponse,
+    undefined, // we don't make any GET requests to ORS
+    ORSRouteParams | ORSMatrixParams | ORSIsochroneParams
+>
+
 export class ORS implements BaseRouter {
-    client: Client<
-        ORSRouteResponse | ORSIsochroneResponse | ORSMatrixResponse,
-        undefined, // we don't make any GET requests to ORS
-        ORSRouteParams | ORSMatrixParams | ORSIsochroneParams
-    >
+    client: ORSClient
     apiKey?: string
     constructor(clientArgs?: ClientConstructorArgs) {
         const {
@@ -115,7 +123,7 @@ export class ORS implements BaseRouter {
         directionsOpts?: ORSDirectionsOpts,
         dryRun?: false,
         format?: ORSFormat
-    ): Promise<Directions<ORSRouteResponse, ORSRoute>>
+    ): Promise<ORSDirections>
     directions(
         locations: [number, number][],
         profile: ORSProfile,
@@ -129,7 +137,7 @@ export class ORS implements BaseRouter {
         directionsOpts: ORSDirectionsOpts = {},
         dryRun?: boolean,
         format: ORSFormat = "json"
-    ): Promise<Directions<ORSRouteResponse, ORSRoute> | string> {
+    ): Promise<ORSDirections | string> {
         if (typeof directionsOpts.options === "object") {
             if (
                 Object.prototype.hasOwnProperty.call(
@@ -176,7 +184,7 @@ export class ORS implements BaseRouter {
         response: ORSRouteResponse,
         format: ORSFormat,
         units?: ORSUnit
-    ): Directions<ORSRouteResponse, ORSRoute> {
+    ): ORSDirections {
         let factor = 1
 
         if (units === "km") {
@@ -242,7 +250,7 @@ export class ORS implements BaseRouter {
         intervals: number[],
         isochronesOpts?: ORSIsochroneOpts,
         dryRun?: false
-    ): Promise<Isochrones<ORSIsochroneResponse, any>>
+    ): Promise<ORSIsochrones>
     reachability(
         location: [number, number],
         profile: string,
@@ -256,7 +264,7 @@ export class ORS implements BaseRouter {
         intervals: number[],
         isochronesOpts: ORSIsochroneOpts = {},
         dryRun?: boolean
-    ): Promise<Isochrones<ORSIsochroneResponse, any> | string> {
+    ): Promise<ORSIsochrones | string> {
         const { range_type, ...rest } = isochronesOpts
         const params: ORSIsochroneParams = {
             locations: [[location[1], location[0]]], // format must be lon/lat
@@ -287,7 +295,7 @@ export class ORS implements BaseRouter {
     public static parseIsochroneResponse(
         response: ORSIsochroneResponse,
         intervalType?: "time" | "distance"
-    ): Isochrones<ORSIsochroneResponse, any> {
+    ): ORSIsochrones {
         const isochrones: Isochrone<any>[] = []
 
         response.features.forEach((feature) => {
@@ -309,7 +317,7 @@ export class ORS implements BaseRouter {
         profile: ORSProfile,
         matrixOpts?: ORSMatrixOpts,
         dryRun?: false
-    ): Promise<Matrix<ORSMatrixResponse>>
+    ): Promise<ORSMatrix>
     matrix(
         locations: [number, number][],
         profile: ORSProfile,
@@ -321,7 +329,7 @@ export class ORS implements BaseRouter {
         profile: ORSProfile,
         matrixOpts: ORSMatrixOpts = {},
         dryRun?: boolean
-    ): Promise<Matrix<ORSMatrixResponse> | string> {
+    ): Promise<ORSMatrix | string> {
         const params: ORSMatrixParams = {
             locations: locations.map(([lat, lon]) => [lon, lat]),
             ...matrixOpts,
@@ -337,7 +345,7 @@ export class ORS implements BaseRouter {
                 if (typeof res === "object") {
                     return ORS.parseMatrixResponse(
                         res as ORSMatrixResponse
-                    ) as Matrix<ORSMatrixResponse>
+                    ) as ORSMatrix
                 } else {
                     return res
                 }
@@ -345,9 +353,7 @@ export class ORS implements BaseRouter {
             .catch(handleORSError)
     }
 
-    public static parseMatrixResponse(
-        response: ORSMatrixResponse
-    ): Matrix<ORSMatrixResponse> {
+    public static parseMatrixResponse(response: ORSMatrixResponse): ORSMatrix {
         return new Matrix(response.durations, response.distances, response)
     }
 }
