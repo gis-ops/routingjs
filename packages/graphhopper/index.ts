@@ -38,8 +38,8 @@ type GraphHopperErrorResponseProps = {
 }
 
 /**
- * `GraphHopperErrorProps` returns additional information about the error thrown by the 
- *  GraphHopper routing engine. It sends a JSON response including an error message along with 
+ * `GraphHopperErrorProps` returns additional information about the error thrown by the
+ *  GraphHopper routing engine. It sends a JSON response including an error message along with
  *  a hints array.
  */
 export interface GraphHopperErrorProps extends ErrorProps {
@@ -48,7 +48,9 @@ export interface GraphHopperErrorProps extends ErrorProps {
 
 export type GraphHopperAPIError = RoutingJSAPIError<GraphHopperErrorProps>
 
-const handleGraphHopperError = (error: AxiosError<GraphHopperErrorResponseProps>) => {
+const handleGraphHopperError = (
+    error: AxiosError<GraphHopperErrorResponseProps>
+) => {
     const props: GraphHopperErrorProps = {
         statusCode: error.response?.status,
         status: error.response?.statusText,
@@ -122,9 +124,7 @@ export class GraphHopper implements BaseRouter {
         const defaultURL = "https://graphhopper.com/api/1"
 
         if (baseUrl === undefined && !apiKey) {
-            throw new Error(
-                "Please provide an API key for GraphHopper"
-            )
+            throw new Error("Please provide an API key for GraphHopper")
         }
 
         this.client = new Client(

@@ -11,7 +11,7 @@
     "typings": "dist/index.d.ts",
     "scripts": {
         "test": "jest",
-        "format": "prettier --write src/{*.ts,**/*.ts}",
+        "format": "prettier --write packages/{*.ts,**/*.ts}",
         "build": "lerna run build",
         "postinstall": "npx husky install",
         "clear": "rimraf \"packages/**/dist/\"",
