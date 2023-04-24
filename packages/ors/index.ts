@@ -80,10 +80,10 @@ export type ORSIsochrones = Isochrones<ORSIsochroneResponse, any>
 export type ORSMatrix = Matrix<ORSMatrixResponse>
 
 export type ORSClient = Client<
-        ORSRouteResponse | ORSIsochroneResponse | ORSMatrixResponse,
-        undefined, // we don't make any GET requests to ORS
-        ORSRouteParams | ORSMatrixParams | ORSIsochroneParams
-    >
+    ORSRouteResponse | ORSIsochroneResponse | ORSMatrixResponse,
+    undefined, // we don't make any GET requests to ORS
+    ORSRouteParams | ORSMatrixParams | ORSIsochroneParams
+>
 
 export class ORS implements BaseRouter {
     client: ORSClient
@@ -353,9 +353,7 @@ export class ORS implements BaseRouter {
             .catch(handleORSError)
     }
 
-    public static parseMatrixResponse(
-        response: ORSMatrixResponse
-    ): ORSMatrix {
+    public static parseMatrixResponse(response: ORSMatrixResponse): ORSMatrix {
         return new Matrix(response.durations, response.distances, response)
     }
 }

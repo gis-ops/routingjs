@@ -189,10 +189,10 @@ export type ValhallaIsochrones = Isochrones<ValhallaIsochroneResponse, Feature>
 export type ValhallaMatrix = Matrix<ValhallaMatrixResponse>
 
 export type ValhallaClient = Client<
-        ValhallaRouteResponse | ValhallaMatrixResponse | FeatureCollection,
-        MapboxAuthParams,
-        ValhallaIsochroneParams | ValhallaRouteParams | ValhallaMatrixParams
-    >
+    ValhallaRouteResponse | ValhallaMatrixResponse | FeatureCollection,
+    MapboxAuthParams,
+    ValhallaIsochroneParams | ValhallaRouteParams | ValhallaMatrixParams
+>
 
 export class Valhalla implements BaseRouter {
     client: ValhallaClient
@@ -386,9 +386,7 @@ export class Valhalla implements BaseRouter {
     public parseDirectionsResponse(
         response: ValhallaRouteResponse,
         type: "main" | "alternative" = "main"
-    ):
-        | ValhallaDirections
-        | Direction<ValhallaRouteResponse> {
+    ): ValhallaDirections | Direction<ValhallaRouteResponse> {
         const geometry: [number, number][] = []
         let [duration, distance] = [0, 0]
         let factor = 1

@@ -97,9 +97,9 @@ export type OSRMDirections = Directions<OSRMRouteResponse, OSRMRoute>
 export type OSRMMatrix = Matrix<OSRMTableResponse>
 
 export type OSRMClient = Client<
-        OSRMRouteResponse | OSRMTableResponse,
-        Partial<OSRMRouteParams> | Partial<OSRMTableParams>
-    >
+    OSRMRouteResponse | OSRMTableResponse,
+    Partial<OSRMRouteParams> | Partial<OSRMTableParams>
+>
 
 export class OSRM implements BaseRouter {
     client: OSRMClient
@@ -346,9 +346,7 @@ export class OSRM implements BaseRouter {
         return params
     }
 
-    public static parseMatrixResponse(
-        response: OSRMTableResponse
-    ): OSRMMatrix {
+    public static parseMatrixResponse(response: OSRMTableResponse): OSRMMatrix {
         return new Matrix(response.durations, response.distances, response)
     }
 }
