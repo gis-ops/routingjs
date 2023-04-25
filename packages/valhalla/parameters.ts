@@ -159,6 +159,12 @@ export interface ValhallaMatrixParams extends ValhallaRequestParams {
     targets: ValhallaLocation[]
 }
 
+export interface ValhallaExpansionParams extends ValhallaIsochroneParams {
+    action?: string
+    skip_opposites?: boolean
+    expansion_properties?: string[]
+}
+
 export interface ValhallaContours {
     /** A floating point value specifying the time in minutes for the contour. */
     time?: number
@@ -371,6 +377,11 @@ export interface ValhallaMatrixResponse {
     locations?: ValhallaReturnLocation[]
     units?: string
     warnings?: { [k: string]: any }[]
+}
+
+export interface ValhallaExpansionResponse {
+    properties: {}
+    features: { [k: string]: any }[]
 }
 
 interface ValhallaMatrixItem {
