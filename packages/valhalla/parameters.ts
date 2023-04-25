@@ -1,4 +1,4 @@
-import { FeatureCollection } from "geojson"
+import { Feature, FeatureCollection, LineString, MultiLineString } from "geojson"
 
 /**
  * You specify locations as an ordered list of two or more locations within a JSON array.
@@ -379,9 +379,25 @@ export interface ValhallaMatrixResponse {
     warnings?: { [k: string]: any }[]
 }
 
+export type ExpansionProps ={
+    distances?:number[]
+    durations?:number[]
+    costs?:number[]
+    statuses?:string[]
+    edge_ids?:number[]
+}
+
+export type ExpansionEdgeProps ={
+    distance?:number
+    duration?:number
+    cost?:number
+    status?:string
+    edge_id?:number
+}
+
 export interface ValhallaExpansionResponse {
-    properties: {}
-    features: { [k: string]: any }[]
+    properties: {algorithm?:string}
+    features: Feature<MultiLineString, ExpansionProps>[]
 }
 
 interface ValhallaMatrixItem {

@@ -29,6 +29,8 @@ import {
     ValhallaExpansionParams,
     ValhallaIsochroneResponse,
     ValhallaExpansionResponse,
+    ExpansionProps,
+    ExpansionEdgeProps,
     ValhallaLocation,
     ValhallaMatrixParams,
     ValhallaMatrixResponse,
@@ -38,6 +40,14 @@ import {
 } from "./parameters"
 import { decode } from "@googlemaps/polyline-codec"
 import { AxiosError } from "axios"
+
+const ValhallaExpansionPropMap ={
+    distances: "distance",
+    durations: "duration",
+    costs:"cost",
+    statuses:"status",
+    edge_ids:"edge_id"
+}
 
 type ValhallaErrorResponseProps = {
     status_code: number
@@ -185,7 +195,7 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
 
 export interface ValhallaExpansionOpts extends ValhallaIsochroneOpts {
     skip_opposites?: boolean
-    expansion_properties?: string[]
+    expansion_properties?: (keyof ExpansionProps)[]
 }
 
 export type ValhallaDirections = Directions<
@@ -936,16 +946,16 @@ export class Valhalla implements BaseRouter {
     public static parseExpansionResponse(
         response: ValhallaExpansionResponse,
         location: [number, number],
-        expansion_properties: string[],
+        expansion_properties: (keyof ExpansionProps)[],
         intervalType: "time" | "distance"
     ): ValhallaExpansions {
         const expansions: Edge[] = []
         response.features[0].geometry.coordinates.forEach(
             (line: any, index: number) => {
-                let properties = {}
+                let properties: ExpansionEdgeProps = {}
                 if (expansion_properties) {
                     expansion_properties.forEach((prop) => {
-                        properties.prop =
+                        properties[ValhallaExpansionPropMap[prop] as keyof ExpansionEdgeProps] =
                             response.features[0].properties[prop][index]
                     })
                 }
