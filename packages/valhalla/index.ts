@@ -42,15 +42,15 @@ import { decode } from "@googlemaps/polyline-codec"
 import { AxiosError } from "axios"
 
 interface ExpansionEdgePropsSign {
-    [key: string]: keyof ExpansionEdgeProps;
+    [key: string]: keyof ExpansionEdgeProps
 }
 
-const ValhallaExpansionPropMap: ExpansionEdgePropsSign ={
+const ValhallaExpansionPropMap: ExpansionEdgePropsSign = {
     distances: "distance",
     durations: "duration",
-    costs:"cost",
-    statuses:"status",
-    edge_ids:"edge_id"
+    costs: "cost",
+    statuses: "status",
+    edge_ids: "edge_id",
 }
 
 type ValhallaErrorResponseProps = {
@@ -216,7 +216,10 @@ export type ValhallaExpansions = Expansions<ValhallaExpansionResponse>
 export type ValhallaClient = Client<
     ValhallaRouteResponse | ValhallaMatrixResponse | FeatureCollection,
     MapboxAuthParams,
-    ValhallaIsochroneParams | ValhallaRouteParams | ValhallaMatrixParams | ValhallaExpansionParams
+    | ValhallaIsochroneParams
+    | ValhallaRouteParams
+    | ValhallaMatrixParams
+    | ValhallaExpansionParams
 >
 
 export class Valhalla implements BaseRouter {
@@ -947,15 +950,27 @@ export class Valhalla implements BaseRouter {
         return params
     }
 
-    public static getRequiredExpansionProps<T extends (keyof ExpansionEdgeProps)[]>(props: T): Required<Pick<ExpansionEdgeProps, typeof props[number]>> {
-        let properties = props.reduce((aggregate, el) => {
-            return {
-            ...aggregate, [el]: null
-            }
-        }, {}) as Required<Pick<ExpansionEdgeProps, typeof props[number]>>;
+    public static getExpansions<
+        T extends (keyof ExpansionEdgeProps)[]
+    >(props: T, res: ValhallaExpansionResponse): Edge[] {
+        const expansions: Edge[] = []
+        res.features[0].geometry.coordinates.forEach(
+            (line: any, index: number) => {
+                let properties = props.reduce((aggregate, el) => {
+                    return {
+                        ...aggregate,
+                        [el]: res.features[0].properties[el][index],
+                    }
+                }, {}) as Required<
+                    Pick<ExpansionEdgeProps, typeof props[number]>
+                >
 
-        return properties;
-        }
+                expansions.push(new Edge(line, ...Object.values(properties)))
+            }
+        )
+
+        return expansions
+    }
 
     public static parseExpansionResponse(
         response: ValhallaExpansionResponse,
@@ -963,25 +978,17 @@ export class Valhalla implements BaseRouter {
         expansion_properties: (keyof ExpansionProps)[],
         intervalType: "time" | "distance"
     ): ValhallaExpansions {
-        const expansions: Edge[] = []
         let properties: (keyof ExpansionEdgeProps)[] = []
-        if(expansion_properties){
+        if (expansion_properties) {
             expansion_properties.forEach((prop) => {
-                properties.push(ValhallaExpansionPropMap[
-                    prop
-                ] as keyof ExpansionEdgeProps)
+                properties.push(
+                    ValhallaExpansionPropMap[prop] as keyof ExpansionEdgeProps
+                )
             })
         }
-        let propertiesRequired = Valhalla.getRequiredExpansionProps(properties)
-        response.features[0].geometry.coordinates.forEach(
-            (line: any, index: number) => {
-                for (let prop in propertiesRequired){
-                    propertiesRequired[prop] = response.features[0].properties[][index]
-                }
-                expansions.push(
-                    new Edge(line, ...Object.values(properties))
-                )
-            }
+        const expansions: Edge[] = Valhalla.getExpansions(
+            properties,
+            response
         )
         return new Expansions(expansions, location, intervalType, response)
     }

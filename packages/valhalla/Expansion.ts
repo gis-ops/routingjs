@@ -7,7 +7,7 @@ export class Expansions<T> {
     ) {}
 }
 
-export class Edge{
+export class Edge {
     constructor(
         public readonly geometry: number,
         public readonly distance: number,

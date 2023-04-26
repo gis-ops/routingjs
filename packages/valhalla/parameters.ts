@@ -379,12 +379,12 @@ export interface ValhallaMatrixResponse {
     warnings?: { [k: string]: any }[]
 }
 
-export type ExpansionProps ={
-    distances?:number[]
-    durations?:number[]
-    costs?:number[]
-    statuses?:string[]
-    edge_ids?:number[]
+export type ExpansionProps = {
+    distances?: number[]
+    durations?: number[]
+    costs?: number[]
+    statuses?: string[]
+    edge_ids?: number[]
 }
 
 export type ExpansionEdgeProps = {
@@ -396,7 +396,7 @@ export type ExpansionEdgeProps = {
 }
 
 export interface ValhallaExpansionResponse {
-    properties: {algorithm?:string}
+    properties: { algorithm?: string }
     features: Feature<MultiLineString, ExpansionProps>[]
 }
 
