@@ -41,7 +41,11 @@ import {
 import { decode } from "@googlemaps/polyline-codec"
 import { AxiosError } from "axios"
 
-const ValhallaExpansionPropMap ={
+interface ExpansionEdgePropsSign {
+    [key: string]: keyof ExpansionEdgeProps;
+}
+
+const ValhallaExpansionPropMap: ExpansionEdgePropsSign ={
     distances: "distance",
     durations: "duration",
     costs:"cost",
@@ -943,6 +947,16 @@ export class Valhalla implements BaseRouter {
         return params
     }
 
+    public static getRequiredExpansionProps<T extends (keyof ExpansionEdgeProps)[]>(props: T): Required<Pick<ExpansionEdgeProps, typeof props[number]>> {
+        let properties = props.reduce((aggregate, el) => {
+            return {
+            ...aggregate, [el]: null
+            }
+        }, {}) as Required<Pick<ExpansionEdgeProps, typeof props[number]>>;
+
+        return properties;
+        }
+
     public static parseExpansionResponse(
         response: ValhallaExpansionResponse,
         location: [number, number],
@@ -950,19 +964,25 @@ export class Valhalla implements BaseRouter {
         intervalType: "time" | "distance"
     ): ValhallaExpansions {
         const expansions: Edge[] = []
+        let properties: (keyof ExpansionEdgeProps)[] = []
+        if(expansion_properties){
+            expansion_properties.forEach((prop) => {
+                properties.push(ValhallaExpansionPropMap[
+                    prop
+                ] as keyof ExpansionEdgeProps)
+            })
+        }
+        let propertiesRequired = Valhalla.getRequiredExpansionProps(properties)
         response.features[0].geometry.coordinates.forEach(
             (line: any, index: number) => {
-                let properties: ExpansionEdgeProps = {}
-                if (expansion_properties) {
-                    expansion_properties.forEach((prop) => {
-                        properties[ValhallaExpansionPropMap[prop] as keyof ExpansionEdgeProps] =
-                            response.features[0].properties[prop][index]
-                    })
+                for (let prop in propertiesRequired){
+                    propertiesRequired[prop] = response.features[0].properties[][index]
                 }
-                expansions.push(new Edge(line, ...properties))
+                expansions.push(
+                    new Edge(line, ...Object.values(properties))
+                )
             }
         )
-
         return new Expansions(expansions, location, intervalType, response)
     }
 }
