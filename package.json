@@ -12,8 +12,9 @@
     "scripts": {
         "test": "jest",
         "format": "prettier --write packages/{*.ts,**/*.ts}",
+        "format-check": "prettier --check packages/{*.ts,**/*.ts}",
         "build": "lerna run build",
-        "postinstall": "npx husky install",
+        "postinstall": "npx husky install && chmod +x .husky/pre-commit",
         "clear": "rimraf \"packages/**/dist/\"",
         "up": "docker compose up -d",
         "down": "docker compose down"
