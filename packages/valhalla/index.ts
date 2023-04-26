@@ -8,6 +8,8 @@ import {
     RoutingJSAPIError,
     Isochrones,
     Matrix,
+    Expansions,
+    Edge,
     BaseRouter,
     ClientConstructorArgs,
     ErrorProps,
@@ -24,7 +26,11 @@ import {
     ValhallaDateTime,
     ValhallaDirectionsType,
     ValhallaIsochroneParams,
+    ValhallaExpansionParams,
     ValhallaIsochroneResponse,
+    ValhallaExpansionResponse,
+    ExpansionProps,
+    ExpansionEdgeProps,
     ValhallaLocation,
     ValhallaMatrixParams,
     ValhallaMatrixResponse,
@@ -34,6 +40,18 @@ import {
 } from "./parameters"
 import { decode } from "@googlemaps/polyline-codec"
 import { AxiosError } from "axios"
+
+interface ExpansionEdgePropsSign {
+    [key: string]: keyof ExpansionEdgeProps
+}
+
+const ValhallaExpansionPropMap: ExpansionEdgePropsSign = {
+    distances: "distance",
+    durations: "duration",
+    costs: "cost",
+    statuses: "status",
+    edge_ids: "edge_id",
+}
 
 type ValhallaErrorResponseProps = {
     status_code: number
@@ -179,6 +197,11 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
     units?: ValhallaRequestUnit
 }
 
+export interface ValhallaExpansionOpts extends ValhallaIsochroneOpts {
+    skip_opposites?: boolean
+    expansion_properties?: (keyof ExpansionProps)[]
+}
+
 export type ValhallaDirections = Directions<
     ValhallaRouteResponse,
     ValhallaRouteResponse
@@ -188,10 +211,15 @@ export type ValhallaIsochrones = Isochrones<ValhallaIsochroneResponse, Feature>
 
 export type ValhallaMatrix = Matrix<ValhallaMatrixResponse>
 
+export type ValhallaExpansions = Expansions<ValhallaExpansionResponse>
+
 export type ValhallaClient = Client<
     ValhallaRouteResponse | ValhallaMatrixResponse | FeatureCollection,
     MapboxAuthParams,
-    ValhallaIsochroneParams | ValhallaRouteParams | ValhallaMatrixParams
+    | ValhallaIsochroneParams
+    | ValhallaRouteParams
+    | ValhallaMatrixParams
+    | ValhallaExpansionParams
 >
 
 export class Valhalla implements BaseRouter {
@@ -827,6 +855,142 @@ export class Valhalla implements BaseRouter {
             ]
             return location
         }
+    }
+
+    /**
+     * Makes a request to Valhalla's `/expansion` endpoint.
+     *
+     * @param locations - Format: [lat, lon]
+     * @param profile - Specifies the mode of transport
+     * @param intervals - Specifies the intervals in meters
+     * @param expansionOpts - Additional parameters, such as costing options.
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
+     * @see {@link ValhallaCostingType} for available profiles
+     */
+
+    public async expansion(
+        location: [number, number],
+        profile: ValhallaCostingType,
+        intervals: number[],
+        expansionOpts?: ValhallaExpansionOpts,
+        dryRun?: false
+    ): Promise<ValhallaExpansions>
+    public async expansion(
+        location: [number, number],
+        profile: ValhallaCostingType,
+        intervals: number[],
+        expansionOpts: ValhallaExpansionOpts,
+        dryRun: true
+    ): Promise<string>
+    public async expansion(
+        location: [number, number],
+        profile: ValhallaCostingType,
+        intervals: number[],
+        expansionOpts: ValhallaExpansionOpts = {},
+        dryRun?: boolean
+    ): Promise<ValhallaExpansions | string> {
+        const getParams: MapboxAuthParams | undefined = this.apiKey
+            ? { access_token: this.apiKey }
+            : undefined
+        const params = this.getExpansionParams(
+            location,
+            profile,
+            intervals,
+            expansionOpts
+        )
+
+        return this.client
+            .request({
+                endpoint: "/expansion",
+                postParams: params,
+                getParams,
+                dryRun,
+            })
+            .then((res) => {
+                if (typeof res === "object") {
+                    return Valhalla.parseExpansionResponse(
+                        res as ValhallaExpansionResponse,
+                        location,
+                        expansionOpts?.expansion_properties
+                            ? expansionOpts.expansion_properties
+                            : [],
+                        expansionOpts?.intervalType
+                            ? expansionOpts.intervalType
+                            : "time"
+                    ) as ValhallaExpansions
+                } else {
+                    return res // return the request info string
+                }
+            })
+            .catch(handleValhallaError)
+    }
+
+    public getExpansionParams(
+        location: [number, number],
+        profile: ValhallaCostingType,
+        intervals: number[],
+        expansionOpts: ValhallaExpansionOpts = {}
+    ): ValhallaExpansionParams {
+        const params: ValhallaExpansionParams = this.getIsochroneParams(
+            location,
+            profile,
+            intervals,
+            expansionOpts
+        )
+
+        params.action = "isochrone"
+        if (expansionOpts.skip_opposites) {
+            params.skip_opposites = expansionOpts.skip_opposites
+        }
+
+        if (expansionOpts.expansion_properties) {
+            params.expansion_properties = expansionOpts.expansion_properties
+        }
+
+        return params
+    }
+
+    public static getExpansions<
+        T extends (keyof ExpansionEdgeProps)[]
+    >(props: T, res: ValhallaExpansionResponse): Edge[] {
+        const expansions: Edge[] = []
+        res.features[0].geometry.coordinates.forEach(
+            (line: any, index: number) => {
+                let properties = props.reduce((aggregate, el) => {
+                    return {
+                        ...aggregate,
+                        [el]: res.features[0].properties[el][index],
+                    }
+                }, {}) as Required<
+                    Pick<ExpansionEdgeProps, typeof props[number]>
+                >
+
+                expansions.push(new Edge(line, ...Object.values(properties)))
+            }
+        )
+
+        return expansions
+    }
+
+    public static parseExpansionResponse(
+        response: ValhallaExpansionResponse,
+        location: [number, number],
+        expansion_properties: (keyof ExpansionProps)[],
+        intervalType: "time" | "distance"
+    ): ValhallaExpansions {
+        let properties: (keyof ExpansionEdgeProps)[] = []
+        if (expansion_properties) {
+            expansion_properties.forEach((prop) => {
+                properties.push(
+                    ValhallaExpansionPropMap[prop] as keyof ExpansionEdgeProps
+                )
+            })
+        }
+        const expansions: Edge[] = Valhalla.getExpansions(
+            properties,
+            response
+        )
+        return new Expansions(expansions, location, intervalType, response)
     }
 }
 
