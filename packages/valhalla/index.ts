@@ -337,7 +337,7 @@ export class Valhalla implements BaseRouter {
                     ])
                 }
             })
-            params.exclude_locations = avoidLocations
+            params.exclude_locations = this._buildLocations(avoidLocations);
         }
 
         if (directionsOpts.avoidPolygons) {

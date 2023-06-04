@@ -94,7 +94,7 @@ interface ValhallaRequestParams {
      * minimum each avoid location must include latitude and longitude. The avoid_locations are
      * mapped to the closest road or roads and these roads are excluded from the route path computation.
      */
-    exclude_locations?: [number, number][]
+    exclude_locations?: [number, number][] | ValhallaLocation[]
     /**
      * One or multiple exterior rings of polygons in the form of nested JSON arrays, e.g.
      * [[[lon1, lat1], [lon2,lat2]],[[lon1,lat1],[lon2,lat2]]]. Roads intersecting these rings
