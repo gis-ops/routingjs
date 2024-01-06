@@ -1,6 +1,6 @@
 {
     "name": "@routingjs/valhalla",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "RoutingJS Valhalla Module",
     "main": "dist/js/index.js",
     "module": "dist/es/index.js",
@@ -55,6 +55,6 @@
     },
     "dependencies": {
         "@googlemaps/polyline-codec": "^1.0.28",
-        "@routingjs/core": "^0.1.0"
+        "@routingjs/core": "^0.2.0"
     }
 }
