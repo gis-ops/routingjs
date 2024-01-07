@@ -201,8 +201,7 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
 
 // export interface ValhallaAdditionalTraceOpts
 export interface ValhallaTraceRouteOpts
-    extends Omit<ValhallaBaseOpts, "exclude_locations" | "exclude_polygons">,
-        ValhallaDirectionOpts {
+    extends Omit<ValhallaBaseOpts, "avoidLocations" | "avoidPolygons"> {
     /**
      * shape_match is an optional string input parameter. It allows some control
      * of the matching algorithm based on the type of input.
@@ -981,9 +980,9 @@ export class Valhalla implements BaseRouter {
         }
 
         params.directions_options = {
-            language: traceRouteOpts.language,
-            units: traceRouteOpts.units,
-            directions_type: traceRouteOpts.directionsType,
+            language: traceRouteOpts.directionsOptions?.language,
+            units: traceRouteOpts.directionsOptions?.units,
+            directions_type: traceRouteOpts.directionsOptions?.directionsType,
         }
 
         params.id = traceRouteOpts.id

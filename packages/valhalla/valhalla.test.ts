@@ -83,7 +83,6 @@ describe("Valhalla returns responses", () => {
                 "pedestrian"
             )
             .then((d) => {
-                console.log(JSON.stringify(d.raw))
                 expect(d.raw).toBeDefined()
                 expect(d.directions).toHaveLength(1)
                 expect(d.directions[0]).toHaveProperty("feature")
