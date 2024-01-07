@@ -199,7 +199,6 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
     units?: ValhallaRequestUnit
 }
 
-// export interface ValhallaAdditionalTraceOpts
 export interface ValhallaTraceRouteOpts
     extends Omit<ValhallaBaseOpts, "avoidLocations" | "avoidPolygons"> {
     /**
@@ -339,7 +338,7 @@ export class Valhalla implements BaseRouter {
         const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = this.getDirectionParams(
+        const params = Valhalla.getDirectionParams(
             locations,
             profile,
             directionsOpts
@@ -365,13 +364,13 @@ export class Valhalla implements BaseRouter {
             .catch(handleValhallaError)
     }
 
-    protected getDirectionParams(
+    public static getDirectionParams(
         locations: [number, number][],
         profile: ValhallaCostingType,
         directionsOpts: ValhallaDirectionOpts = {}
     ): ValhallaRouteParams {
         const params: ValhallaRouteParams = {
-            locations: this._buildLocations(locations),
+            locations: Valhalla._buildLocations(locations),
             costing: profile,
             narrative: directionsOpts.instructions || false,
         }
@@ -561,7 +560,7 @@ export class Valhalla implements BaseRouter {
         const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = this.getIsochroneParams(
+        const params = Valhalla.getIsochroneParams(
             location,
             profile,
             intervals,
@@ -592,7 +591,7 @@ export class Valhalla implements BaseRouter {
             .catch(handleValhallaError)
     }
 
-    public getIsochroneParams(
+    public static getIsochroneParams(
         location: [number, number],
         profile: ValhallaCostingType,
         intervals: number[],
@@ -623,7 +622,7 @@ export class Valhalla implements BaseRouter {
         })
 
         const params: ValhallaIsochroneParams = {
-            locations: this._buildLocations(location),
+            locations: Valhalla._buildLocations(location),
             costing: profile,
             contours,
             polygons: isochroneOpts.polygons,
@@ -753,7 +752,7 @@ export class Valhalla implements BaseRouter {
         const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = this.getMatrixParams(locations, profile, matrixOpts)
+        const params = Valhalla.getMatrixParams(locations, profile, matrixOpts)
 
         return this.client
             .request({
@@ -775,12 +774,12 @@ export class Valhalla implements BaseRouter {
             .catch(handleValhallaError)
     }
 
-    public getMatrixParams(
+    public static getMatrixParams(
         locations: [number, number][],
         profile: ValhallaCostingType,
         matrixOpts: ValhallaMatrixOpts = {}
     ): ValhallaMatrixParams {
-        const matrixLocations = this._buildLocations(locations)
+        const matrixLocations = Valhalla._buildLocations(locations)
 
         let sourceCoords = matrixLocations
 
@@ -917,7 +916,7 @@ export class Valhalla implements BaseRouter {
         const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = this.getTraceRouteParams(
+        const params = Valhalla.getTraceRouteParams(
             locations,
             profile,
             traceRouteOpts
@@ -943,7 +942,7 @@ export class Valhalla implements BaseRouter {
             .catch(handleValhallaError)
     }
 
-    protected getTraceRouteParams(
+    public static getTraceRouteParams(
         locations: [number, number][],
         profile: ValhallaCostingType,
         traceRouteOpts: ValhallaTraceRouteOpts = {}
@@ -990,11 +989,13 @@ export class Valhalla implements BaseRouter {
         return params
     }
 
-    protected _buildLocations(
+    public static _buildLocations(
         coordinates: [number, number][]
     ): ValhallaLocation[]
-    protected _buildLocations(coordinates: [number, number]): [ValhallaLocation]
-    protected _buildLocations(
+    public static _buildLocations(
+        coordinates: [number, number]
+    ): [ValhallaLocation]
+    public static _buildLocations(
         coordinates: [number, number][] | [number, number]
     ): ValhallaLocation[] {
         if (Array.isArray(coordinates[0])) {
