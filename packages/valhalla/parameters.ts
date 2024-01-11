@@ -235,7 +235,7 @@ export interface ValhallaLeg {
     maneuvers?: ValhallaManeuvers[]
 }
 
-interface ValhallaManeuvers {
+export interface ValhallaManeuvers {
     type?: number
     /**
      * Written maneuver instruction. Describes the maneuver.
