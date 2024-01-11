@@ -1305,6 +1305,86 @@ export type ValhallaCostingType =
      */
     | "pedestrian"
 
+export type ValhallaShapeMatch = "edge_walk" | "map_snap" | "walk_or_snap"
+interface ValhallaTraceOptions {
+    /** Search radius in meters associated with supplied trace points. */
+    search_radius?: number
+    /** GPS accuracy in meters associated with supplied trace points. */
+    gps_accuracy?: number
+    /** Breaking distance in meters between trace points.  */
+    breakage_distance?: number
+    /** Interpolation distance in meters beyond which trace points are merged together. */
+    interpolation_distance?: number
+    /**
+     * When present and true, the successful trace_route response will include a key
+     * linear_references. Its value is an array of base64-encoded [OpenLR](https://www.openlr-association.com/fileadmin/user_upload/openlr-whitepaper_v1.5.pdf) location
+     * references, one for each graph edge of the road network matched by the input trace.
+     *
+     */
+    linear_references?: boolean
+}
+
 export interface MapboxAuthParams {
     access_token?: string // TODO: needs to be abstracted to work with mb/OSRM
+}
+
+export interface ValhallaTraceRouteParams
+    extends Omit<
+            ValhallaRequestParams,
+            "exclude_locations" | "exclude_polygons"
+        >,
+        ValhallaDirectionsOptions {
+    /** The array of input locations */
+    shape: ValhallaLocation[]
+    /**
+     * shape_match is an optional string input parameter. It allows some control
+     * of the matching algorithm based on the type of input.
+     *
+     * @remarks
+     * `edge_walk`:    Indicates an edge walking algorithm can be used. This algorithm
+     *                 requires nearly exact shape matching, so it should only be used
+     *                 when the shape is from a prior Valhalla route.
+     *
+     * `map_snap`: 	   Indicates that a map-matching algorithm should be used because
+     *                 the input shape might not closely match Valhalla edges. This
+     *                 algorithm is more expensive.
+     *
+     * `walk_or_snap`: Also the default option. This will try edge walking and if this
+     *                 does not succeed, it will fall back and use map matching.
+     *
+     * @defaultValue
+     * `walk_or_snap`
+     */
+    shape_match?: ValhallaShapeMatch
+    /**
+     * Begin timestamp for the trace.
+     *
+     * @remarks
+     * This is used along with the durations so that timestamps can be specified for a
+     * trace that is specified using an encoded polyline.
+     */
+    begin_time?: string
+    /**
+     * List of durations (seconds) between each successive pair of input trace points.
+     *
+     * @remarks
+     * This allows trace points to be supplied as an encoded polyline and timestamps to be
+     * created by using this list of "delta" times along with the begin_time of the trace.
+     */
+    durations?: number[]
+    /**
+     * A boolean value indicating whether the input timestamps or durations should be used
+     * when computing elapsed time at each edge along the matched path.
+     *
+     * @remarks
+     * If true, timestamps are used. If false (default), internal costing is applied to
+     * compute elapsed times.
+     *
+     * @defaultValue
+     * `false`
+     */
+    use_timestamps?: boolean
+    /** Additional Options */
+    trace_options?: ValhallaTraceOptions
+    directions_options?: ValhallaDirectionsOptions
 }

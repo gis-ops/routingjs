@@ -76,4 +76,11 @@ export interface BaseRouter {
         isochronesOpts?: JSONObject,
         dryRun?: boolean
     ) => Promise<Isochrones<any, any> | string>
+
+    mapMatch?: (
+        locations: [number, number][],
+        profile: string,
+        mapMatchOpts?: JSONObject,
+        dryRun?: boolean
+    ) => Promise<Directions<any, any> | string>
 }

@@ -31,6 +31,8 @@ import {
     ValhallaRequestUnit,
     ValhallaRouteParams,
     ValhallaRouteResponse,
+    ValhallaShapeMatch,
+    ValhallaTraceRouteParams,
 } from "./parameters"
 import { decode } from "@googlemaps/polyline-codec"
 import { AxiosError } from "axios"
@@ -108,6 +110,24 @@ interface ValhallaBaseOpts {
     dateTime?: ValhallaDateTime
 }
 
+interface ValhallaAdditionalTraceOpts {
+    /** Search radius in meters associated with supplied trace points. */
+    searchRadius?: number
+    /** GPS accuracy in meters associated with supplied trace points. */
+    gpsAccuracy?: number
+    /** Breaking distance in meters between trace points.  */
+    breakageDistance?: number
+    /** Interpolation distance in meters beyond which trace points are merged together. */
+    interpolationDistance?: number
+    /**
+     * When present and true, the successful trace_route response will include a key
+     * linear_references. Its value is an array of base64-encoded [OpenLR](https://www.openlr-association.com/fileadmin/user_upload/openlr-whitepaper_v1.5.pdf) location
+     * references, one for each graph edge of the road network matched by the input trace.
+     *
+     */
+    linearReferences?: boolean
+}
+
 export interface ValhallaDirectionOpts extends ValhallaBaseOpts {
     /**
      * Whether to return turn-by-turn instructions. Named for compatibility with other
@@ -179,6 +199,61 @@ export interface ValhallaMatrixOpts extends ValhallaBaseOpts {
     units?: ValhallaRequestUnit
 }
 
+export interface ValhallaTraceRouteOpts
+    extends Omit<ValhallaBaseOpts, "avoidLocations" | "avoidPolygons"> {
+    /**
+     * shape_match is an optional string input parameter. It allows some control
+     * of the matching algorithm based on the type of input.
+     *
+     * @remarks
+     * `edge_walk`:    Indicates an edge walking algorithm can be used. This algorithm
+     *                 requires nearly exact shape matching, so it should only be used
+     *                 when the shape is from a prior Valhalla route.
+     *
+     * `map_snap`: 	   Indicates that a map-matching algorithm should be used because
+     *                 the input shape might not closely match Valhalla edges. This
+     *                 algorithm is more expensive.
+     *
+     * `walk_or_snap`: Also the default option. This will try edge walking and if this
+     *                 does not succeed, it will fall back and use map matching.
+     *
+     * @defaultValue
+     * `walk_or_snap`
+     */
+    shapeMatch?: ValhallaShapeMatch
+    /**
+     * Begin timestamp for the trace.
+     *
+     * @remarks
+     * This is used along with the durations so that timestamps can be specified for a
+     * trace that is specified using an encoded polyline.
+     */
+    beginTime?: string
+    /**
+     * List of durations (seconds) between each successive pair of input trace points.
+     *
+     * @remarks
+     * This allows trace points to be supplied as an encoded polyline and timestamps to be
+     * created by using this list of "delta" times along with the begin_time of the trace.
+     */
+    durations?: number[]
+    /**
+     * A boolean value indicating whether the input timestamps or durations should be used
+     * when computing elapsed time at each edge along the matched path.
+     *
+     * @remarks
+     * If true, timestamps are used. If false (default), internal costing is applied to
+     * compute elapsed times.
+     *
+     * @defaultValue
+     * `false`
+     */
+    useTimestamps?: boolean
+    /** Additional Options */
+    traceOptions?: ValhallaAdditionalTraceOpts
+    directionsOptions?: ValhallaDirectionOpts
+}
+
 export type ValhallaDirections = Directions<
     ValhallaRouteResponse,
     ValhallaRouteResponse
@@ -188,10 +263,18 @@ export type ValhallaIsochrones = Isochrones<ValhallaIsochroneResponse, Feature>
 
 export type ValhallaMatrix = Matrix<ValhallaMatrixResponse>
 
+export type ValhallaTraceRoute = Directions<
+    ValhallaRouteResponse,
+    ValhallaRouteResponse
+>
+
 export type ValhallaClient = Client<
     ValhallaRouteResponse | ValhallaMatrixResponse | FeatureCollection,
     MapboxAuthParams,
-    ValhallaIsochroneParams | ValhallaRouteParams | ValhallaMatrixParams
+    | ValhallaIsochroneParams
+    | ValhallaRouteParams
+    | ValhallaMatrixParams
+    | ValhallaTraceRouteParams
 >
 
 export class Valhalla implements BaseRouter {
@@ -255,7 +338,7 @@ export class Valhalla implements BaseRouter {
         const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = this.getDirectionParams(
+        const params = Valhalla.getDirectionParams(
             locations,
             profile,
             directionsOpts
@@ -281,13 +364,13 @@ export class Valhalla implements BaseRouter {
             .catch(handleValhallaError)
     }
 
-    protected getDirectionParams(
+    public static getDirectionParams(
         locations: [number, number][],
         profile: ValhallaCostingType,
         directionsOpts: ValhallaDirectionOpts = {}
     ): ValhallaRouteParams {
         const params: ValhallaRouteParams = {
-            locations: this._buildLocations(locations),
+            locations: Valhalla._buildLocations(locations),
             costing: profile,
             narrative: directionsOpts.instructions || false,
         }
@@ -477,7 +560,7 @@ export class Valhalla implements BaseRouter {
         const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = this.getIsochroneParams(
+        const params = Valhalla.getIsochroneParams(
             location,
             profile,
             intervals,
@@ -508,7 +591,7 @@ export class Valhalla implements BaseRouter {
             .catch(handleValhallaError)
     }
 
-    public getIsochroneParams(
+    public static getIsochroneParams(
         location: [number, number],
         profile: ValhallaCostingType,
         intervals: number[],
@@ -539,7 +622,7 @@ export class Valhalla implements BaseRouter {
         })
 
         const params: ValhallaIsochroneParams = {
-            locations: this._buildLocations(location),
+            locations: Valhalla._buildLocations(location),
             costing: profile,
             contours,
             polygons: isochroneOpts.polygons,
@@ -669,7 +752,7 @@ export class Valhalla implements BaseRouter {
         const getParams: MapboxAuthParams | undefined = this.apiKey
             ? { access_token: this.apiKey }
             : undefined
-        const params = this.getMatrixParams(locations, profile, matrixOpts)
+        const params = Valhalla.getMatrixParams(locations, profile, matrixOpts)
 
         return this.client
             .request({
@@ -691,12 +774,12 @@ export class Valhalla implements BaseRouter {
             .catch(handleValhallaError)
     }
 
-    public getMatrixParams(
+    public static getMatrixParams(
         locations: [number, number][],
         profile: ValhallaCostingType,
         matrixOpts: ValhallaMatrixOpts = {}
     ): ValhallaMatrixParams {
-        const matrixLocations = this._buildLocations(locations)
+        const matrixLocations = Valhalla._buildLocations(locations)
 
         let sourceCoords = matrixLocations
 
@@ -803,11 +886,116 @@ export class Valhalla implements BaseRouter {
         return new Matrix(durations, distances, response)
     }
 
-    protected _buildLocations(
+    /**
+     * Makes a request to Valhalla's `/trace_route` endpoint.
+     *
+     * @param locations - Format: [lat, lon]
+     * @param profile - Specifies the mode of transport
+     * @param mapMatchOpts - Additional parameters, such as costing options.
+     * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
+     * @see {@link ValhallaCostingType} for available profiles
+     */
+    public async mapMatch(
+        locations: [number, number][],
+        profile: ValhallaCostingType,
+        mapMatchOpts?: ValhallaTraceRouteOpts,
+        dryRun?: false
+    ): Promise<ValhallaDirections>
+    public async mapMatch(
+        locations: [number, number][],
+        profile: ValhallaCostingType,
+        mapMatchOpts: ValhallaTraceRouteOpts,
+        dryRun: true
+    ): Promise<string>
+    public async mapMatch(
+        locations: [number, number][],
+        profile: ValhallaCostingType,
+        traceRouteOpts: ValhallaTraceRouteOpts = {},
+        dryRun?: boolean
+    ): Promise<ValhallaDirections | string> {
+        const getParams: MapboxAuthParams | undefined = this.apiKey
+            ? { access_token: this.apiKey }
+            : undefined
+        const params = Valhalla.getTraceRouteParams(
+            locations,
+            profile,
+            traceRouteOpts
+        )
+
+        return this.client
+            .request({
+                endpoint: "/trace_route",
+                postParams: params,
+                getParams,
+                dryRun,
+            })
+            .then((res) => {
+                if (typeof res === "object") {
+                    return this.parseDirectionsResponse(
+                        res as ValhallaRouteResponse,
+                        "main"
+                    ) as ValhallaDirections
+                } else {
+                    return res // return the request info string
+                }
+            })
+            .catch(handleValhallaError)
+    }
+
+    public static getTraceRouteParams(
+        locations: [number, number][],
+        profile: ValhallaCostingType,
+        traceRouteOpts: ValhallaTraceRouteOpts = {}
+    ): ValhallaTraceRouteParams {
+        const params: ValhallaTraceRouteParams = {
+            shape: this._buildLocations(locations),
+            costing: profile,
+        }
+
+        if (
+            traceRouteOpts.costingOpts !== undefined &&
+            Object.keys(traceRouteOpts.costingOpts).length
+        ) {
+            params.costing_options = {
+                [profile]: {
+                    ...traceRouteOpts.costingOpts,
+                },
+            }
+        }
+
+        params.shape_match = traceRouteOpts.shapeMatch
+        params.begin_time = traceRouteOpts.beginTime
+        params.durations = traceRouteOpts.durations
+        params.use_timestamps = traceRouteOpts.useTimestamps
+
+        if (traceRouteOpts.traceOptions) {
+            params.trace_options = {
+                gps_accuracy: traceRouteOpts.traceOptions.gpsAccuracy,
+                breakage_distance: traceRouteOpts.traceOptions.breakageDistance,
+                search_radius: traceRouteOpts.traceOptions.searchRadius,
+                interpolation_distance:
+                    traceRouteOpts.traceOptions.interpolationDistance,
+            }
+        }
+
+        params.directions_options = {
+            language: traceRouteOpts.directionsOptions?.language,
+            units: traceRouteOpts.directionsOptions?.units,
+            directions_type: traceRouteOpts.directionsOptions?.directionsType,
+        }
+
+        params.id = traceRouteOpts.id
+
+        return params
+    }
+
+    public static _buildLocations(
         coordinates: [number, number][]
     ): ValhallaLocation[]
-    protected _buildLocations(coordinates: [number, number]): [ValhallaLocation]
-    protected _buildLocations(
+    public static _buildLocations(
+        coordinates: [number, number]
+    ): [ValhallaLocation]
+    public static _buildLocations(
         coordinates: [number, number][] | [number, number]
     ): ValhallaLocation[] {
         if (Array.isArray(coordinates[0])) {

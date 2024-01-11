@@ -72,6 +72,32 @@ describe("Valhalla returns responses", () => {
                 expect(m.durations).toHaveLength(2)
             })
     })
+
+    it("gets a trace_route response", async () => {
+        await v
+            .mapMatch(
+                [
+                    [42.5063, 1.51886],
+                    [42.51007, 1.53789],
+                ],
+                "pedestrian"
+            )
+            .then((d) => {
+                expect(d.raw).toBeDefined()
+                expect(d.directions).toHaveLength(1)
+                expect(d.directions[0]).toHaveProperty("feature")
+                expect(d.directions[0].feature).toHaveProperty("geometry")
+                expect(d.directions[0].feature.geometry).toHaveProperty(
+                    "coordinates"
+                )
+                expect(
+                    d.directions[0].feature.properties.duration
+                ).not.toBeNull()
+                expect(
+                    d.directions[0].feature.properties.distance
+                ).not.toBeNull()
+            })
+    })
 })
 
 describe("Throws RoutingJSAPIError", () => {
