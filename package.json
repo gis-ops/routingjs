@@ -18,9 +18,9 @@
         "format": "prettier --write packages/**/*.ts",
         "format-check": "prettier --check packages/**/*.ts",
         "build": "lerna run build",
-        "postinstall": "npx husky install && chmod +x .husky/pre-commit",
         "clear": "rimraf \"packages/**/dist/\"",
         "up": "docker compose up -d",
+        "postinstall": "npx husky install && chmod +x .husky/pre-commit",
         "down": "docker compose down"
     },
     "repository": {

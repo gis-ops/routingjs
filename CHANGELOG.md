@@ -17,3 +17,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 -   Remove `directionsOpts` as top level options in `ValhallaTraceRouteOpts` ([#35](https://github.com/gis-ops/routingjs/pull/35))
+-   Remove User-Agent header ([#33](https://github.com/gis-ops/routingjs/pull/33))
+

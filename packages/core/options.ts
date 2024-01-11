@@ -6,7 +6,6 @@ interface optionsInterface {
     defaultUserAgent: string
     defaultProxy?: false | AxiosProxyConfig
     defaultMaxRetries: number
-    defaultHeaders: object
 }
 
 const options: optionsInterface = {
@@ -15,7 +14,6 @@ const options: optionsInterface = {
     defaultProxy: false,
     defaultUserAgent: "routing-js-",
     defaultMaxRetries: 5,
-    defaultHeaders: { "Content-Type": "application/json" },
 }
 
 export default options

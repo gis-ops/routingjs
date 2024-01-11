@@ -84,8 +84,6 @@ class Client<
         public additionalAxiosOpts?: AxiosRequestConfig
     ) {
         this.headers = {
-            ...options.defaultHeaders,
-            "User-Agent": userAgent,
             ...this.headers,
         }
         this.axiosOptions = {
