@@ -20,6 +20,7 @@
         "build": "lerna run build",
         "clear": "rimraf \"packages/**/dist/\"",
         "up": "docker compose up -d",
+        "postinstall": "npx husky install && chmod +x .husky/pre-commit",
         "down": "docker compose down"
     },
     "repository": {
