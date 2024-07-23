@@ -48,7 +48,12 @@ export interface ClientConstructorArgs {
     readonly axiosOpts?: AxiosRequestConfig
 }
 
-export interface BaseRouter {
+export interface Waypoint {
+    lat: number
+    lon: number
+}
+
+export interface BaseRouter<T extends Waypoint> {
     client: Client<
         Record<string | number, any>,
         Record<string | number, any> | undefined,
@@ -56,21 +61,21 @@ export interface BaseRouter {
     >
 
     directions: (
-        locations: number[][],
+        locations: ([number, number] | T)[],
         profile: string,
         directionsOpts?: Record<string | number | symbol, JSONValue>,
         dryRun?: boolean
     ) => Promise<Directions<any, any> | string>
 
     matrix: (
-        locations: [number, number][],
+        locations: ([number, number] | T)[],
         profile: string,
         matrixOpts?: JSONObject,
         dryRun?: boolean
     ) => Promise<Matrix<any> | string>
 
     reachability?: (
-        location: [number, number],
+        location: [number, number] | T,
         profile: string,
         intervals: number[],
         isochronesOpts?: JSONObject,
@@ -78,7 +83,7 @@ export interface BaseRouter {
     ) => Promise<Isochrones<any, any> | string>
 
     mapMatch?: (
-        locations: [number, number][],
+        locations: ([number, number] | T)[],
         profile: string,
         mapMatchOpts?: JSONObject,
         dryRun?: boolean

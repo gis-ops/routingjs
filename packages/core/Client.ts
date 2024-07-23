@@ -101,7 +101,7 @@ class Client<
                 ? (error) =>
                       isNetworkOrIdempotentRequestError(error) ||
                       error.response?.status == 429
-                : undefined,
+                : () => false,
             retryDelay: axiosRetry.exponentialDelay,
             onRetry: (number, error) =>
                 console.log(

@@ -109,7 +109,7 @@ export type ValhallaRequestUnit = "mi" | "km" | "miles" | "kilometers"
 
 export interface ValhallaIsochroneParams extends ValhallaRequestParams {
     /** Only single location can be specified. */
-    locations: [ValhallaLocation]
+    locations: ValhallaLocation[]
     /**
      * The local date and time at the location. These parameters apply only for multimodal
      * requests and are not used with other costing methods.
