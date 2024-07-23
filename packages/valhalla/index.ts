@@ -277,7 +277,7 @@ export type ValhallaClient = Client<
     | ValhallaTraceRouteParams
 >
 
-export class Valhalla implements BaseRouter {
+export class Valhalla implements BaseRouter<ValhallaLocation> {
     client: ValhallaClient
     apiKey?: string
     constructor(clientArgs?: ClientConstructorArgs) {
@@ -317,19 +317,19 @@ export class Valhalla implements BaseRouter {
      * @see {@link ValhallaCostingType} for available profiles
      */
     public async directions(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         directionsOpts?: ValhallaDirectionOpts,
         dryRun?: false
     ): Promise<ValhallaDirections>
     public async directions(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         directionsOpts: ValhallaDirectionOpts,
         dryRun: true
     ): Promise<string>
     public async directions(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         directionsOpts: ValhallaDirectionOpts = {},
         dryRun = false
@@ -365,7 +365,7 @@ export class Valhalla implements BaseRouter {
     }
 
     public static getDirectionParams(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         directionsOpts: ValhallaDirectionOpts = {}
     ): ValhallaRouteParams {
@@ -537,21 +537,21 @@ export class Valhalla implements BaseRouter {
      * @see {@link ValhallaCostingType} for available profiles
      */
     public async reachability(
-        location: [number, number],
+        location: [number, number] | ValhallaLocation,
         profile: ValhallaCostingType,
         intervals: number[],
         isochronesOpts?: ValhallaIsochroneOpts,
         dryRun?: false
     ): Promise<ValhallaIsochrones>
     public async reachability(
-        location: [number, number],
+        location: [number, number] | ValhallaLocation,
         profile: ValhallaCostingType,
         intervals: number[],
         isochronesOpts: ValhallaIsochroneOpts,
         dryRun: true
     ): Promise<string>
     public async reachability(
-        location: [number, number],
+        location: [number, number] | ValhallaLocation,
         profile: ValhallaCostingType,
         intervals: number[],
         isochronesOpts: ValhallaIsochroneOpts = {},
@@ -592,7 +592,7 @@ export class Valhalla implements BaseRouter {
     }
 
     public static getIsochroneParams(
-        location: [number, number],
+        location: [number, number] | ValhallaLocation,
         profile: ValhallaCostingType,
         intervals: number[],
         isochroneOpts: ValhallaIsochroneOpts = {}
@@ -700,17 +700,18 @@ export class Valhalla implements BaseRouter {
 
     public static parseIsochroneResponse(
         response: ValhallaIsochroneResponse,
-        location: [number, number],
+        location: [number, number] | ValhallaLocation,
         intervals: number[],
         intervalType: "time" | "distance"
     ): ValhallaIsochrones {
         const isochrones: Isochrone<Feature>[] = []
         response.features.forEach((feature, index) => {
-            // TODO: convert to loop
             if (feature.geometry.type !== "Point") {
                 isochrones.push(
                     new Isochrone(
-                        location,
+                        Array.isArray(location)
+                            ? location
+                            : [location.lat, location.lon],
                         intervals[index],
                         intervalType,
                         feature as Feature<LineString | Polygon, any>
@@ -732,19 +733,19 @@ export class Valhalla implements BaseRouter {
      * @see {@link ValhallaCostingType} for available profiles
      */
     public async matrix(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         matrixOpts?: ValhallaMatrixOpts,
         dryRun?: false
     ): Promise<ValhallaMatrix>
     public async matrix(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         matrixOpts: ValhallaMatrixOpts,
         dryRun: true
     ): Promise<string>
     public async matrix(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         matrixOpts: ValhallaMatrixOpts = {},
         dryRun?: boolean
@@ -775,7 +776,7 @@ export class Valhalla implements BaseRouter {
     }
 
     public static getMatrixParams(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         matrixOpts: ValhallaMatrixOpts = {}
     ): ValhallaMatrixParams {
@@ -896,19 +897,19 @@ export class Valhalla implements BaseRouter {
      * @see {@link ValhallaCostingType} for available profiles
      */
     public async mapMatch(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         mapMatchOpts?: ValhallaTraceRouteOpts,
         dryRun?: false
     ): Promise<ValhallaDirections>
     public async mapMatch(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         mapMatchOpts: ValhallaTraceRouteOpts,
         dryRun: true
     ): Promise<string>
     public async mapMatch(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         traceRouteOpts: ValhallaTraceRouteOpts = {},
         dryRun?: boolean
@@ -943,7 +944,7 @@ export class Valhalla implements BaseRouter {
     }
 
     public static getTraceRouteParams(
-        locations: [number, number][],
+        locations: ([number, number] | ValhallaLocation)[],
         profile: ValhallaCostingType,
         traceRouteOpts: ValhallaTraceRouteOpts = {}
     ): ValhallaTraceRouteParams {
@@ -990,30 +991,50 @@ export class Valhalla implements BaseRouter {
     }
 
     public static _buildLocations(
-        coordinates: [number, number][]
+        coordinates:
+            | ([number, number] | ValhallaLocation)[]
+            | [number, number]
+            | ValhallaLocation
     ): ValhallaLocation[]
     public static _buildLocations(
-        coordinates: [number, number]
+        coordinates:
+            | ([number, number] | ValhallaLocation)[]
+            | [number, number]
+            | ValhallaLocation
     ): [ValhallaLocation]
     public static _buildLocations(
-        coordinates: [number, number][] | [number, number]
+        coordinates:
+            | ([number, number] | ValhallaLocation)[]
+            | [number, number]
+            | ValhallaLocation
     ): ValhallaLocation[] {
-        if (Array.isArray(coordinates[0])) {
-            const locations: ValhallaLocation[] = []
-            ;(coordinates as number[][]).forEach((coordPair) => {
-                // TODO: convert to loop
-                const locObj = { lon: coordPair[1], lat: coordPair[0] }
-                locations.push(locObj)
-            })
-            return locations
+        if (Array.isArray(coordinates)) {
+            if (Array.isArray(coordinates[0])) {
+                // [[lat, long], [lat, long], ...]
+                const locations: ValhallaLocation[] = []
+                ;(coordinates as number[][]).forEach((coordPair) => {
+                    const locObj = { lon: coordPair[1], lat: coordPair[0] }
+                    locations.push(locObj)
+                })
+                return locations
+            } else {
+                if (typeof coordinates[0] == "number") {
+                    // [lat, lng]
+                    const location: [ValhallaLocation] = [
+                        {
+                            lat: (coordinates as [number, number])[0],
+                            lon: (coordinates as [number, number])[1],
+                        },
+                    ]
+                    return location
+                } else {
+                    // location objects
+                    return coordinates as ValhallaLocation[]
+                }
+            }
         } else {
-            const location: [ValhallaLocation] = [
-                {
-                    lat: (coordinates as number[])[0],
-                    lon: (coordinates as number[])[1],
-                },
-            ]
-            return location
+            // single location obj
+            return [coordinates]
         }
     }
 }

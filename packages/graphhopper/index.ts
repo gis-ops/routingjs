@@ -10,6 +10,7 @@ import {
     Isochrones,
     Matrix,
     Client,
+    Waypoint,
 } from "@routingjs/core"
 import { LineString } from "geojson"
 import {
@@ -119,7 +120,7 @@ export type GraphHopperClient = Client<
  *
  * For the full documentation, see  {@link https://docs.graphhopper.com}.
  */
-export class GraphHopper implements BaseRouter {
+export class GraphHopper implements BaseRouter<Waypoint> {
     client: GraphHopperClient
     apiKey?: string
 
@@ -161,26 +162,28 @@ export class GraphHopper implements BaseRouter {
      * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
      */
     directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: GraphHopperProfile,
         directionsOpts?: GraphHopperDirectionsOpts,
         dryRun?: false
     ): Promise<GraphHopperDirections>
     directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: GraphHopperProfile,
         directionsOpts: GraphHopperDirectionsOpts,
         dryRun: true
     ): Promise<string>
     public async directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: GraphHopperProfile,
         directionsOpts?: GraphHopperDirectionsOpts,
         dryRun?: boolean | undefined
     ): Promise<string | GraphHopperDirections> {
         const params: GraphHopperRouteParams = {
             profile,
-            points: locations.map(([lat, lon]) => [lon, lat]),
+            points: locations.map((c) =>
+                Array.isArray(c) ? [c[1], c[0]] : [c.lon, c.lat]
+            ),
             ...directionsOpts,
         }
 
@@ -263,28 +266,30 @@ export class GraphHopper implements BaseRouter {
      * @see {@link https://docs.graphhopper.com/#tag/Isochrone-API} for the full documentation.
      */
     reachability(
-        location: [number, number],
+        location: [number, number] | Waypoint,
         profile: GraphHopperProfile,
         intervals: [number],
         isochronesOpts?: GraphHopperIsochroneOpts,
         dryRun?: false
     ): Promise<GraphHopperIsochrones>
     reachability(
-        location: [number, number],
+        location: [number, number] | Waypoint,
         profile: GraphHopperProfile,
         intervals: [number],
         isochronesOpts: GraphHopperIsochroneOpts,
         dryRun: true
     ): Promise<string>
     public async reachability(
-        location: [number, number],
+        location: [number, number] | Waypoint,
         profile: GraphHopperProfile,
         intervals: [number],
         isochronesOpts?: GraphHopperIsochroneOpts,
         dryRun?: boolean | undefined
     ): Promise<string | GraphHopperIsochrones> {
         const params: GraphHopperIsochroneGetParams = {
-            point: location.join(","),
+            point: Array.isArray(location)
+                ? `${location[0]}, ${location[1]}`
+                : `${location.lat},${location.lon}`,
             profile,
         }
 
@@ -333,13 +338,13 @@ export class GraphHopper implements BaseRouter {
      */
     public static parseIsochroneResponse(
         response: GraphHopperIsochroneResponse,
-        center: [number, number],
+        center: [number, number] | Waypoint,
         intervalType: "time" | "distance"
     ): GraphHopperIsochrones {
         const isochrones: Isochrone<GraphHopperIsochroneProps>[] =
             response.polygons.map((poly) => {
                 return new Isochrone(
-                    center,
+                    Array.isArray(center) ? center : [center.lat, center.lon],
                     poly.properties.bucket,
                     intervalType,
                     poly
@@ -367,19 +372,19 @@ export class GraphHopper implements BaseRouter {
      *
      */
     matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: GraphHopperProfile,
         matrixOpts?: GraphHopperMatrixOpts,
         dryRun?: false
     ): Promise<GraphHopperMatrix>
     matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: GraphHopperProfile,
         matrixOpts: GraphHopperMatrixOpts,
         dryRun: true
     ): Promise<string>
     public async matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: GraphHopperProfile,
         matrixOpts?: GraphHopperMatrixOpts,
         dryRun?: boolean | undefined
@@ -392,7 +397,7 @@ export class GraphHopper implements BaseRouter {
                         return matrixOpts.sources.includes(i)
                     } else return true
                 })
-                .map(([lat, lon]) => [lon, lat]), // reverse order for POST requests
+                .map((c) => (Array.isArray(c) ? [c[1], c[0]] : [c.lon, c.lat])), // reverse order for POST requests
 
             to_points: locations
                 .filter((coords, i) => {
@@ -400,7 +405,8 @@ export class GraphHopper implements BaseRouter {
                         return matrixOpts.destinations.includes(i)
                     } else return true
                 })
-                .map(([lat, lon]) => [lon, lat]),
+                .map((c) => (Array.isArray(c) ? [c[1], c[0]] : [c.lon, c.lat])), // reverse order for POST requests
+
             ...matrixOpts,
         }
 

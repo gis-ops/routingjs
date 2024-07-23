@@ -9,6 +9,7 @@ import {
     Matrix,
     BaseRouter,
     ClientConstructorArgs,
+    Waypoint,
 } from "@routingjs/core"
 
 import {
@@ -101,7 +102,7 @@ export type OSRMClient = Client<
     Partial<OSRMRouteParams> | Partial<OSRMTableParams>
 >
 
-export class OSRM implements BaseRouter {
+export class OSRM implements BaseRouter<Waypoint> {
     client: OSRMClient
     apiKey?: string
     constructor(clientArgs?: ClientConstructorArgs) {
@@ -141,25 +142,27 @@ export class OSRM implements BaseRouter {
      * @param dryRun - if true, will not make the request and instead return an info string containing the URL and request parameters; for debugging
      */
     public async directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: string,
         directionsOpts?: OSRMDirectionsOpts,
         dryRun?: false
     ): Promise<OSRMDirections>
     public async directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: string,
         directionsOpts: OSRMDirectionsOpts,
         dryRun: true
     ): Promise<string>
     public async directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile = "driving",
         directionsOpts: OSRMDirectionsOpts = {},
         dryRun = false
     ): Promise<OSRMDirections | string> {
         const coords = locations
-            .map((tuple) => `${tuple[1]},${tuple[0]}`)
+            .map((l) =>
+                Array.isArray(l) ? `${l[1]},${l[0]}` : `${l.lon},${l.lat}`
+            )
             .join(";")
 
         const params = OSRM.getDirectionParams(directionsOpts)
@@ -278,25 +281,27 @@ export class OSRM implements BaseRouter {
     }
 
     public async matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: string,
         matrixOpts?: OSRMMatrixOpts,
         dryRun?: false
     ): Promise<OSRMMatrix>
     public async matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: string,
         matrixOpts: OSRMMatrixOpts,
         dryRun: true
     ): Promise<string>
     public async matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: string,
         matrixOpts: OSRMMatrixOpts = {},
         dryRun?: boolean
     ): Promise<OSRMMatrix | string> {
         const coords = locations
-            .map((tuple) => `${tuple[1]},${tuple[0]}`)
+            .map((l) =>
+                Array.isArray(l) ? `${l[1]},${l[0]}` : `${l.lon},${l.lat}`
+            )
             .join(";")
 
         const params = OSRM.getMatrixParams(matrixOpts)

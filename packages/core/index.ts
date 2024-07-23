@@ -1,4 +1,4 @@
-export { BaseRouter, ClientConstructorArgs } from "./BaseRouter"
+export { BaseRouter, ClientConstructorArgs, Waypoint } from "./BaseRouter"
 export { default as Client } from "./Client"
 export { Direction, Directions, DirectionFeat } from "./Direction"
 export { default as Matrix } from "./Matrix"

@@ -10,6 +10,7 @@ import {
     Matrix,
     Isochrone,
     Isochrones,
+    Waypoint,
 } from "@routingjs/core"
 
 import {
@@ -85,7 +86,7 @@ export type ORSClient = Client<
     ORSRouteParams | ORSMatrixParams | ORSIsochroneParams
 >
 
-export class ORS implements BaseRouter {
+export class ORS implements BaseRouter<Waypoint> {
     client: ORSClient
     apiKey?: string
     constructor(clientArgs?: ClientConstructorArgs) {
@@ -118,21 +119,21 @@ export class ORS implements BaseRouter {
         )
     }
     directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: ORSProfile,
         directionsOpts?: ORSDirectionsOpts,
         dryRun?: false,
         format?: ORSFormat
     ): Promise<ORSDirections>
     directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: ORSProfile,
         directionsOpts: ORSDirectionsOpts,
         dryRun: true,
         format?: ORSFormat
     ): Promise<string>
     public async directions(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: ORSProfile,
         directionsOpts: ORSDirectionsOpts = {},
         dryRun?: boolean,
@@ -156,7 +157,9 @@ export class ORS implements BaseRouter {
         }
 
         const params: ORSRouteParams = {
-            coordinates: locations.map(([lat, lon]) => [lon, lat]),
+            coordinates: locations.map((c) =>
+                Array.isArray(c) ? [c[1], c[0]] : [c.lon, c.lat]
+            ),
             ...directionsOpts,
         }
 
@@ -245,21 +248,21 @@ export class ORS implements BaseRouter {
     }
 
     reachability(
-        location: [number, number],
+        location: [number, number] | Waypoint,
         profile: string,
         intervals: number[],
         isochronesOpts?: ORSIsochroneOpts,
         dryRun?: false
     ): Promise<ORSIsochrones>
     reachability(
-        location: [number, number],
+        location: [number, number] | Waypoint,
         profile: string,
         intervals: number[],
         isochronesOpts: ORSIsochroneOpts,
         dryRun: true
     ): Promise<string>
     async reachability(
-        location: [number, number],
+        location: [number, number] | Waypoint,
         profile: string,
         intervals: number[],
         isochronesOpts: ORSIsochroneOpts = {},
@@ -267,7 +270,9 @@ export class ORS implements BaseRouter {
     ): Promise<ORSIsochrones | string> {
         const { range_type, ...rest } = isochronesOpts
         const params: ORSIsochroneParams = {
-            locations: [[location[1], location[0]]], // format must be lon/lat
+            locations: Array.isArray(location)
+                ? [[location[1], location[0]]]
+                : [[location.lon, location.lat]], // format must be lon/lat
             range: intervals,
             ...rest,
         }
@@ -313,25 +318,27 @@ export class ORS implements BaseRouter {
     }
 
     matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: ORSProfile,
         matrixOpts?: ORSMatrixOpts,
         dryRun?: false
     ): Promise<ORSMatrix>
     matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: ORSProfile,
         matrixOpts: ORSMatrixOpts,
         dryRun: true
     ): Promise<string>
     async matrix(
-        locations: [number, number][],
+        locations: ([number, number] | Waypoint)[],
         profile: ORSProfile,
         matrixOpts: ORSMatrixOpts = {},
         dryRun?: boolean
     ): Promise<ORSMatrix | string> {
         const params: ORSMatrixParams = {
-            locations: locations.map(([lat, lon]) => [lon, lat]),
+            locations: locations.map((c) =>
+                Array.isArray(c) ? [c[1], c[0]] : [c.lon, c.lat]
+            ),
             ...matrixOpts,
         }
 
