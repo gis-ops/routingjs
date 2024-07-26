@@ -32,6 +32,26 @@ describe("Valhalla returns responses", () => {
             })
     })
 
+    it("gets a directions response when passing exclude_locations", async () => {
+        await v
+            .directions(
+                [
+                    [-33.3844596, 148.0080975],
+                    [-33.8346839, 148.6911799],
+                ],
+                "auto",
+                {
+                    avoidLocations: [[-33.4023733, 148.0193885]],
+                }
+            )
+            .then((d) => {
+                expect(d.raw).toBeDefined()
+                expect(d.raw?.trip?.status_message).toBe(
+                    "Found route between points"
+                )
+            })
+    })
+
     it("gets an isochrone response", async () => {
         await v
             .reachability([42.50823, 1.52601], "pedestrian", [30, 90])
